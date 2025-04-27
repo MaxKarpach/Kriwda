@@ -33,7 +33,7 @@ Effect.o: $(SRC_DIR)/Effect.cpp
 	$(CC) -c $(SRC_DIR)/Effect.cpp $(CFLAGS)
 
 Renderer.o: $(SRC_DIR)/Renderer.cpp
-	$(CC) -c $(SRC_DIR)/Rendere.cpp $(CFLAGS)
+	$(CC) -c $(SRC_DIR)/Renderer.cpp $(CFLAGS)
 
 clean:
 	rm -f $(OBJ) $(EXEC)

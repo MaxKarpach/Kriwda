@@ -1,5 +1,6 @@
 #include "../headerFiles/Item.h" 
 #include <iostream>
+#include <climits>
 
 const int MAX_STRING_LEN = 20;
 

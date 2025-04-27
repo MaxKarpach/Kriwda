@@ -9,5 +9,8 @@
 
 int main(int argc, char* argv[]){
     std::ifstream input("data.txt");
+    ItemRegistry r;
+    r.load(input);
+    std::cout << r.getItem().name;
     return 0;
 }
