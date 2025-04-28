@@ -1,9 +1,9 @@
 SRC_DIR = sourceFiles
 INC_DIR = headerFiles
 
-SRC = $(SRC_DIR)/main.cpp $(SRC_DIR)/Player.cpp $(SRC_DIR)/Enemy.cpp/Ability.cpp/Item.cpp/Effect.cpp/Renderer.cpp
+SRC = $(SRC_DIR)/main.cpp $(SRC_DIR)/Player.cpp $(SRC_DIR)/Enemy.cpp/Ability.cpp/Item.cpp/Effect.cpp/Renderer.cpp/Location.cpp
 
-OBJ = main.o Player.o Enemy.o Ability.o Item.o Effect.o Renderer.o
+OBJ = main.o Player.o Enemy.o Ability.o Item.o Effect.o Renderer.o Location.o
 EXEC = main
 
 CC = g++
@@ -34,6 +34,9 @@ Effect.o: $(SRC_DIR)/Effect.cpp
 
 Renderer.o: $(SRC_DIR)/Renderer.cpp
 	$(CC) -c $(SRC_DIR)/Renderer.cpp $(CFLAGS)
+
+Location.o: $(SRC_DIR)/Location.cpp
+	$(CC) -c $(SRC_DIR)/Location.cpp $(CFLAGS)
 
 clean:
 	rm -f $(OBJ) $(EXEC)
