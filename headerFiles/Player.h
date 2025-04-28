@@ -11,17 +11,17 @@ struct PlayerDef{
     int questId;
     int locationId;
     int dialogNodeId;
-    int inventory;
-    int abilities;
-    int chosenAbilities;
-    int chosenWeapon;
+    std::vector<int> inventory;
+    std::vector<int> abilities;
+    std::array<int, 3> chosenAbilities;
+    int chosenWeaponId;
 };
 
 class Player {
 public:
     Player(const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
-           const int &money, const int &questId, const int &locationId, const int &dialogNodeId, const int &inventory,
-           const int &abilities, const int &chosenAbilities, const int &chosenWeapon);
+           const int &money, const int &questId, const int &locationId, const int &dialogNodeId, const std::vector<int> &inventory,
+           const std::vector<int> &abilities, const std::array<int, 3>& chosenAbilities, const int &chosenWeaponId);
 
     int getHp() const { return hp; }
     void setHp(int value) { hp = value; }
@@ -50,17 +50,8 @@ public:
     int getDialogNodeId() const { return dialogNodeId; }
     void setDialogNodeId(int value) { dialogNodeId = value; }
 
-    int getInventory() const { return inventory; }
-    void setInventory(int value) { inventory = value; }
-
-    int getAbilities() const { return abilities; }
-    void setAbilities(int value) { abilities = value; }
-
-    int getChosenAbilities() const { return chosenAbilities; }
-    void setChosenAbilities(int value) { chosenAbilities = value; }
-
-    int getChosenWeapon() const { return chosenWeapon; }
-    void setChosenWeapon(int value) { chosenWeapon = value; }
+    int getChosenWeaponId() const { return chosenWeaponId; }
+    void setChosenWeaponId(int value) { chosenWeaponId = value; }
 
 private:
     int hp;
@@ -72,10 +63,10 @@ private:
     int questId;
     int locationId;
     int dialogNodeId;
-    int inventory;
-    int abilities;
-    int chosenAbilities;
-    int chosenWeapon;
+    std::vector<int> inventory;
+    std::vector<int> abilities;
+    std::array<int, 3> chosenAbilities;
+    int chosenWeaponId;
 };
 
 

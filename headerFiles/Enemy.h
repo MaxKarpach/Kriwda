@@ -9,14 +9,14 @@ struct EnemyDef{
     int stamina;
     int shield;
     int dodgeCount;
-    int abilities;
-    int chosenWeapon;
+    std::array<int, 3> abilities;
+    int chosenWeaponId;
 };
 
 class Enemy{
 public:
-    Enemy(const int& id, const std::string& name, const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
-           const int &abilities, const int &chosenWeapon);
+Enemy(const int& id, const std::string& name, const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
+    const std::array<int, 3>& abilities, const int &chosenWeaponId);
 
     int getId() const { return id; }
     void setId(int value) { id = value; }
@@ -39,11 +39,8 @@ public:
     int getDodgeCount() const { return dodgeCount; }
     void setDodgeCount(int value) { dodgeCount = value; }
 
-    int getAbilities() const { return abilities; }
-    void setAbilities(int value) { abilities = value; }
-
-    int getChosenWeapon() const { return chosenWeapon; }
-    void setChosenWeapon(int value) { chosenWeapon = value; }
+    int getChosenWeaponId() const { return chosenWeaponId; }
+    void setChosenWeaponId(int value) { chosenWeaponId = value; }
 
 private:
     std::string name;
@@ -53,8 +50,8 @@ private:
     int stamina;
     int shield;
     int dodgeCount;
-    int abilities;
-    int chosenWeapon;
+    std::array<int, 3> abilities;
+    int chosenWeaponId;
 };
 
 

@@ -3,8 +3,8 @@
 
 const int MAX_STRING_LEN = 20;
 
-Location::Location(const int& id, const std::string& name, const std::vector<int> &choices)
-:id(id), name(name), choices(choices) {}
+Location::Location(const int& id, const std::string& name, const std::vector<int> &choices, const std::vector<int>& enemies)
+:id(id), name(name), choices(choices), enemies(enemies) {}
 
 LocationDef LocationRegistry::getLocation(){
     return location;
@@ -24,6 +24,13 @@ void  LocationRegistry::load(std::istream& is){
         int locationId = 0;
         is >> locationId;
         ld.choices.push_back(locationId);
+    }
+    int enemiesCount = 0;
+    is >> enemiesCount;
+    for (int i = 0; i < enemiesCount;i++){
+        int enemyId = 0;
+        is >> enemyId;
+        ld.enemies.push_back(enemyId);
     }
     location = ld;
 }

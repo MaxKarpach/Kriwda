@@ -5,11 +5,12 @@ struct LocationDef{
     int id;
     std::string name;
     std::vector<int> choices;
+    std::vector<int> enemies;
 };
 
 class Location{
 public:
-    Location(const int& id, const std::string& name, const std::vector<int> &choices);
+    Location(const int& id, const std::string& name, const std::vector<int> &choices, const std::vector<int>& enemies);
 
     int getId() const { return id; }
     void setId(int value) { id = value; }
@@ -25,6 +26,7 @@ private:
 int id;
 std::string name;
 std::vector<int> choices;
+std::vector<int> enemies;
 };
 
 
