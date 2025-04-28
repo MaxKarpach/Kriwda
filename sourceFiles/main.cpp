@@ -7,13 +7,11 @@
 #include "../headerFiles/Effect.h" 
 #include "../headerFiles/Renderer.h" 
 #include "../headerFiles/Location.h" 
+#include "../headerFiles/Dialog.h" 
+#include "../headerFiles/DialogNode.h" 
+#include "../headerFiles/DialogChoice.h" 
 
 int main(int argc, char* argv[]){
     std::ifstream input("data.txt");
-    LocationRegistry l;
-    l.load(input);
-    for (int i = 0; i < l.getLocation().choices.size();i++){
-        std::cout << l.getLocation().choices[i] << std::endl;
-    }
     return 0;
 }
