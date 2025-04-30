@@ -11,12 +11,13 @@ struct EnemyDef{
     int dodgeCount;
     std::array<int, 3> abilities;
     int chosenWeaponId;
+    int locationId;
 };
 
 class Enemy{
 public:
 Enemy(const int& id, const std::string& name, const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
-    const std::array<int, 3>& abilities, const int &chosenWeaponId);
+    const std::array<int, 3>& abilities, const int &chosenWeaponId, const int& locationId);
 
     int getId() const { return id; }
     void setId(int value) { id = value; }
@@ -42,6 +43,9 @@ Enemy(const int& id, const std::string& name, const int &hp, const int &damage, 
     int getChosenWeaponId() const { return chosenWeaponId; }
     void setChosenWeaponId(int value) { chosenWeaponId = value; }
 
+    int getLocationId() const { return locationId; }
+    void setLocationId(int value) { locationId = value; }
+
 private:
     std::string name;
     int id;
@@ -52,6 +56,7 @@ private:
     int dodgeCount;
     std::array<int, 3> abilities;
     int chosenWeaponId;
+    int locationId;
 };
 
 

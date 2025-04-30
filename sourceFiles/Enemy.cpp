@@ -4,9 +4,9 @@
 const int MAX_STRING_LEN = 20;
 
 Enemy::Enemy(const int& id, const std::string& name, const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
-    const std::array<int, 3>& abilities, const int &chosenWeaponId)
+    const std::array<int, 3>& abilities, const int &chosenWeaponId, const int& locationId)
 : id(id), name(name), hp(hp), damage(damage), stamina(stamina), shield(shield), dodgeCount(dodgeCount),
-abilities(abilities), chosenWeaponId(chosenWeaponId) {}
+abilities(abilities), chosenWeaponId(chosenWeaponId),locationId(locationId) {}
 
 EnemyDef EnemyRegistry::getEnemy(){
     return enemy;
@@ -29,5 +29,6 @@ void EnemyRegistry::load(std::istream& is){
     is >> ed.abilities[1];
     is >> ed.abilities[2];
     is >> ed.chosenWeaponId;
+    is >> ed.locationId;
     enemy = ed;
 }

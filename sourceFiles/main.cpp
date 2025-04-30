@@ -10,8 +10,11 @@
 #include "../headerFiles/Dialog.h" 
 #include "../headerFiles/DialogNode.h" 
 #include "../headerFiles/DialogChoice.h" 
+#include "../headerFiles/Game.h" 
 
 int main(int argc, char* argv[]){
     std::ifstream input("data.txt");
+    Game game;
+    game.initNewGame();
     return 0;
 }

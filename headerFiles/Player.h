@@ -20,7 +20,7 @@ struct PlayerDef{
 class Player {
 public:
     Player(const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
-           const int &money, const int &questId, const int &locationId, const int &dialogNodeId, const std::vector<int> &inventory,
+           const int &money, const int &locationId, const int &dialogNodeId, const std::vector<int> &inventory,
            const std::vector<int> &abilities, const std::array<int, 3>& chosenAbilities, const int &chosenWeaponId);
 
     int getHp() const { return hp; }
@@ -41,9 +41,6 @@ public:
     int getMoney() const { return money; }
     void setMoney(int value) { money = value; }
 
-    int getQuestId() const { return questId; }
-    void setQuestId(int value) { questId = value; }
-
     int getLocationId() const { return locationId; }
     void setLocationId(int value) { locationId = value; }
 
@@ -60,7 +57,6 @@ private:
     int shield;
     int dodgeCount;
     int money;
-    int questId;
     int locationId;
     int dialogNodeId;
     std::vector<int> inventory;

@@ -2,11 +2,11 @@
 #include <iostream>
 
 Player::Player(const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
-    const int &money, const int &questId, const int &locationId, const int &dialogNodeId, const std::vector<int> &inventory,
+    const int &money, const int &locationId, const int &dialogNodeId, const std::vector<int> &inventory,
     const std::vector<int> &abilities, const std::array<int, 3>& chosenAbilities, const int &chosenWeaponId)
  : hp(hp), damage(damage), stamina(stamina), shield(shield), dodgeCount(dodgeCount), money(money), 
-   questId(questId), locationId(locationId), dialogNodeId(dialogNodeId), inventory(inventory),
-   abilities(abilities), chosenAbilities(chosenAbilities), chosenWeaponId(chosenWeaponId) {}
+   locationId(locationId), dialogNodeId(dialogNodeId), inventory(inventory), abilities(abilities), 
+   chosenAbilities(chosenAbilities), chosenWeaponId(chosenWeaponId) {}
 
 PlayerDef PlayerRegistry::getPlayer(){
     return player;
@@ -20,7 +20,6 @@ void PlayerRegistry::load(std::istream& is){
     is >> pd.shield;
     is >> pd.dodgeCount;
     is >> pd.money;
-    is >> pd.questId;
     is >> pd.locationId;
     is >> pd.dialogNodeId;
     int inventorySize = 0;
