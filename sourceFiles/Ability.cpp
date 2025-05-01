@@ -3,8 +3,8 @@
 
 const int MAX_STRING_LEN = 20;
 
-Ability::Ability(const int &id, const std::string &name, const char &type, const int &effectId, const int &factor)
-:id(id), name(name), type(type), effectId(effectId), factor(factor) {}
+Ability::Ability(const AbilityDef& def)
+:id(def.id), name(def.name), type(def.type), effectId(def.effectId), factor(def.factor) {}
 
 AbilityDef AbilityRegistry::getAbility(){
     return ability;

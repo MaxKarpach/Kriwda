@@ -1,8 +1,8 @@
 #include "../headerFiles/Dialog.h" 
 #include <iostream>
 
-Dialog::Dialog(const int &id,const int& currentNodeId)
-:id(id), currentNodeId(currentNodeId){}
+Dialog::Dialog(const DialogDef& def)
+:id(def.id), currentNodeId(def.currentNodeId){}
 
 DialogDef DialogRegistry::getDialog(){
     return dialog;

@@ -1,8 +1,8 @@
 #include "../headerFiles/Effect.h" 
 #include <iostream>
 
-Effect::Effect(const int &id, const char &type)
-:id(id), type(type) {}
+Effect::Effect(const EffectDef& def)
+:id(def.id), type(def.type) {}
 
 EffectDef EffectRegistry::getEffect(){
     return effect;

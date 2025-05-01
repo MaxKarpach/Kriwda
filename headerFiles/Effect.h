@@ -8,7 +8,7 @@ struct EffectDef{
 
 class Effect{
 public:
-    Effect(const int &id, const char &type);
+    Effect(const EffectDef& def);
 
     int getId() const { return id; }
     void setId(int value) { id = value; }

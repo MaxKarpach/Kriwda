@@ -1,12 +1,10 @@
 #include "../headerFiles/Player.h" 
 #include <iostream>
 
-Player::Player(const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
-    const int &money, const int &locationId, const int &dialogNodeId, const std::vector<int> &inventory,
-    const std::vector<int> &abilities, const std::array<int, 3>& chosenAbilities, const int &chosenWeaponId)
- : hp(hp), damage(damage), stamina(stamina), shield(shield), dodgeCount(dodgeCount), money(money), 
-   locationId(locationId), dialogNodeId(dialogNodeId), inventory(inventory), abilities(abilities), 
-   chosenAbilities(chosenAbilities), chosenWeaponId(chosenWeaponId) {}
+Player::Player(const PlayerDef& def)
+ : hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount), money(def.money), 
+   locationId(def.locationId), dialogNodeId(def.dialogNodeId), inventory(def.inventory), abilities(def.abilities), 
+   chosenAbilities(def.chosenAbilities), chosenWeaponId(def.chosenWeaponId) {}
 
 PlayerDef PlayerRegistry::getPlayer(){
     return player;

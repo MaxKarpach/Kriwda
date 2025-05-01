@@ -1,0 +1,45 @@
+все об игроке
+    int hp;
+    int damage;
+    int stamina;
+    int shield;
+    int dodgeCount;
+    int money;
+    int questId;
+    int locationId;
+    int dialogNodeId;
+    std::vector<int> inventory;
+    std::vector<int> abilities;
+    std::array<int, 3> chosenAbilities;
+    int chosenWeaponId;
+локации
+    int id;
+    std::string name;
+    std::vector<int> choices;
+    std::vector<int> enemies;
+враги
+    int id;
+    std::string name;
+    int hp;
+    int damage;
+    int stamina;
+    int shield;
+    int dodgeCount;
+    std::array<int, 3> abilities;
+    int chosenWeaponId;
+    int locationId;
+способности
+    int id;
+    std::string name;
+    char type;
+    int effectId;
+    int factor;
+предметы
+    int id;
+    std::string name;
+    char type;
+    int effectId;
+    int factor;
+эффекты
+    int id;
+    char type;

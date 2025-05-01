@@ -11,7 +11,7 @@ struct AbilityDef{
 
 class Ability {
 public:
-    Ability(const int &id, const std::string &name, const char &type, const int &effectId, const int &factor);
+    Ability(const AbilityDef& def);
 
     int getId() const { return id; }
     void setId(int value) { id = value; }

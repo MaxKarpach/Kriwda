@@ -11,7 +11,7 @@ struct ItemDef{
 
 class Item {
 public:
-    Item(const int &id, const std::string &name, const char &type, const int &effectId, const int &factor);
+    Item(const ItemDef& def);
 
     int getId() const { return id; }
     void setId(int value) { id = value; }

@@ -8,7 +8,6 @@ struct PlayerDef{
     int shield;
     int dodgeCount;
     int money;
-    int questId;
     int locationId;
     int dialogNodeId;
     std::vector<int> inventory;
@@ -19,9 +18,7 @@ struct PlayerDef{
 
 class Player {
 public:
-    Player(const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
-           const int &money, const int &locationId, const int &dialogNodeId, const std::vector<int> &inventory,
-           const std::vector<int> &abilities, const std::array<int, 3>& chosenAbilities, const int &chosenWeaponId);
+    Player(const PlayerDef& def);
 
     int getHp() const { return hp; }
     void setHp(int value) { hp = value; }
@@ -49,6 +46,49 @@ public:
 
     int getChosenWeaponId() const { return chosenWeaponId; }
     void setChosenWeaponId(int value) { chosenWeaponId = value; }
+
+    void showInventory(){
+        for (int i = 0; i < inventory.size(); i++){
+            std::cout << inventory[i] << std::endl;
+        }
+    }
+    void addItemToInventory(int itemId){
+        inventory.push_back(itemId);
+    }
+    void removeItemFromInventory(int itemId) {
+        auto it = std::find(inventory.begin(), inventory.end(), itemId);
+        if (it != inventory.end()) {
+            inventory.erase(it);
+        } 
+    }
+
+    void showAbilities(){
+        for (int i = 0; i < abilities.size(); i++){
+            std::cout << abilities[i] << std::endl;
+        }
+    }
+    void addAbility(int abilityId){
+        abilities.push_back(abilityId);
+    }
+    void removeAbility(int abilityId) {
+        auto it = std::find(abilities.begin(), abilities.end(), abilityId);
+        if (it != abilities.end()) {
+            abilities.erase(it);
+        } 
+    }
+    void showChosenAbilities(){
+        for (int i = 0; i < chosenAbilities.size(); i++){
+            std::cout << chosenAbilities[i] << std::endl;
+        }
+    }
+    void addChosenAbility(int abilityId, int chosenAbilityIndex){
+        if ((chosenAbilities.size()-1) >= chosenAbilityIndex){
+            chosenAbilities[chosenAbilityIndex] = abilityId;
+        }
+    }
+    void removeChosenAbility(int chosenAbilityIndex) {
+        chosenAbilities[chosenAbilityIndex] = 0;
+    }
 
 private:
     int hp;

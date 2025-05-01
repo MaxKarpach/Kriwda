@@ -3,10 +3,9 @@
 
 const int MAX_STRING_LEN = 20;
 
-Enemy::Enemy(const int& id, const std::string& name, const int &hp, const int &damage, const int &stamina, const int &shield, const int &dodgeCount,
-    const std::array<int, 3>& abilities, const int &chosenWeaponId, const int& locationId)
-: id(id), name(name), hp(hp), damage(damage), stamina(stamina), shield(shield), dodgeCount(dodgeCount),
-abilities(abilities), chosenWeaponId(chosenWeaponId),locationId(locationId) {}
+Enemy::Enemy(const EnemyDef& def)
+: id(def.id), name(def.name), hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount),
+abilities(def.abilities), chosenWeaponId(def.chosenWeaponId),locationId(def.locationId) {}
 
 EnemyDef EnemyRegistry::getEnemy(){
     return enemy;

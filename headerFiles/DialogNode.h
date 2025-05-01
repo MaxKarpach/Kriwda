@@ -11,8 +11,7 @@ struct DialogNodeDef{
 
 class DialogNode {
     public:
-        DialogNode(const int &id, const std::string &name, const std::string &text, const std::vector<int> &choices,
-             const int &dialogId);
+        DialogNode(const DialogNodeDef& def);
         int getId() const { return id; }
         void setId(int value) { id = value; }
 
@@ -27,6 +26,17 @@ class DialogNode {
 
         void addChoice(const int& choiceId) {
             choices.push_back(choiceId);
+        }
+        void showChoices(){
+            for (int i = 0; i < choices.size(); i++){
+                std::cout << choices[i] << std::endl;
+            }
+        }
+        void removeChoice(int choiceId) {
+            auto it = std::find(choices.begin(), choices.end(), choiceId);
+            if (it != choices.end()) {
+                choices.erase(it);
+            } 
         }
     private:
     int id;

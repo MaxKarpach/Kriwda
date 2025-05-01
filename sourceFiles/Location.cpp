@@ -3,8 +3,8 @@
 
 const int MAX_STRING_LEN = 20;
 
-Location::Location(const int& id, const std::string& name, const std::vector<int> &choices, const std::vector<int>& enemies)
-:id(id), name(name), choices(choices), enemies(enemies) {}
+Location::Location(const LocationDef& def)
+:id(def.id), name(def.name), choices(def.choices), enemies(def.enemies) {}
 
 LocationDef LocationRegistry::getLocation(){
     return location;

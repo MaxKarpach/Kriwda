@@ -3,8 +3,7 @@
 
 const int MAX_STRING_LEN = 255;
 
-DialogNode::DialogNode(const int &id, const std::string &name, const std::string &text, const std::vector<int> &choices, 
-    const int &dialogId):id(id), name(name), text(text), choices(choices), dialogId(dialogId){}
+DialogNode::DialogNode(const DialogNodeDef& def):id(def.id), name(def.name), text(def.text), choices(def.choices), dialogId(def.dialogId){}
 
 DialogNodeDef DialogNodeRegistry::getDialogNode(){
     return dialogNode;
@@ -13,7 +12,7 @@ DialogNodeDef DialogNodeRegistry::getDialogNode(){
 void DialogNodeRegistry::load(std::istream& is){
     DialogNodeDef dnd;
     is >> dnd.id;
-    is.ignore(); // <-- ВАЖНО! Очистить '\n' после считывания числа
+    is.ignore();
 
     char buf1[MAX_STRING_LEN + 1] = {0};
     is.getline(buf1, MAX_STRING_LEN);

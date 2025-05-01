@@ -8,7 +8,7 @@ struct DialogDef{
 
 class Dialog{
 public:
-    Dialog(const int &id, const int &currentNodeId);
+    Dialog(const DialogDef& def);
 
     int getId() const { return id; }
     void setId(int value) { id = value; }

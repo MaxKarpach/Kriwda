@@ -10,7 +10,7 @@ struct DialogChoiceDef{
 
 class DialogChoice {
     public:
-        DialogChoice(const int &id, const std::string &text, const int &nextNodeId,const int &nodeId);
+        DialogChoice(const DialogChoiceDef& def);
         int getId() const { return id; }
         void setId(int value) { id = value; }
 
