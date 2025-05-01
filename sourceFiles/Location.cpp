@@ -6,12 +6,15 @@ const int MAX_STRING_LEN = 20;
 Location::Location(const LocationDef& def)
 :id(def.id), name(def.name), choices(def.choices), enemies(def.enemies) {}
 
-LocationDef LocationRegistry::getLocation(){
-    return location;
+std::vector<LocationDef> LocationRegistry::getLocations(){
+    return locations;
 }
 
 void  LocationRegistry::load(std::istream& is){
-    LocationDef ld;
+    int locationsCount = 0;
+    is >> locationsCount;
+    for (int i = 0; i < locationsCount; i++){
+        LocationDef ld;
     is >> ld.id;
     char buf[MAX_STRING_LEN + 1] = {0};
     is.getline(buf, MAX_STRING_LEN);
@@ -32,5 +35,6 @@ void  LocationRegistry::load(std::istream& is){
         is >> enemyId;
         ld.enemies.push_back(enemyId);
     }
-    location = ld;
+    locations.push_back(ld);
+    }
 }

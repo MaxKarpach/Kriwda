@@ -33,8 +33,8 @@ class DialogChoice {
 class DialogChoiceRegistry{
     public:
     void load(std::istream& is);
-    DialogChoiceDef getDialogChoice();
+    std::vector<DialogChoiceDef> getDialogChoices();
 private:
-DialogChoiceDef dialogChoice;
+std::vector<DialogChoiceDef> dialogChoices;
 };
 #endif

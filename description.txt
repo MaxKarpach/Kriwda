@@ -5,18 +5,19 @@
     int shield;
     int dodgeCount;
     int money;
-    int questId;
     int locationId;
     int dialogNodeId;
     std::vector<int> inventory;
     std::vector<int> abilities;
     std::array<int, 3> chosenAbilities;
     int chosenWeaponId;
+кол-во локаций
 локации
     int id;
     std::string name;
     std::vector<int> choices;
     std::vector<int> enemies;
+кол-во врагов
 враги
     int id;
     std::string name;
@@ -28,18 +29,21 @@
     std::array<int, 3> abilities;
     int chosenWeaponId;
     int locationId;
+кол-во способностей
 способности
     int id;
     std::string name;
     char type;
     int effectId;
     int factor;
+кол-во предметов
 предметы
     int id;
     std::string name;
     char type;
     int effectId;
     int factor;
+кол-во эффектов
 эффекты
     int id;
     char type;

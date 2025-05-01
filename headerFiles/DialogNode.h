@@ -50,8 +50,8 @@ class DialogNode {
 class DialogNodeRegistry{
     public:
     void load(std::istream& is);
-    DialogNodeDef getDialogNode();
+    std::vector<DialogNodeDef> getDialogNodes();
 private:
-DialogNodeDef dialogNode;
+std::vector<DialogNodeDef> dialogNodes;
 };
 #endif

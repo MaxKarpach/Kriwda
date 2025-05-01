@@ -25,8 +25,8 @@ char type;
 class EffectRegistry{
     public:
     void load(std::istream& is);
-    EffectDef getEffect();
+    std::vector<EffectDef> getEffects();
 private:
-    EffectDef effect;
+    std::vector<EffectDef> effects;
 };
 #endif

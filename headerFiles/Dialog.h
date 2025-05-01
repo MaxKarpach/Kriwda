@@ -25,8 +25,8 @@ int currentNodeId;
 class DialogRegistry{
     public:
     void load(std::istream& is);
-    DialogDef getDialog();
+    std::vector<DialogDef> getDialogs();
 private:
-DialogDef dialog;
+std::vector<DialogDef> dialogs;
 };
 #endif

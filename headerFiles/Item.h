@@ -40,8 +40,8 @@ int factor;
 class ItemRegistry{
     public:
     void load(std::istream& is);
-    ItemDef getItem();
+    std::vector<ItemDef> getItems();
 private:
-    ItemDef item;
+    std::vector<ItemDef> items;
 };
 #endif

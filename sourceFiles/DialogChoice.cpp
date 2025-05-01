@@ -5,11 +5,14 @@ const int MAX_STRING_LEN = 255;
 
 DialogChoice::DialogChoice(const DialogChoiceDef& def):id(def.id), text(def.text), nextNodeId(def.nextNodeId), nodeId(def.nodeId){}
 
-DialogChoiceDef DialogChoiceRegistry::getDialogChoice(){
-    return dialogChoice;
+std::vector<DialogChoiceDef> DialogChoiceRegistry::getDialogChoices(){
+    return dialogChoices;
 }
 
 void DialogChoiceRegistry::load(std::istream& is){
+    int dialogChoicesCount = 0;
+    is >> dialogChoicesCount;
+    for (int i = 0; i < dialogChoicesCount; i++){
     DialogChoiceDef dcd;
     is >> dcd.id;
     char buf[MAX_STRING_LEN + 1] = {0};
@@ -19,5 +22,6 @@ void DialogChoiceRegistry::load(std::istream& is){
     dcd.text = buf;
     is >> dcd.nextNodeId;
     is >> dcd.nodeId;
-    dialogChoice = dcd;
+    dialogChoices.push_back(dcd);
+    }
 }

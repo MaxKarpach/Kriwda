@@ -59,8 +59,8 @@ std::vector<int> enemies;
 class LocationRegistry{
     public:
     void load(std::istream& is);
-    LocationDef getLocation();
+    std::vector<LocationDef> getLocations();
 private:
-    LocationDef location;
+    std::vector<LocationDef> locations;
 };
 #endif

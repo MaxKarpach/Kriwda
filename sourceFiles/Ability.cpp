@@ -6,12 +6,15 @@ const int MAX_STRING_LEN = 20;
 Ability::Ability(const AbilityDef& def)
 :id(def.id), name(def.name), type(def.type), effectId(def.effectId), factor(def.factor) {}
 
-AbilityDef AbilityRegistry::getAbility(){
-    return ability;
+std::vector<AbilityDef> AbilityRegistry::getAbilities(){
+    return abilities;
 }
 
 void AbilityRegistry::load(std::istream& is){
-    AbilityDef ad;
+    int abilitiesCount = 0;
+    is >> abilitiesCount;
+    for (int i = 0; i < abilitiesCount; i++){
+        AbilityDef ad;
     is >> ad.id;
     char buf[MAX_STRING_LEN + 1] = {0};
     is.getline(buf, MAX_STRING_LEN);
@@ -21,5 +24,6 @@ void AbilityRegistry::load(std::istream& is){
     is >> ad.type;
     is >> ad.effectId;
     is >> ad.factor;
-    ability = ad;
+    abilities.push_back(ad);
+    }
 }

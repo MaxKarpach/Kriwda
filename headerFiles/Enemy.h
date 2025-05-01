@@ -76,8 +76,8 @@ private:
 class EnemyRegistry{
     public:
     void load(std::istream& is);
-    EnemyDef getEnemy();
+    std::vector<EnemyDef> getEnemies();
 private:
-    EnemyDef enemy;
+    std::vector<EnemyDef> enemies;
 };
 #endif

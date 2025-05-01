@@ -16,8 +16,8 @@ int main(int argc, char* argv[]){
     std::ifstream input("data.txt");
     Game game;
     game.initNewGame();
-    // PlayerRegistry playerRegistry;
-    // playerRegistry.load(input);
-    // Player player(playerRegistry.getPlayer());
+    PlayerRegistry playerRegistry;
+    playerRegistry.load(input);
+    Player player(playerRegistry.getPlayer());
     return 0;
 }

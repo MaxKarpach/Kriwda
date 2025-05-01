@@ -4,8 +4,8 @@
 Dialog::Dialog(const DialogDef& def)
 :id(def.id), currentNodeId(def.currentNodeId){}
 
-DialogDef DialogRegistry::getDialog(){
-    return dialog;
+std::vector<DialogDef> DialogRegistry::getDialogs(){
+    return dialogs;
 }
 
 void Dialog::start(int& startNode) {
@@ -13,8 +13,12 @@ void Dialog::start(int& startNode) {
 }
 
 void DialogRegistry::load(std::istream& is){
-    DialogDef dd;
+    int dialogsCount = 0;
+    is >> dialogsCount;
+    for (int i = 0; i < dialogsCount; i++){
+        DialogDef dd;
     is >> dd.id;
     is >> dd.currentNodeId;
-    dialog = dd;
+    dialogs.push_back(dd);
+    }
 }

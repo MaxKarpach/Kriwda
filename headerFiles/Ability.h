@@ -40,8 +40,8 @@ int factor;
 class AbilityRegistry{
     public:
     void load(std::istream& is);
-    AbilityDef getAbility();
+    std::vector<AbilityDef> getAbilities();
 private:
-    AbilityDef ability;
+    std::vector<AbilityDef> abilities;
 };
 #endif
