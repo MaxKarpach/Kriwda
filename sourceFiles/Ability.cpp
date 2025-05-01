@@ -1,7 +1,7 @@
 #include "../headerFiles/Ability.h" 
 #include <iostream>
 
-const int MAX_STRING_LEN = 20;
+const int MAX_STRING_LEN = 60;
 
 Ability::Ability(const AbilityDef& def)
 :id(def.id), name(def.name), type(def.type), effectId(def.effectId), factor(def.factor) {}

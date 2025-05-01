@@ -2,7 +2,7 @@
 #include <iostream>
 #include <climits>
 
-const int MAX_STRING_LEN = 20;
+const int MAX_STRING_LEN = 60;
 
 Item::Item(const ItemDef& def)
 :id(def.id), name(def.name), type(def.type), effectId(def.effectId), factor(def.factor) {}
