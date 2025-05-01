@@ -33,6 +33,10 @@ public:
         } 
     }
 
+    std::vector<int> getChoices(){
+        return choices;
+    }
+
     void addEnemy(const int& enemyId) {
         enemies.push_back(enemyId);
     }

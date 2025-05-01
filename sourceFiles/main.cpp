@@ -11,11 +11,39 @@
 #include "../headerFiles/DialogNode.h" 
 #include "../headerFiles/DialogChoice.h" 
 #include "../headerFiles/Game.h" 
+Location* findLocationById(int locationId, std::vector<Location>& locations) {
+    for (auto& loc : locations) {
+        if (loc.getId() == locationId) {
+            return &loc;
+        }
+    }
+    return nullptr;
+}
+
+void move(Player& player, std::vector<Location>& locations){
+    while (true){
+        Location *currentLocation = findLocationById(player.getLocationId(), locations);
+        std::cout << "Ваше текущее местоположение: " << currentLocation->getName() << std::endl;
+        std::cout << "Вы можете пойти в следующие места: " << std::endl;
+        std::vector<Location*> nearlyLocations;
+        for (int i = 0; i < currentLocation->getChoices().size(); i++)
+        {
+            Location* nearlyLocation = findLocationById(currentLocation->getChoices()[i], locations);
+            nearlyLocations.push_back(nearlyLocation);
+            std::cout << i + 1 << ": " << nearlyLocation->getName() << std::endl;
+        }
+        int userChoice = 0;
+        std::cin >> userChoice;
+        if (userChoice <= currentLocation->getChoices().size() && userChoice > 0){
+            player.setLocationId(nearlyLocations[userChoice-1]->getId());
+        } else {
+            std::cout << "Такого варианта нет" << std::endl;
+        }
+    }
+}
 
 int main(int argc, char* argv[]){
     std::ifstream input("data.txt");
-    Game game;
-    game.initNewGame();
 
     PlayerRegistry playerRegistry;
     playerRegistry.load(input);
@@ -60,6 +88,9 @@ int main(int argc, char* argv[]){
     for (const EffectDef& def : effectDefs) {
         effects.push_back(Effect(def));
     }
-    
+
+    Game game;
+    game.initNewGame();
+    move(player, locations);
     return 0;
 }
