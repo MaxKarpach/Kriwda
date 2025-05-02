@@ -5,7 +5,7 @@ struct LocationDef{
     int id;
     std::string name;
     std::vector<int> choices;
-    std::vector<int> enemies;
+    int enemyId;
 };
 
 class Location{
@@ -17,6 +17,9 @@ public:
 
     std::string getName() const { return name; }
     void setName(std::string value) { name = value; }
+
+    int getEnemyId() const { return enemyId; }
+    void setEnemyId(int value) { enemyId = value; }
 
     void addChoice(const int& choiceId) {
         choices.push_back(choiceId);
@@ -37,26 +40,11 @@ public:
         return choices;
     }
 
-    void addEnemy(const int& enemyId) {
-        enemies.push_back(enemyId);
-    }
-    void showEnemies(){
-        for (int i = 0; i < enemies.size(); i++){
-            std::cout << enemies[i] << std::endl;
-        }
-    }
-    void removeEnemy(int enemyId) {
-        auto it = std::find(enemies.begin(), enemies.end(), enemyId);
-        if (it != enemies.end()) {
-            enemies.erase(it);
-        } 
-    }
-
 private:
 int id;
 std::string name;
 std::vector<int> choices;
-std::vector<int> enemies;
+int enemyId;
 };
 
 

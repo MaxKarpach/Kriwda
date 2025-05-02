@@ -29,17 +29,46 @@ void move(Player& player, std::vector<Location>& locations){
         for (int i = 0; i < currentLocation->getChoices().size(); i++)
         {
             Location* nearlyLocation = findLocationById(currentLocation->getChoices()[i], locations);
-            nearlyLocations.push_back(nearlyLocation);
-            std::cout << i + 1 << ": " << nearlyLocation->getName() << std::endl;
+            if (nearlyLocation) {
+                nearlyLocations.push_back(nearlyLocation);
+                std::cout << i + 1 << ": " << nearlyLocation->getName() << std::endl;
+            }
         }
+        std::cout << currentLocation->getChoices().size()+1 << ": Показать меню" << std::endl;
         int userChoice = 0;
         std::cin >> userChoice;
-        if (userChoice <= currentLocation->getChoices().size() && userChoice > 0){
+        if (userChoice == currentLocation->getChoices().size()+1){
+            return;
+        }
+        else if (userChoice <= currentLocation->getChoices().size() && userChoice > 0)
+        {
             player.setLocationId(nearlyLocations[userChoice-1]->getId());
-        } else {
+        }
+        else
+        {
             std::cout << "Такого варианта нет" << std::endl;
         }
     }
+}
+
+void showMenu(Player& player, std::vector<Location>& locations){
+    int userChoice = 0;
+    while (true)
+    {
+        std::cout << "Меню: " << std::endl;
+        std::cout << "1: Сменить локацию" << std::endl;
+        std::cin >> userChoice;
+
+        switch (userChoice)
+        {
+        case 1:
+            move(player, locations);
+            break;
+        default:
+            std::cout << "Неверный ввод" << std::endl;
+            return;
+        }
+        }
 }
 
 int main(int argc, char* argv[]){
@@ -91,6 +120,6 @@ int main(int argc, char* argv[]){
 
     Game game;
     game.initNewGame();
-    move(player, locations);
+    showMenu(player, locations);
     return 0;
 }
