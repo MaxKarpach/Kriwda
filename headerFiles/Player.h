@@ -14,6 +14,9 @@ struct PlayerDef{
     std::vector<int> abilities;
     std::array<int, 3> chosenAbilities;
     int chosenWeaponId;
+    bool isShieldOn;
+    bool isDodgeOn;
+    int staminaFactor;
 };
 
 class Player {
@@ -29,8 +32,17 @@ public:
     int getStamina() const { return stamina; }
     void setStamina(int value) { stamina = value; }
 
+    int getStaminaFactor() const { return staminaFactor; }
+    void setStaminaFactor(int value) { staminaFactor = value; }
+
     int getShield() const { return shield; }
     void setShield(int value) { shield = value; }
+
+    bool getIsShieldOn() const { return isShieldOn; }
+    void setIsShieldOn(bool value) { isShieldOn = value; }
+
+    bool getIsDodgeOn() const { return isDodgeOn; }
+    void setIsDodgeOn(bool value) { isDodgeOn = value; }
 
     int getDodgeCount() const { return dodgeCount; }
     void setDodgeCount(int value) { dodgeCount = value; }
@@ -90,6 +102,10 @@ public:
         chosenAbilities[chosenAbilityIndex] = 0;
     }
 
+    std::array<int, 3> getChosenAbilities(){
+        return chosenAbilities;
+    }
+
 private:
     int hp;
     int damage;
@@ -103,8 +119,10 @@ private:
     std::vector<int> abilities;
     std::array<int, 3> chosenAbilities;
     int chosenWeaponId;
+    bool isShieldOn;
+    bool isDodgeOn;
+    int staminaFactor;
 };
-
 
 class PlayerRegistry{
     public:

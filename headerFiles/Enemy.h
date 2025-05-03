@@ -12,6 +12,9 @@ struct EnemyDef{
     std::array<int, 3> abilities;
     int chosenWeaponId;
     int locationId;
+    bool isShieldOn;
+    bool isDodgeOn;
+    int staminaFactor;
 };
 
 class Enemy{
@@ -29,6 +32,12 @@ Enemy(const EnemyDef& def);
 
     int getDamage() const { return damage; }
     void setDamage(int value) { damage = value; }
+
+    bool getIsShieldOn() const { return isShieldOn; }
+    void setIsShieldOn(bool value) { isShieldOn = value; }
+
+    bool getIsDodgeOn() const { return isDodgeOn; }
+    void setIsDodgeOn(bool value) { isDodgeOn = value; }
 
     int getStamina() const { return stamina; }
     void setStamina(int value) { stamina = value; }
@@ -59,6 +68,10 @@ Enemy(const EnemyDef& def);
         abilities[abilityIndex] = 0;
     }
 
+    std::array<int, 3> getAbilities(){
+        return abilities;
+    }
+
 private:
     std::string name;
     int id;
@@ -70,6 +83,9 @@ private:
     std::array<int, 3> abilities;
     int chosenWeaponId;
     int locationId;
+    bool isShieldOn;
+    bool isDodgeOn;
+    int staminaFactor;
 };
 
 

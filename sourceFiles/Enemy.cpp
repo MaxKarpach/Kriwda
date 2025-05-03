@@ -5,7 +5,8 @@ const int MAX_STRING_LEN = 20;
 
 Enemy::Enemy(const EnemyDef& def)
 : id(def.id), name(def.name), hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount),
-abilities(def.abilities), chosenWeaponId(def.chosenWeaponId),locationId(def.locationId) {}
+abilities(def.abilities), chosenWeaponId(def.chosenWeaponId),locationId(def.locationId), isShieldOn(def.isShieldOn), 
+isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor) {}
 
 std::vector<EnemyDef> EnemyRegistry::getEnemies(){
     return enemies;
@@ -32,6 +33,9 @@ void EnemyRegistry::load(std::istream& is){
         is >> ed.abilities[2];
         is >> ed.chosenWeaponId;
         is >> ed.locationId;
+        is >> ed.isShieldOn;
+        is >> ed.isDodgeOn;
+        is >> ed.staminaFactor;
         enemies.push_back(ed);
     }
 }

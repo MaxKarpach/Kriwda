@@ -4,7 +4,8 @@
 Player::Player(const PlayerDef& def)
  : hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount), money(def.money), 
    locationId(def.locationId), dialogNodeId(def.dialogNodeId), inventory(def.inventory), abilities(def.abilities), 
-   chosenAbilities(def.chosenAbilities), chosenWeaponId(def.chosenWeaponId) {}
+   chosenAbilities(def.chosenAbilities), chosenWeaponId(def.chosenWeaponId), isShieldOn(def.isShieldOn), 
+   isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor) {}
 
 PlayerDef PlayerRegistry::getPlayer(){
     return player;
@@ -38,5 +39,8 @@ void PlayerRegistry::load(std::istream& is){
     is >> pd.chosenAbilities[1];
     is >> pd.chosenAbilities[2];
     is >> pd.chosenWeaponId;
+    is >> pd.isShieldOn;
+    is >> pd.isDodgeOn;
+    is >> pd.staminaFactor;
     player = pd;
 }

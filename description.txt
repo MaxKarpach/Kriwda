@@ -11,6 +11,9 @@
     std::vector<int> abilities;
     std::array<int, 3> chosenAbilities;
     int chosenWeaponId;
+    bool isShieldOn;
+    bool isDodgeOn;
+    int staminaFactor;
 кол-во локаций
 локации
     int id;
@@ -29,6 +32,9 @@
     std::array<int, 3> abilities;
     int chosenWeaponId;
     int locationId;
+    bool isShieldOn;
+    bool isDodgeOn;
+    int staminaFactor;
 кол-во способностей
 способности
     int id;
