@@ -17,6 +17,11 @@ struct PlayerDef{
     bool isShieldOn;
     bool isDodgeOn;
     int staminaFactor;
+    int shieldFactor;
+    int maxDodgeCount;
+    int maxStamina;
+    int maxShield;
+    int staminaRecoveryFactor;
 };
 
 class Player {
@@ -32,11 +37,23 @@ public:
     int getStamina() const { return stamina; }
     void setStamina(int value) { stamina = value; }
 
+    int getMaxStamina() const { return maxStamina; }
+    void setMaxStamina(int value) { maxStamina = value; }
+
+    int getMaxShield() const { return maxShield; }
+    void setMaxShield(int value) { maxShield = value; }
+
     int getStaminaFactor() const { return staminaFactor; }
     void setStaminaFactor(int value) { staminaFactor = value; }
 
+    int getStaminaRecoveryFactor() const { return staminaRecoveryFactor; }
+    void setStaminaRecoveryFactor(int value) { staminaRecoveryFactor = value; }
+
     int getShield() const { return shield; }
     void setShield(int value) { shield = value; }
+
+    int getShieldFactor() const { return shieldFactor; }
+    void setShieldFactor(int value) { shieldFactor = value; }
 
     bool getIsShieldOn() const { return isShieldOn; }
     void setIsShieldOn(bool value) { isShieldOn = value; }
@@ -45,7 +62,10 @@ public:
     void setIsDodgeOn(bool value) { isDodgeOn = value; }
 
     int getDodgeCount() const { return dodgeCount; }
-    void setDodgeCount(int value) { dodgeCount = value; }
+    void setDodgeCount(int value) { dodgeCount = value;}
+
+     int getMaxDodgeCount() const { return maxDodgeCount; }
+     void setMaxDodgeCount(int value) {maxDodgeCount = value;}
 
     int getMoney() const { return money; }
     void setMoney(int value) { money = value; }
@@ -122,6 +142,11 @@ private:
     bool isShieldOn;
     bool isDodgeOn;
     int staminaFactor;
+    int shieldFactor;
+    int maxDodgeCount;
+    int maxStamina;
+    int maxShield;
+    int staminaRecoveryFactor;
 };
 
 class PlayerRegistry{

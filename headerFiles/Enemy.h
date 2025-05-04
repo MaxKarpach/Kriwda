@@ -15,6 +15,11 @@ struct EnemyDef{
     bool isShieldOn;
     bool isDodgeOn;
     int staminaFactor;
+    int shieldFactor;
+    int maxDodgeCount;
+    int maxStamina;
+    int maxShield;
+    int staminaRecoveryFactor;
 };
 
 class Enemy{
@@ -42,11 +47,20 @@ Enemy(const EnemyDef& def);
     int getStamina() const { return stamina; }
     void setStamina(int value) { stamina = value; }
 
+    int getStaminaFactor() const { return staminaFactor; }
+    void setStaminaFactor(int value) { staminaFactor = value; }
+
+    int getShieldFactor() const { return shieldFactor; }
+    void setShieldFactor(int value) { shieldFactor = value; }
+
     int getShield() const { return shield; }
     void setShield(int value) { shield = value; }
 
     int getDodgeCount() const { return dodgeCount; }
     void setDodgeCount(int value) { dodgeCount = value; }
+
+    int getStaminaRecoveryFactor() const { return staminaRecoveryFactor; }
+    void setStaminaRecoveryFactor(int value) { staminaRecoveryFactor = value; }
 
     int getChosenWeaponId() const { return chosenWeaponId; }
     void setChosenWeaponId(int value) { chosenWeaponId = value; }
@@ -72,6 +86,15 @@ Enemy(const EnemyDef& def);
         return abilities;
     }
 
+    int getMaxStamina() const { return maxStamina; }
+    void setMaxStamina(int value) { maxStamina = value; }
+
+    int getMaxShield() const { return maxShield; }
+    void setMaxShield(int value) { maxShield = value; }
+
+    int getMaxDodgeCount() const { return maxDodgeCount; }
+    void setMaxDodgeCount(int value) {maxDodgeCount = value;}
+
 private:
     std::string name;
     int id;
@@ -86,6 +109,11 @@ private:
     bool isShieldOn;
     bool isDodgeOn;
     int staminaFactor;
+    int shieldFactor;
+    int maxDodgeCount;
+    int maxStamina;
+    int maxShield;
+    int staminaRecoveryFactor;
 };
 
 

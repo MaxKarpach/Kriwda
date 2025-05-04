@@ -69,22 +69,52 @@ void move(Player& player, std::vector<Location>& locations){
     }
 }
 
-void abilityEffect(Ability* ability, Enemy* enemy, Player& player){
+void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
     char type = ability->getType();
-    switch (type)
-    {
-    case 'p':
-        break; 
-    case 'd':
-        enemy->setHp(enemy->getHp() - ability->getFactor());
-        break;
-    case 'h':
-        player.setHp(player.getHp() + ability->getFactor());
-        break;
-    case 'n':
-        break; 
-    default:
-        break;
+    if (flag){
+        switch (type)
+        {
+        case 'p':
+            break; 
+        case 'd':
+            if (enemy->getIsDodgeOn()){
+                break;
+            } else if (enemy->getIsShieldOn()){
+            enemy->setShield(enemy->getShield() - ability->getFactor());
+            } else {
+            enemy->setHp(enemy->getHp() - ability->getFactor());
+            }
+            break;
+        case 'h':
+            player.setHp(player.getHp() + ability->getFactor());
+            break;
+        case 'n':
+            break; 
+        default:
+            break;
+        }
+    } else {
+        switch (type)
+        {
+        case 'p':
+            break; 
+        case 'd':
+            if (player.getIsDodgeOn()){
+                break;
+            } else if (player.getIsShieldOn()){
+                player.setShield(player.getShield() - ability->getFactor());
+            } else {
+                player.setHp(player.getHp() - ability->getFactor());
+            }
+            break;
+        case 'h':
+            enemy->setHp(enemy->getHp() + ability->getFactor());
+            break;
+        case 'n':
+            break; 
+        default:
+            break;
+        }
     }
 }
 
@@ -98,58 +128,163 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
     Ability *enemy3Ability = findAbilityById(enemy->getAbilities()[2], abilities);
     int movesCount = 6;
     std::cout << "Ваш враг: " << enemy->getName() << std::endl;
-    std::cout << "Введите 6 цифр" << std::endl;
-    std::cout << "1: Атака" << std::endl;
-    std::cout << "2: Защита" << std::endl;
-    std::cout << "3: Уклонение" << std::endl;
-    std::cout << "4: " << player1Ability->getName() << std::endl;
-    std::cout << "5: " << player2Ability->getName() << std::endl;
-    std::cout << "6: " << player3Ability->getName() << std::endl;
-    int userChoice = 0;
-    std::array<int, 6> playerMovesValues;
-    std::array<int, 6> enemyMovesValues;
-    for (int i = 0; i < movesCount; i++){
-        std::cin >> playerMovesValues[i];
-        enemyMovesValues[i] = rand() % 6 + 1;
-    }
     do {
-        for (int i = 0; i < movesCount; i++){
-            switch (playerMovesValues[i])
+        std::cout << "Введите" << std::endl;
+        std::cout << "1: Атака" << std::endl;
+        std::cout << "2: Защита" << std::endl;
+        std::cout << "3: Уклонение" << std::endl;
+        std::cout << "4: " << player1Ability->getName() << std::endl;
+        std::cout << "5: " << player2Ability->getName() << std::endl;
+        std::cout << "6: " << player3Ability->getName() << std::endl;
+        int userChoice = 0;
+        int enemyChoice = rand() % 6 + 1;
+        std::cin >> userChoice;
+        if (userChoice == 1 && enemyChoice == 2 && enemy->getShield() > 0 && player.getStamina() > 0){
+            enemy->setIsShieldOn(1);
+            enemy->setShield(enemy->getShield() - player.getDamage());
+            player.setStamina(player.getStamina() - player.getStaminaFactor());
+            if (enemy->getShield() > 0){
+                std::cout << "Враг поставил блок" << std::endl;
+                std::cout << "Вы ударили в блок" << std::endl;
+            } else {
+                std::cout << "Вы пробили щит" << std::endl;
+                enemy->setHp(enemy->getHp() + enemy->getShield());
+            }
+        } else if (userChoice == 1 && enemyChoice == 3 && enemy->getDodgeCount() > 0 && player.getStamina() > 0){
+            enemy->setIsDodgeOn(1);
+            enemy->setDodgeCount(enemy->getDodgeCount()-1);
+            std::cout << "Враг уклонился" << std::endl;
+            player.setStamina(player.getStamina() - player.getStaminaFactor());
+            std::cout << "Вы промахнулись" << std::endl;
+        } else if (userChoice == 2 && enemyChoice == 1 && player.getShield() > 0 && enemy->getStamina() > 0){
+            player.setIsShieldOn(1);
+            player.setShield(player.getShield() - enemy->getDamage());
+            enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
+            if (enemy->getShield() > 0){
+                std::cout << "Вы поставили блок" << std::endl;
+                std::cout << "Враг ударил в блок" << std::endl;
+            } else {
+                std::cout << "Враг пробил щит" << std::endl;
+                player.setHp(player.getHp() + player.getShield());
+            }
+        } else if (userChoice == 3 && enemyChoice == 1 && player.getDodgeCount() > 0 && enemy->getStamina() > 0) {
+            player.setIsDodgeOn(1);
+            player.setDodgeCount(player.getDodgeCount()-1);
+            std::cout << "Вы уклонились" << std::endl;
+            enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
+            std::cout << "Враг промахнулся" << std::endl;
+        } else {
+            switch (userChoice)
             {
             case 1:
-                if (player.getStamina() > 0){
+                if (player.getStamina() > 0)
+                {
                     player.setStamina(player.getStamina() - player.getStaminaFactor());
-                    if (enemy->getIsDodgeOn()){
-                        break;
-                    } else if (enemy->getIsShieldOn()){
-                        enemy->setShield(enemy->getShield() - player.getDamage());
-                    } else {
-                        enemy->setHp(enemy->getHp() - player.getDamage());
-                    }
+                    std::cout << "Вы попали" << std::endl;
+                    enemy->setHp(enemy->getHp() - player.getDamage());
                 }
                 break;
             case 2:
-                player.setIsShieldOn(1);
+                if (player.getShield() > 0)
+                {
+                    player.setIsShieldOn(1);
+                    std::cout << "Вы поставили блок" << std::endl;
+                }
                 break;
             case 3:
-                player.setIsDodgeOn(1);
+                if (player.getDodgeCount() > 0)
+                {
+                    std::cout << "Вы уклонились" << std::endl;
+                    player.setIsDodgeOn(1);
+                    player.setDodgeCount(player.getDodgeCount() - 1);
+                }
                 break;
             case 4:
-                abilityEffect(player1Ability, enemy, player);
+                abilityEffect(player1Ability, enemy, player, 1);
+                std::cout << "Вы использовали способность " << player1Ability->getName() << std::endl;
                 break;
             case 5:
-                abilityEffect(player2Ability, enemy, player);
+                abilityEffect(player2Ability, enemy, player, 1);
+                std::cout << "Вы использовали способность " << player2Ability->getName() << std::endl;
                 break;
             case 6:
-                abilityEffect(player3Ability, enemy, player); 
+                abilityEffect(player3Ability, enemy, player, 1);
+                std::cout << "Вы использовали способность " << player3Ability->getName() << std::endl;
                 break;
             default:
                 break;
             }
+            switch (enemyChoice)
+            {
+                case 1:
+                    if (enemy->getStamina() > 0){
+                        enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
+                            player.setHp(player.getHp() - enemy->getDamage());
+                            std::cout << "Враг попал" << std::endl;
+                    }
+                    break;
+                case 2:
+                    if (enemy->getShield() > 0){
+                        enemy->setIsShieldOn(1);
+                        std::cout << "Враг поставил блок" << std::endl;
+                    }
+                    break;
+                case 3:
+                    if (enemy->getDodgeCount() > 0){
+                        enemy->setIsDodgeOn(1);
+                        enemy->setDodgeCount(enemy->getDodgeCount()-1);
+                        std::cout << "Враг уклонился" << std::endl;
+                    }
+                    break;
+                case 4:
+                    abilityEffect(enemy1Ability, enemy, player, 0);
+                    std::cout << "Враг использовал способность " << enemy1Ability->getName() << std::endl;
+                    break;
+                case 5:
+                    abilityEffect(enemy2Ability, enemy, player, 0);
+                    std::cout << "Враг использовал способность " << enemy2Ability->getName() << std::endl;
+                    break;
+                case 6:
+                    abilityEffect(enemy3Ability, enemy, player, 0); 
+                    std::cout << "Враг использовал способность " << enemy3Ability->getName() << std::endl;
+                    break;
+                default:
+                    break;
+                }
         }
-        player.setIsShieldOn(0);
-        player.setIsDodgeOn(0);
-    } while (enemy->getHp() <= 0);
+            if (enemy->getDodgeCount() != enemy->getMaxDodgeCount()){
+                enemy->setDodgeCount(enemy->getDodgeCount()+1);
+            }
+            enemy->setIsShieldOn(0);
+            enemy->setIsDodgeOn(0);
+            if (enemy->getStamina() + enemy->getStaminaRecoveryFactor() < enemy->getMaxStamina()){
+                enemy->setStamina(enemy->getStamina() + enemy->getStaminaRecoveryFactor());
+            }
+            if (enemy->getShield() + enemy->getShieldFactor() < enemy->getMaxShield()){
+                enemy->setShield(enemy->getShield() + enemy->getShieldFactor());
+            }
+            if (player.getDodgeCount() != player.getMaxDodgeCount()){
+                player.setDodgeCount(player.getDodgeCount()+1);
+            }
+            player.setIsShieldOn(0);
+            player.setIsDodgeOn(0);
+            if (player.getStamina() + player.getStaminaRecoveryFactor() < player.getMaxStamina()){
+                player.setStamina(player.getStamina() + player.getStaminaRecoveryFactor());
+            }
+            if (player.getShield() + player.getShieldFactor() < player.getMaxShield()){
+                player.setShield(player.getShield() + player.getShieldFactor());
+            }
+        std::cout << "Здоровье игрока: " << player.getHp() << std::endl;
+        std::cout << "Щит игрока: " << player.getShield() << std::endl;
+        std::cout << "Выносливость игрока: " << player.getStamina() << std::endl;
+        std::cout << "Уклонения игрока: " << player.getDodgeCount() << std::endl;
+        std::cout << "Здоровье врага: " << enemy->getHp() << std::endl;
+    } while (enemy->getHp() > 0 && player.getHp() >0);
+    if (enemy->getHp() <= 0){
+        std::cout << "Вы победили" << std::endl;
+    } else if (player.getHp() <= 0){
+        std::cout << "Вы проиграли" << std::endl;
+    }
 }
 
 void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities){
