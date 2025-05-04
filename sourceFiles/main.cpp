@@ -274,17 +274,19 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
             if (player.getShield() + player.getShieldFactor() < player.getMaxShield()){
                 player.setShield(player.getShield() + player.getShieldFactor());
             }
-        std::cout << "Здоровье игрока: " << player.getHp() << std::endl;
-        std::cout << "Щит игрока: " << player.getShield() << std::endl;
-        std::cout << "Выносливость игрока: " << player.getStamina() << std::endl;
-        std::cout << "Уклонения игрока: " << player.getDodgeCount() << std::endl;
-        std::cout << "Здоровье врага: " << enemy->getHp() << std::endl;
+        if (enemy->getHp() <= 0){
+                std::cout << "Вы победили" << std::endl;
+        } else if (player.getHp() <= 0){
+                std::cout << "Вы проиграли" << std::endl;
+        } else {
+            std::cout << "Здоровье игрока: " << player.getHp() << std::endl;
+            std::cout << "Щит игрока: " << player.getShield() << std::endl;
+            std::cout << "Выносливость игрока: " << player.getStamina() << std::endl;
+            std::cout << "Уклонения игрока: " << player.getDodgeCount() << std::endl;
+            std::cout << "Здоровье врага: " << enemy->getHp() << std::endl;
+        }
+        
     } while (enemy->getHp() > 0 && player.getHp() >0);
-    if (enemy->getHp() <= 0){
-        std::cout << "Вы победили" << std::endl;
-    } else if (player.getHp() <= 0){
-        std::cout << "Вы проиграли" << std::endl;
-    }
 }
 
 void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities){

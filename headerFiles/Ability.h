@@ -7,6 +7,7 @@ struct AbilityDef{
     char type;
     int effectId;
     int factor;
+    int movesCount;
 };
 
 class Ability {
@@ -28,14 +29,16 @@ public:
     int getFactor() const { return factor; }
     void setFactor(int value) { factor = value; }
 
-private:
-int id;
-std::string name;
-char type;
-int effectId;
-int factor;
-};
+    int getMovesCount() const { return movesCount; }
+    void setMovesCount(int value){movesCount = value;}
 
+    private : int id;
+    std::string name;
+    char type;
+    int effectId;
+    int factor;
+    int movesCount;
+};
 
 class AbilityRegistry{
     public:

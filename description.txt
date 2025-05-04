@@ -52,6 +52,7 @@
     char type;
     int effectId;
     int factor;
+    int movesCount;
 кол-во предметов
 предметы
     int id;
