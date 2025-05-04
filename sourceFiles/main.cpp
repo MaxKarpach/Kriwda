@@ -126,9 +126,12 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
     Ability *enemy1Ability = findAbilityById(enemy->getAbilities()[0], abilities);
     Ability *enemy2Ability = findAbilityById(enemy->getAbilities()[1], abilities);
     Ability *enemy3Ability = findAbilityById(enemy->getAbilities()[2], abilities);
-    int movesCount = 6;
+    std::cout << enemy1Ability->getName() << std::endl;
+    std::cout << enemy2Ability->getName() << std::endl;
+    std::cout << enemy3Ability->getName() << std::endl;
     std::cout << "Ваш враг: " << enemy->getName() << std::endl;
-    do {
+    do
+    {
         std::cout << "Введите" << std::endl;
         std::cout << "1: Атака" << std::endl;
         std::cout << "2: Защита" << std::endl;
@@ -200,18 +203,28 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
                 }
                 break;
             case 4:
-                abilityEffect(player1Ability, enemy, player, 1);
-                std::cout << "Вы использовали способность " << player1Ability->getName() << std::endl;
-                break;
+                if (player1Ability->getMovesCount() == player1Ability->getMaxMovesCount()){
+                    abilityEffect(player1Ability, enemy, player, 1);
+                    std::cout << "Вы использовали способность " << player1Ability->getName() << std::endl;
+                    player1Ability->setMovesCount(player1Ability->getMovesCount() - 1);
+                    break;
+                }
             case 5:
+            if (player2Ability->getMovesCount() == player2Ability->getMaxMovesCount()){
                 abilityEffect(player2Ability, enemy, player, 1);
                 std::cout << "Вы использовали способность " << player2Ability->getName() << std::endl;
+                player2Ability->setMovesCount(player2Ability->getMovesCount() - 1);
                 break;
+            }
             case 6:
+            if (player3Ability->getMovesCount() == player3Ability->getMaxMovesCount()){
                 abilityEffect(player3Ability, enemy, player, 1);
                 std::cout << "Вы использовали способность " << player3Ability->getName() << std::endl;
+                player3Ability->setMovesCount(player3Ability->getMovesCount() - 1);
                 break;
+            }
             default:
+                std::cout << "Такой опции нет" << std::endl;
                 break;
             }
             switch (enemyChoice)
@@ -236,18 +249,27 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
                         std::cout << "Враг уклонился" << std::endl;
                     }
                     break;
-                case 4:
-                    abilityEffect(enemy1Ability, enemy, player, 0);
-                    std::cout << "Враг использовал способность " << enemy1Ability->getName() << std::endl;
-                    break;
+                    case 4:
+                    if (enemy1Ability->getMovesCount() == enemy1Ability->getMaxMovesCount()){
+                        abilityEffect(enemy1Ability, enemy, player, 0);
+                        std::cout << "Враг использовали способность " << enemy1Ability->getName() << std::endl;
+                        enemy1Ability->setMovesCount(enemy1Ability->getMovesCount() - 1);
+                        break;
+                    }
                 case 5:
+                if (enemy2Ability->getMovesCount() == enemy2Ability->getMaxMovesCount()){
                     abilityEffect(enemy2Ability, enemy, player, 0);
                     std::cout << "Враг использовал способность " << enemy2Ability->getName() << std::endl;
+                    enemy2Ability->setMovesCount(enemy2Ability->getMovesCount() - 1);
                     break;
+                }
                 case 6:
-                    abilityEffect(enemy3Ability, enemy, player, 0); 
+                if (enemy3Ability->getMovesCount() == enemy3Ability->getMaxMovesCount()){
+                    abilityEffect(enemy3Ability, enemy, player, 0);
                     std::cout << "Враг использовал способность " << enemy3Ability->getName() << std::endl;
+                    enemy3Ability->setMovesCount(enemy3Ability->getMovesCount() - 1);
                     break;
+                }
                 default:
                     break;
                 }
@@ -257,36 +279,95 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
             }
             enemy->setIsShieldOn(0);
             enemy->setIsDodgeOn(0);
-            if (enemy->getStamina() + enemy->getStaminaRecoveryFactor() < enemy->getMaxStamina()){
+            if (enemy->getStamina() + enemy->getStaminaFactor() < enemy->getMaxStamina()){
                 enemy->setStamina(enemy->getStamina() + enemy->getStaminaRecoveryFactor());
             }
             if (enemy->getShield() + enemy->getShieldFactor() < enemy->getMaxShield()){
                 enemy->setShield(enemy->getShield() + enemy->getShieldFactor());
+            }
+            if (enemy1Ability->getMaxMovesCount() != enemy1Ability->getMovesCount()){
+                if (enemy1Ability->getMovesCount() == -1){
+                    enemy1Ability->setMovesCount(enemy1Ability->getMaxMovesCount());
+                } else {
+                    enemy1Ability->setMovesCount(enemy1Ability->getMovesCount() - 1);
+                }
+            }
+            if (enemy2Ability->getMaxMovesCount() != enemy2Ability->getMovesCount()){
+                if (enemy2Ability->getMovesCount() == -1){
+                    enemy2Ability->setMovesCount(enemy2Ability->getMaxMovesCount());
+                } else {
+                    enemy2Ability->setMovesCount(enemy2Ability->getMovesCount() - 1);
+                }
+            }
+            if (enemy3Ability->getMaxMovesCount() != enemy3Ability->getMovesCount()){
+                if (enemy3Ability->getMovesCount() == -1){
+                    enemy3Ability->setMovesCount(enemy3Ability->getMaxMovesCount());
+                } else {
+                    enemy3Ability->setMovesCount(enemy3Ability->getMovesCount() - 1);
+                }
             }
             if (player.getDodgeCount() != player.getMaxDodgeCount()){
                 player.setDodgeCount(player.getDodgeCount()+1);
             }
             player.setIsShieldOn(0);
             player.setIsDodgeOn(0);
-            if (player.getStamina() + player.getStaminaRecoveryFactor() < player.getMaxStamina()){
+            if (player.getStamina() + player.getStaminaFactor() < player.getMaxStamina()){
                 player.setStamina(player.getStamina() + player.getStaminaRecoveryFactor());
             }
             if (player.getShield() + player.getShieldFactor() < player.getMaxShield()){
                 player.setShield(player.getShield() + player.getShieldFactor());
             }
-        if (enemy->getHp() <= 0){
+            if (player1Ability->getMaxMovesCount() != player1Ability->getMovesCount()){
+                if (player1Ability->getMovesCount() == -1){
+                    player1Ability->setMovesCount(player1Ability->getMaxMovesCount());
+                } else {
+                    player1Ability->setMovesCount(player1Ability->getMovesCount() - 1);
+                }
+            }
+            if (player2Ability->getMaxMovesCount() != player2Ability->getMovesCount()){
+                if (player2Ability->getMovesCount() == -1){
+                    player2Ability->setMovesCount(player2Ability->getMaxMovesCount());
+                } else {
+                    player2Ability->setMovesCount(player2Ability->getMovesCount() - 1);
+                }
+            }
+            if (player3Ability->getMaxMovesCount() != player3Ability->getMovesCount()){
+                if (player3Ability->getMovesCount() == -1){
+                    player3Ability->setMovesCount(player3Ability->getMaxMovesCount());
+                } else {
+                    player3Ability->setMovesCount(player3Ability->getMovesCount() - 1);
+                }
+            }
+            if (enemy->getHp() <= 0)
+            {
                 std::cout << "Вы победили" << std::endl;
-        } else if (player.getHp() <= 0){
+            }
+            else if (player.getHp() <= 0)
+            {
                 std::cout << "Вы проиграли" << std::endl;
-        } else {
-            std::cout << "Здоровье игрока: " << player.getHp() << std::endl;
-            std::cout << "Щит игрока: " << player.getShield() << std::endl;
-            std::cout << "Выносливость игрока: " << player.getStamina() << std::endl;
-            std::cout << "Уклонения игрока: " << player.getDodgeCount() << std::endl;
-            std::cout << "Здоровье врага: " << enemy->getHp() << std::endl;
-        }
-        
-    } while (enemy->getHp() > 0 && player.getHp() >0);
+            }
+            else
+            {
+                std::cout << "Здоровье игрока: " << player.getHp() << std::endl;
+                std::cout << "Щит игрока: " << player.getShield() << std::endl;
+                std::cout << "Выносливость игрока: " << player.getStamina() << std::endl;
+                std::cout << "Уклонения игрока: " << player.getDodgeCount() << std::endl;
+                std::cout << "Здоровье врага: " << enemy->getHp() << std::endl;
+                if (player1Ability->getMaxMovesCount() != player1Ability->getMovesCount())
+                {
+                    std::cout << "До возможности использовать способность " << player1Ability->getName() << " осталось " << player1Ability->getMovesCount() + 2 << " хода(ов)" << std::endl;
+                }
+                if (player2Ability->getMaxMovesCount() != player2Ability->getMovesCount())
+                {
+                    std::cout << "До возможности использовать способность " << player2Ability->getName() << " осталось " << player2Ability->getMovesCount() + 2 << " хода(ов)" << std::endl;
+                }
+                if (player3Ability->getMaxMovesCount() != player3Ability->getMovesCount())
+                {
+                    std::cout << "До возможности использовать способность " << player3Ability->getName() << " осталось " << player3Ability->getMovesCount() + 2 << " хода(ов)" << std::endl;
+                }
+            }
+
+    } while (enemy->getHp() > 0 && player.getHp() > 0);
 }
 
 void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities){

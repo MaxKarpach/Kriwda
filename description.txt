@@ -53,6 +53,7 @@
     int effectId;
     int factor;
     int movesCount;
+    int maxMovesCount;
 кол-во предметов
 предметы
     int id;

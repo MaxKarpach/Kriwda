@@ -8,6 +8,7 @@ struct AbilityDef{
     int effectId;
     int factor;
     int movesCount;
+    int maxMovesCount;
 };
 
 class Ability {
@@ -32,12 +33,16 @@ public:
     int getMovesCount() const { return movesCount; }
     void setMovesCount(int value){movesCount = value;}
 
+    int getMaxMovesCount() const { return maxMovesCount; }
+    void setMaxMovesCount(int value){maxMovesCount = value;}
+
     private : int id;
     std::string name;
     char type;
     int effectId;
     int factor;
     int movesCount;
+    int maxMovesCount;
 };
 
 class AbilityRegistry{

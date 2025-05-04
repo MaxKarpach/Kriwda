@@ -5,7 +5,7 @@ const int MAX_STRING_LEN = 60;
 
 Ability::Ability(const AbilityDef& def)
 :id(def.id), name(def.name), type(def.type), effectId(def.effectId), factor(def.factor),
-movesCount(def.movesCount) {}
+movesCount(def.movesCount),maxMovesCount(def.maxMovesCount)  {}
 
 std::vector<AbilityDef> AbilityRegistry::getAbilities(){
     return abilities;
@@ -26,6 +26,7 @@ void AbilityRegistry::load(std::istream& is){
     is >> ad.effectId;
     is >> ad.factor;
     is >> ad.movesCount;
+    is >> ad.maxMovesCount;
     abilities.push_back(ad);
     }
 }
