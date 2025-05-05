@@ -79,9 +79,12 @@ void move(Player& player, std::vector<Location>& locations){
     }
 }
 
-void showInventory(std::vector<int>& inventory, std::vector<Item>& items){
-    for (int i = 0; i < inventory.size();i++){
-        std::cout << i+1 << ": " << findItemById(inventory[i], items)->getName() << std::endl;
+void showInventory(std::vector<int>& inventory, std::vector<Item>& items) {
+    for (int i = 0; i < inventory.size(); i++) {
+        Item* item = findItemById(inventory[i], items);
+        if (item != nullptr) {
+            std::cout << i + 1 << ": " << item->getName() << std::endl;
+        } 
     }
 }
 
@@ -452,6 +455,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
     {
         int enemyId = findLocationById(player.getLocationId(), locations)->getEnemyId();
         std::vector<int> inventory = player.getInventory();
+        std::vector<int> locationItems = findLocationById(player.getLocationId(), locations)->getItems(); 
         std::cout << "Меню: " << std::endl;
         std::cout << "1: Сменить локацию" << std::endl;
         std::cout << "2: Показать инвертарь" << std::endl;

@@ -25,6 +25,7 @@
     std::string name;
     std::vector<int> choices;
     int enemyId;
+    std::vector<int> items;
 кол-во врагов
 враги
     int id;

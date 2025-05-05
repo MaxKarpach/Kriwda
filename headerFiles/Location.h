@@ -6,6 +6,7 @@ struct LocationDef{
     std::string name;
     std::vector<int> choices;
     int enemyId;
+    std::vector<int> items;
 };
 
 class Location{
@@ -14,6 +15,8 @@ public:
 
     int getId() const { return id; }
     void setId(int value) { id = value; }
+
+    std::vector<int> getItems() const { return items; }
 
     std::string getName() const { return name; }
     void setName(std::string value) { name = value; }
@@ -45,8 +48,8 @@ int id;
 std::string name;
 std::vector<int> choices;
 int enemyId;
+std::vector<int>items;
 };
-
 
 class LocationRegistry{
     public:
