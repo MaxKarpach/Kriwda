@@ -47,6 +47,39 @@ Item* findItemById(int itemId, std::vector<Item>& items) {
     return nullptr;
 }
 
+void loot(std::vector<int>& locationItems, std::vector<Item>& items, std::vector<int>& playerInventory) {
+    while (!locationItems.empty()) {
+        std::cout << "Предметы на локации:" << std::endl;
+        std::cout << "0: Выйти" << std::endl;
+        for (int i = 0; i < locationItems.size(); ++i) {
+            Item* item = findItemById(locationItems[i], items);
+            if (item) {
+                std::cout << i + 1 << ": " << item->getName() << std::endl;
+            }
+        }
+
+        int choice = -1;
+        std::cout << "Выберите предмет для подбора: " << std::endl;
+        std::cin >> choice;
+
+        if (choice == 0) {
+            break;
+        }
+
+        if (choice > 0 && choice <= locationItems.size()) {
+            int itemId = locationItems[choice - 1];
+            playerInventory.push_back(itemId); 
+            locationItems.erase(locationItems.begin() + (choice - 1)); 
+            std::cout << "Предмет подобран!" << std::endl;
+        } else {
+            std::cout << "Неверный выбор, попробуйте снова." << std::endl;
+        }
+    }
+
+    if (locationItems.empty()) {
+        std::cout << "На локации больше нет предметов." << std::endl;
+    }
+}
 
 void move(Player& player, std::vector<Location>& locations){
     while (true){
@@ -449,43 +482,50 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
     } while (enemy->getHp() > 0 && player.getHp() > 0);
 }
 
-void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items){
+void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items) {
     int userChoice = 0;
-    while (true)
-    {
-        int enemyId = findLocationById(player.getLocationId(), locations)->getEnemyId();
+
+    while (true) {
+        Location* currentLocation = findLocationById(player.getLocationId(), locations);
+        int enemyId = currentLocation->getEnemyId();
+        std::vector<int> locationItems = currentLocation->getItems();
         std::vector<int> inventory = player.getInventory();
-        std::vector<int> locationItems = findLocationById(player.getLocationId(), locations)->getItems(); 
-        std::cout << "Меню: " << std::endl;
-        std::cout << "1: Сменить локацию" << std::endl;
-        std::cout << "2: Показать инвертарь" << std::endl;
-        if (enemyId != 0)
-        {
-            std::cout << "3: Вступить в бой" << std::endl;
+
+        std::cout << "Меню:" << std::endl;
+
+        std::vector<std::string> options;
+        options.push_back("Сменить локацию");
+        options.push_back("Показать инвентарь");
+        if (enemyId != 0) {
+            options.push_back("Вступить в бой"); 
         }
+        if (!locationItems.empty()) {
+            options.push_back("Осмотреть предметы на локации");
+        }
+
+        for (int i = 0; i < options.size(); i++) {
+            std::cout << (i + 1) << ": " << options[i] << std::endl;
+        }
+
         std::cin >> userChoice;
 
-        switch (userChoice)
-        {
-        case 1:
+        if (userChoice < 1 || userChoice > options.size()) {
+            std::cout << "Неверный ввод. Попробуйте снова." << std::endl;
+            continue;
+        }
+        std::string selectedOption = options[userChoice - 1];
+
+        if (selectedOption == "Сменить локацию") {
             move(player, locations);
-            break;
-        case 2:
+        } else if (selectedOption == "Показать инвентарь") {
             showInventory(inventory, items);
-            break;
-        case 3:
-            if (enemyId != 0){
-                fight(player, enemyId, enemies, abilities);
-                break;
-            } else {
-                std::cout << "Неверный ввод" << std::endl;
-                return;
-            }
-        default:
-            std::cout << "Неверный ввод" << std::endl;
-            return;
+        } else if (selectedOption == "Вступить в бой") {
+            fight(player, enemyId, enemies, abilities);
+        } else if (selectedOption == "Осмотреть предметы на локации") {
+            loot(locationItems, items, inventory);
+            player.setInventory(inventory);
         }
-        }
+    }
 }
 
 int main(int argc, char* argv[]){

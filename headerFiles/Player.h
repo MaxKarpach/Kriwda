@@ -69,22 +69,26 @@ public:
      int getMaxDodgeCount() const { return maxDodgeCount; }
      void setMaxDodgeCount(int value) {maxDodgeCount = value;}
 
-    int getMoney() const { return money; }
-    void setMoney(int value) { money = value; }
+     void setInventory(std::vector<int> value) { inventory = value; }
 
-    int getLocationId() const { return locationId; }
-    void setLocationId(int value) { locationId = value; }
+     int getMoney() const { return money; }
+     void setMoney(int value) { money = value; }
 
-    int getDialogNodeId() const { return dialogNodeId; }
-    void setDialogNodeId(int value) { dialogNodeId = value; }
+     int getLocationId() const { return locationId; }
+     void setLocationId(int value) { locationId = value; }
 
-    int getChosenWeaponId() const { return chosenWeaponId; }
-    void setChosenWeaponId(int value) { chosenWeaponId = value; }
+     int getDialogNodeId() const { return dialogNodeId; }
+     void setDialogNodeId(int value) { dialogNodeId = value; }
 
-    void showInventory(){
-        for (int i = 0; i < inventory.size(); i++){
-            std::cout << inventory[i] << std::endl;
-        }
+     int getChosenWeaponId() const { return chosenWeaponId; }
+     void setChosenWeaponId(int value) { chosenWeaponId = value; }
+
+     void showInventory()
+     {
+         for (int i = 0; i < inventory.size(); i++)
+         {
+             std::cout << inventory[i] << std::endl;
+         }
     }
     void addItemToInventory(int itemId){
         inventory.push_back(itemId);
