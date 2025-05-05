@@ -20,6 +20,7 @@ struct EnemyDef{
     int maxStamina;
     int maxShield;
     int staminaRecoveryFactor;
+    std::vector<int> items;
 };
 
 class Enemy{
@@ -114,6 +115,7 @@ private:
     int maxStamina;
     int maxShield;
     int staminaRecoveryFactor;
+    std::vector<int> items;
 };
 
 

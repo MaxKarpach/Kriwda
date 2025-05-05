@@ -45,6 +45,7 @@
     int maxStamina;
     int maxShield;
     int staminaRecoveryFactor;
+    std::vector<int> items;
 кол-во способностей
 способности
     int id;

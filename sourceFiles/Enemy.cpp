@@ -8,7 +8,7 @@ Enemy::Enemy(const EnemyDef& def)
 abilities(def.abilities), chosenWeaponId(def.chosenWeaponId),locationId(def.locationId), isShieldOn(def.isShieldOn), 
 isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor),shieldFactor(def.shieldFactor),
 maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield),
-staminaRecoveryFactor(def.staminaRecoveryFactor) {}
+staminaRecoveryFactor(def.staminaRecoveryFactor), items(def.items) {}
 
 std::vector<EnemyDef> EnemyRegistry::getEnemies(){
     return enemies;
@@ -43,6 +43,13 @@ void EnemyRegistry::load(std::istream& is){
         is >> ed.maxStamina;
         is >> ed.maxShield;
         is >> ed.staminaRecoveryFactor;
-        enemies.push_back(ed);
+        int itemsCount = 0;
+        is >> itemsCount;
+        for (int i = 0; i < itemsCount; i++){
+            int itemId = 0;
+            is >> itemId;
+            ed.items.push_back(itemId);
+        }
+            enemies.push_back(ed);
     }
 }
