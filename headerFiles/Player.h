@@ -49,6 +49,8 @@ public:
     int getStaminaRecoveryFactor() const { return staminaRecoveryFactor; }
     void setStaminaRecoveryFactor(int value) { staminaRecoveryFactor = value; }
 
+    std::vector<int> getInventory() const { return inventory; }
+
     int getShield() const { return shield; }
     void setShield(int value) { shield = value; }
 

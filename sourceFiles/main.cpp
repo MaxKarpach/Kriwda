@@ -38,6 +38,16 @@ Ability* findAbilityById(int abilityId, std::vector<Ability>& abilities) {
     return nullptr;
 }
 
+Item* findItemById(int itemId, std::vector<Item>& items) {
+    for (auto& item : items) {
+        if (item.getId() == itemId) {
+            return &item;
+        }
+    }
+    return nullptr;
+}
+
+
 void move(Player& player, std::vector<Location>& locations){
     while (true){
         Location *currentLocation = findLocationById(player.getLocationId(), locations);
@@ -66,6 +76,12 @@ void move(Player& player, std::vector<Location>& locations){
         {
             std::cout << "Такого варианта нет" << std::endl;
         }
+    }
+}
+
+void showInventory(std::vector<int>& inventory, std::vector<Item>& items){
+    for (int i = 0; i < inventory.size();i++){
+        std::cout << i+1 << ": " << findItemById(inventory[i], items)->getName() << std::endl;
     }
 }
 
@@ -430,15 +446,18 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
     } while (enemy->getHp() > 0 && player.getHp() > 0);
 }
 
-void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities){
+void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items){
     int userChoice = 0;
     while (true)
     {
         int enemyId = findLocationById(player.getLocationId(), locations)->getEnemyId();
+        std::vector<int> inventory = player.getInventory();
         std::cout << "Меню: " << std::endl;
         std::cout << "1: Сменить локацию" << std::endl;
-        if (enemyId != 0){
-            std::cout << "2: Вступить в бой" << std::endl;
+        std::cout << "2: Показать инвертарь" << std::endl;
+        if (enemyId != 0)
+        {
+            std::cout << "3: Вступить в бой" << std::endl;
         }
         std::cin >> userChoice;
 
@@ -448,6 +467,9 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
             move(player, locations);
             break;
         case 2:
+            showInventory(inventory, items);
+            break;
+        case 3:
             if (enemyId != 0){
                 fight(player, enemyId, enemies, abilities);
                 break;
@@ -511,6 +533,6 @@ int main(int argc, char* argv[]){
 
     Game game;
     game.initNewGame();
-    showMenu(player, locations, enemies, abilities);
+    showMenu(player, locations, enemies, abilities, items);
     return 0;
 }
