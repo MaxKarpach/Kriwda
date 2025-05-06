@@ -121,6 +121,67 @@ void showInventory(std::vector<int>& inventory, std::vector<Item>& items) {
     }
 }
 
+void showAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abilities, std::array<int, 3>& playerChosenAbilities) {
+    int inputAbilityIndex = -1;
+    int replaceIndex = -1;
+
+    while (true) {
+        std::cout << "Все способности:" <<std::endl;
+        for (int i = 0; i < playerAbilities.size(); i++) {
+            Ability* ability = findAbilityById(playerAbilities[i], abilities);
+            if (ability != nullptr) {
+                std::cout << i + 1 << ": " << ability->getName() << std::endl;
+            }
+        }
+
+        std::cout << "Выбранные способности:" <<std::endl;
+        for (int i = 0; i < playerChosenAbilities.size(); i++) {
+            Ability* ability = findAbilityById(playerChosenAbilities[i], abilities);
+            if (ability != nullptr) {
+                std::cout << i + 1 << ": " << ability->getName() << std::endl;
+            }
+        }
+
+        std::cout << "Введите номер способности для замены (0 для выхода): ";
+        std::cin >> inputAbilityIndex;
+
+        if (inputAbilityIndex == 0) break;
+
+        if (inputAbilityIndex < 1 || inputAbilityIndex > playerAbilities.size()) {
+            std::cout << "Некорректный ввод. Попробуйте снова." << std::endl;
+            continue;
+        }
+
+        int selectedAbilityId = playerAbilities[inputAbilityIndex - 1];
+
+        bool alreadyChosen = false;
+        for (int i = 0; i < playerChosenAbilities.size(); i++) {
+            if (playerChosenAbilities[i] == selectedAbilityId) {
+                alreadyChosen = true;
+                break;
+            }
+        }
+
+        if (alreadyChosen) {
+            std::cout << "Эта способность уже выбрана. Выберите другую."<<std::endl;
+            continue;
+        }
+
+        std::cout << "Введите номер выбранной способности, которую хотите заменить (1-3): ";
+        std::cin >> replaceIndex;
+
+        if (replaceIndex < 1 || replaceIndex > 3) {
+            std::cout << "Некорректный выбор замены." << std::endl;
+            continue;
+        }
+
+        playerChosenAbilities[replaceIndex - 1] = selectedAbilityId;
+        std::cout << "Способность заменена!\n";
+    }
+}
+
+
+
 void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
     char type = ability->getType();
     if (flag){
@@ -490,14 +551,18 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         int enemyId = currentLocation->getEnemyId();
         std::vector<int> locationItems = currentLocation->getItems();
         std::vector<int> inventory = player.getInventory();
+        std::vector<int> playerAbilities = player.getAbilities();
+        std::array<int, 3> playerChosenAbilities = player.getChosenAbilities();
 
         std::cout << "Меню:" << std::endl;
 
         std::vector<std::string> options;
         options.push_back("Сменить локацию");
         options.push_back("Показать инвентарь");
-        if (enemyId != 0) {
-            options.push_back("Вступить в бой"); 
+        options.push_back("Показать способности");
+        if (enemyId != 0)
+        {
+            options.push_back("Вступить в бой");
         }
         if (!locationItems.empty()) {
             options.push_back("Осмотреть предметы на локации");
@@ -519,9 +584,15 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
             move(player, locations);
         } else if (selectedOption == "Показать инвентарь") {
             showInventory(inventory, items);
-        } else if (selectedOption == "Вступить в бой") {
+        } else if (selectedOption == "Показать способности") {
+            showAbilities(playerAbilities, abilities, playerChosenAbilities);
+        }
+        else if (selectedOption == "Вступить в бой")
+        {
             fight(player, enemyId, enemies, abilities);
-        } else if (selectedOption == "Осмотреть предметы на локации") {
+        }
+        else if (selectedOption == "Осмотреть предметы на локации")
+        {
             loot(locationItems, items, inventory);
             player.setInventory(inventory);
         }

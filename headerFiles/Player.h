@@ -132,6 +132,10 @@ public:
         return chosenAbilities;
     }
 
+    std::vector<int> getAbilities(){
+        return abilities;
+    }
+
 private:
     int hp;
     int damage;
