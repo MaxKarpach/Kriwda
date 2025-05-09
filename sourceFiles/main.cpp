@@ -176,11 +176,9 @@ void showAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abil
         }
 
         playerChosenAbilities[replaceIndex - 1] = selectedAbilityId;
-        std::cout << "Способность заменена!\n";
+        std::cout << "Способность заменена!" <<std::endl;
     }
 }
-
-
 
 void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
     char type = ability->getType();
@@ -644,6 +642,30 @@ int main(int argc, char* argv[]){
     std::vector<Effect> effects;
     for (const EffectDef& def : effectDefs) {
         effects.push_back(Effect(def));
+    }
+
+    DialogRegistry dialogRegistry;
+    dialogRegistry.load(input);
+    std::vector<DialogDef> dialogDefs = dialogRegistry.getDialogs();
+    std::vector<Dialog> dialogs;
+    for (const DialogDef& def : dialogDefs) {
+        dialogs.push_back(Dialog(def));
+    }
+
+    DialogNodeRegistry dialogNodeRegistry;
+    dialogNodeRegistry.load(input);
+    std::vector<DialogNodeDef> dialogNodeDefs = dialogNodeRegistry.getDialogNodes();
+    std::vector<DialogNode> dialogNodes;
+    for (const DialogNodeDef& def : dialogNodeDefs) {
+        dialogNodes.push_back(DialogNode(def));
+    }
+
+    DialogChoiceRegistry dialogChoiceRegistry;
+    dialogChoiceRegistry.load(input);
+    std::vector<DialogChoiceDef> dialogChoiceDefs = dialogChoiceRegistry.getDialogChoices();
+    std::vector<DialogChoice> dialogChoices;
+    for (const DialogChoiceDef& def : dialogChoiceDefs) {
+        dialogChoices.push_back(DialogChoice(def));
     }
 
     Game game;
