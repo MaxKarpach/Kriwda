@@ -47,6 +47,52 @@ Item* findItemById(int itemId, std::vector<Item>& items) {
     return nullptr;
 }
 
+void startDialog(int dialogId,std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId) {
+    while (true) {
+
+        DialogNode* currentNode = nullptr;
+        for (auto& node : dialogNodes) {
+            if (node.getId() == currentNodeId) {
+                currentNode = &node;
+                break;
+            }
+        }
+        if (!currentNode) {
+            std::cout << "Ошибка: узел диалога не найден." << std::endl;
+            break;
+        }
+
+        std::cout << currentNode->getName() << ": " << currentNode->getText() << std::endl;
+
+        std::vector<DialogChoice*> currentChoices;
+        for (auto& choice : dialogChoices) {
+            if (choice.getNodeId() == currentNodeId) {
+                currentChoices.push_back(&choice);
+            }
+        }
+
+        if (currentChoices.empty()) {
+            std::cout << "Диалог завершён." << std::endl;
+            break;
+        }
+
+        for (int i = 0; i < currentChoices.size(); ++i) {
+            std::cout << i + 1 << ": " << currentChoices[i]->getText() << std::endl;
+        }
+
+        int userChoice = 0;
+        std::cout << "Выберите вариант (0 — выход): ";
+        std::cin >> userChoice;
+
+        if (userChoice <= 0 || userChoice > currentChoices.size()) {
+            std::cout << "Диалог прерван." << std::endl;
+            break;
+        }
+
+        currentNodeId = currentChoices[userChoice - 1]->getNextNodeId();
+    }
+}
+
 void loot(std::vector<int>& locationItems, std::vector<Item>& items, std::vector<int>& playerInventory) {
     while (!locationItems.empty()) {
         std::cout << "Предметы на локации:" << std::endl;
@@ -670,6 +716,7 @@ int main(int argc, char* argv[]){
 
     Game game;
     game.initNewGame();
+    startDialog(1, dialogNodes, dialogChoices, 3);
     showMenu(player, locations, enemies, abilities, items);
     return 0;
 }
