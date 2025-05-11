@@ -6,6 +6,7 @@ struct LocationDef{
     std::string name;
     std::vector<int> choices;
     int enemyId;
+    int dialogNodeId;
     std::vector<int> items;
 };
 
@@ -15,6 +16,9 @@ public:
 
     int getId() const { return id; }
     void setId(int value) { id = value; }
+
+    int getDialogNodeId() const { return dialogNodeId; }
+    void setDialogNodeId(int value) { dialogNodeId= value; }
 
     std::vector<int> getItems() const { return items; }
 
@@ -47,6 +51,7 @@ private:
 int id;
 std::string name;
 std::vector<int> choices;
+int dialogNodeId;
 int enemyId;
 std::vector<int>items;
 };

@@ -48,7 +48,8 @@ Item* findItemById(int itemId, std::vector<Item>& items) {
 }
 
 void startDialog(int dialogId,std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId) {
-    while (true) {
+    while (true)
+    {
 
         DialogNode* currentNode = nullptr;
         for (auto& node : dialogNodes) {
@@ -587,12 +588,13 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
     } while (enemy->getHp() > 0 && player.getHp() > 0);
 }
 
-void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items) {
+void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices) {
     int userChoice = 0;
 
     while (true) {
         Location* currentLocation = findLocationById(player.getLocationId(), locations);
         int enemyId = currentLocation->getEnemyId();
+        int dialogNodeId = currentLocation->getDialogNodeId();
         std::vector<int> locationItems = currentLocation->getItems();
         std::vector<int> inventory = player.getInventory();
         std::vector<int> playerAbilities = player.getAbilities();
@@ -607,6 +609,10 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         if (enemyId != 0)
         {
             options.push_back("Вступить в бой");
+        }
+        if (dialogNodeId != 0)
+        {
+            options.push_back("Поговорить");
         }
         if (!locationItems.empty()) {
             options.push_back("Осмотреть предметы на локации");
@@ -639,6 +645,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         {
             loot(locationItems, items, inventory);
             player.setInventory(inventory);
+        } else if (selectedOption == "Поговорить") {
+            startDialog(1, dialogNodes, dialogChoices, dialogNodeId);
         }
     }
 }
@@ -716,7 +724,6 @@ int main(int argc, char* argv[]){
 
     Game game;
     game.initNewGame();
-    startDialog(1, dialogNodes, dialogChoices, 3);
-    showMenu(player, locations, enemies, abilities, items);
+    showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
     return 0;
 }

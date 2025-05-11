@@ -24,6 +24,7 @@
     int id;
     std::string name;
     std::vector<int> choices;
+    int dialogNodeId;
     int enemyId;
     std::vector<int> items;
 кол-во врагов
