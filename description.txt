@@ -27,6 +27,7 @@
     int dialogNodeId;
     int enemyId;
     std::vector<int> items;
+    std::string description;
 кол-во врагов
 враги
     int id;
@@ -48,6 +49,7 @@
     int maxShield;
     int staminaRecoveryFactor;
     std::vector<int> items;
+    std::string description;
 кол-во способностей
 способности
     int id;
@@ -57,6 +59,7 @@
     int factor;
     int movesCount;
     int maxMovesCount;
+    std::string description;
 кол-во предметов
 предметы
     int id;
@@ -64,6 +67,7 @@
     char type;
     int effectId;
     int factor;
+    std::string description;
 кол-во эффектов
 эффекты
     int id;

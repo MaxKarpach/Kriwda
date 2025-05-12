@@ -7,6 +7,7 @@ struct ItemDef{
     char type;
     int effectId;
     int factor;
+    std::string description;
 };
 
 class Item {
@@ -28,12 +29,16 @@ public:
     int getFactor() const { return factor; }
     void setFactor(int value) { factor = value; }
 
+    std::string getDescription() const { return description; }
+    void setDescription(std::string value) { description = value; }
+
 private:
 int id;
 std::string name;
 char type;
 int effectId;
 int factor;
+std::string description;
 };
 
 

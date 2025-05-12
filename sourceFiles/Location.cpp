@@ -1,10 +1,11 @@
 #include "../headerFiles/Location.h" 
 #include <iostream>
 
-const int MAX_STRING_LEN = 60;
+const int MAX_STRING_LEN = 100;
 
 Location::Location(const LocationDef& def)
-:id(def.id), name(def.name), choices(def.choices), enemyId(def.enemyId), items(def.items), dialogNodeId(def.dialogNodeId){}
+:id(def.id), name(def.name), choices(def.choices), enemyId(def.enemyId), items(def.items), dialogNodeId(def.dialogNodeId),
+description(def.description){}
 
 std::vector<LocationDef> LocationRegistry::getLocations(){
     return locations;
@@ -37,6 +38,11 @@ void  LocationRegistry::load(std::istream& is){
         is >> itemId;
         ld.items.push_back(itemId);
     }
+    char buf2[MAX_STRING_LEN + 1] = {0};
+    is.getline(buf2, MAX_STRING_LEN);
+    memset(buf2, 0, sizeof(buf2));
+    is.getline(buf2, MAX_STRING_LEN);
+    ld.description = buf2;
     locations.push_back(ld);
     }
 }

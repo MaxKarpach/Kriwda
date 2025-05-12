@@ -21,6 +21,7 @@ struct EnemyDef{
     int maxShield;
     int staminaRecoveryFactor;
     std::vector<int> items;
+    std::string description;
 };
 
 class Enemy{
@@ -32,6 +33,9 @@ Enemy(const EnemyDef& def);
 
     std::string getName() const { return name; }
     void setName(std::string value) { name = value; }
+
+    std::string getDescription() const { return description; }
+    void setDescription(std::string value) { description = value; }
 
     int getHp() const { return hp; }
     void setHp(int value) { hp = value; }
@@ -116,6 +120,7 @@ private:
     int maxShield;
     int staminaRecoveryFactor;
     std::vector<int> items;
+    std::string description;
 };
 
 

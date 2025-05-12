@@ -8,6 +8,7 @@ struct LocationDef{
     int enemyId;
     int dialogNodeId;
     std::vector<int> items;
+    std::string description;
 };
 
 class Location{
@@ -47,6 +48,9 @@ public:
         return choices;
     }
 
+    std::string getDescription() const { return description; }
+    void setDescription(std::string value) { description = value; }
+
 private:
 int id;
 std::string name;
@@ -54,6 +58,7 @@ std::vector<int> choices;
 int dialogNodeId;
 int enemyId;
 std::vector<int>items;
+std::string description;
 };
 
 class LocationRegistry{

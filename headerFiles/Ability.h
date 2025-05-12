@@ -9,11 +9,15 @@ struct AbilityDef{
     int factor;
     int movesCount;
     int maxMovesCount;
+    std::string description;
 };
 
 class Ability {
 public:
     Ability(const AbilityDef& def);
+
+    std::string getDescription() const { return description; }
+    void setDescription(std::string value) { description = value; }
 
     int getId() const { return id; }
     void setId(int value) { id = value; }
@@ -36,13 +40,15 @@ public:
     int getMaxMovesCount() const { return maxMovesCount; }
     void setMaxMovesCount(int value){maxMovesCount = value;}
 
-    private : int id;
+    private: 
+    int id;
     std::string name;
     char type;
     int effectId;
     int factor;
     int movesCount;
     int maxMovesCount;
+    std::string description;
 };
 
 class AbilityRegistry{

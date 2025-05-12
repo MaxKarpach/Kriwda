@@ -1,14 +1,14 @@
 #include "../headerFiles/Enemy.h" 
 #include <iostream>
 
-const int MAX_STRING_LEN = 20;
+const int MAX_STRING_LEN = 100;
 
 Enemy::Enemy(const EnemyDef& def)
 : id(def.id), name(def.name), hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount),
 abilities(def.abilities), chosenWeaponId(def.chosenWeaponId),locationId(def.locationId), isShieldOn(def.isShieldOn), 
 isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor),shieldFactor(def.shieldFactor),
 maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield),
-staminaRecoveryFactor(def.staminaRecoveryFactor), items(def.items) {}
+staminaRecoveryFactor(def.staminaRecoveryFactor), items(def.items), description(def.description) {}
 
 std::vector<EnemyDef> EnemyRegistry::getEnemies(){
     return enemies;
@@ -50,6 +50,11 @@ void EnemyRegistry::load(std::istream& is){
             is >> itemId;
             ed.items.push_back(itemId);
         }
+        char buf2[MAX_STRING_LEN + 1] = {0};
+        is.getline(buf2, MAX_STRING_LEN);
+        memset(buf2, 0, sizeof(buf2));
+        is.getline(buf2, MAX_STRING_LEN);
+        ed.description = buf2;
             enemies.push_back(ed);
     }
 }
