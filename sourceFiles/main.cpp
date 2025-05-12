@@ -159,12 +159,60 @@ void move(Player& player, std::vector<Location>& locations){
     }
 }
 
-void showInventory(std::vector<int>& inventory, std::vector<Item>& items) {
-    for (int i = 0; i < inventory.size(); i++) {
-        Item* item = findItemById(inventory[i], items);
-        if (item != nullptr) {
-            std::cout << i + 1 << ": " << item->getName() << std::endl;
-        } 
+void showInventory(std::vector<int>& inventory, std::vector<Item>& items, Player& player) {
+    while (true) {
+        std::cout << "Ваш инвентарь:" << std::endl;
+
+        if (inventory.empty()) {
+            std::cout << "Инвентарь пуст." << std::endl;
+            return;
+        }
+
+        for (int i = 0; i < inventory.size(); i++) {
+            Item* item = findItemById(inventory[i], items);
+            if (item != nullptr) {
+                std::cout << i + 1 << ": " << item->getName() << std::endl;
+            }
+        }
+
+        std::cout << "Введите номер предмета, чтобы использовать (0 для выхода): ";
+        int input;
+        std::cin >> input;
+
+        if (input == 0) break;
+
+        if (input < 1 || input > inventory.size()) {
+            std::cout << "Неверный выбор. Попробуйте снова." << std::endl;
+            continue;
+        }
+
+        int itemId = inventory[input - 1];
+        Item* item = findItemById(itemId, items);
+
+        if (!item) {
+            std::cout << "Ошибка: предмет не найден." << std::endl;
+            continue;
+        }
+
+        char type = item->getType();
+        switch (type) {
+            case 'f':
+                player.setHp(player.getHp() + item->getFactor());
+                std::cout << "Вы выбрали еду: " << item->getName() << std::endl;
+                std::cout << "Вы восстановили " << item->getFactor() << " здоровья." << std::endl;
+                break;
+            case 'w':
+                player.setChosenWeaponId(item->getId());
+                std::cout << "Вы выбрали оружие: " << item->getName() << std::endl;
+                break;
+            default:
+                std::cout << "Предмет не может быть использован." << std::endl;
+                continue;
+        }
+
+        if (type != 'w'){
+            inventory.erase(inventory.begin() + (input - 1));
+        }
     }
 }
 
@@ -691,7 +739,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         if (selectedOption == "Сменить локацию") {
             move(player, locations);
         } else if (selectedOption == "Показать инвентарь") {
-            showInventory(inventory, items);
+            showInventory(inventory, items, player);
         } else if (selectedOption == "Выбрать способности") {
             changeAbilities(playerAbilities, abilities, playerChosenAbilities);
         }
