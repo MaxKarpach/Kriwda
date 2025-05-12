@@ -168,7 +168,7 @@ void showInventory(std::vector<int>& inventory, std::vector<Item>& items) {
     }
 }
 
-void showAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abilities, std::array<int, 3>& playerChosenAbilities) {
+void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abilities, std::array<int, 3>& playerChosenAbilities) {
     int inputAbilityIndex = -1;
     int replaceIndex = -1;
 
@@ -224,6 +224,62 @@ void showAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abil
 
         playerChosenAbilities[replaceIndex - 1] = selectedAbilityId;
         std::cout << "Способность заменена!" <<std::endl;
+    }
+}
+
+void showItemDescriptions(const std::vector<int>& inventory, std::vector<Item>& items) {
+    while (true) {
+        std::cout << "Ваш инвентарь. Введите номер предмета для просмотра описания (0 для выхода):" << std::endl;
+        for (int i = 0; i < inventory.size(); ++i) {
+            const Item* item = findItemById(inventory[i], items);
+            if (item != nullptr) {
+                std::cout << i + 1 << ": " << item->getName() << std::endl;
+            }
+        }
+
+        int choice;
+        std::cin >> choice;
+
+        if (choice == 0) break;
+
+        if (choice < 1 || choice > inventory.size()) {
+            std::cout << "Некорректный выбор. Попробуйте снова." << std::endl;
+            continue;
+        }
+
+        const Item* selected = findItemById(inventory[choice - 1], items);
+        if (selected) {
+            std::cout << "Описание предмета " << selected->getName() << ":" << std::endl;
+            std::cout << selected->getDescription()<< std::endl;
+        }
+    }
+}
+
+void showAbilityDescriptions(const std::vector<int>& playerAbilities, std::vector<Ability>& abilities) {
+    while (true) {
+        std::cout << "Выберите способность для просмотра описания (0 для выхода):" << std::endl;
+        for (int i = 0; i < playerAbilities.size(); ++i) {
+            const Ability* ability = findAbilityById(playerAbilities[i], abilities);
+            if (ability != nullptr) {
+                std::cout << i + 1 << ": " << ability->getName() << std::endl;
+            }
+        }
+
+        int choice;
+        std::cin >> choice;
+
+        if (choice == 0) break;
+
+        if (choice < 1 || choice > playerAbilities.size()) {
+            std::cout << "Некорректный выбор. Попробуйте снова." << std::endl;
+            continue;
+        }
+
+        const Ability* selected = findAbilityById(playerAbilities[choice - 1], abilities);
+        if (selected) {
+            std::cout << "Описание способности " << selected->getName() << ":" << std::endl;
+            std::cout << selected->getDescription() << std::endl;
+        }
     }
 }
 
@@ -605,7 +661,9 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         std::vector<std::string> options;
         options.push_back("Сменить локацию");
         options.push_back("Показать инвентарь");
-        options.push_back("Показать способности");
+        options.push_back("Выбрать способности");
+        options.push_back("Показать описания способностей");
+        options.push_back("Показать описания предметов");
         if (enemyId != 0)
         {
             options.push_back("Вступить в бой");
@@ -634,8 +692,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
             move(player, locations);
         } else if (selectedOption == "Показать инвентарь") {
             showInventory(inventory, items);
-        } else if (selectedOption == "Показать способности") {
-            showAbilities(playerAbilities, abilities, playerChosenAbilities);
+        } else if (selectedOption == "Выбрать способности") {
+            changeAbilities(playerAbilities, abilities, playerChosenAbilities);
         }
         else if (selectedOption == "Вступить в бой")
         {
@@ -647,7 +705,11 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
             player.setInventory(inventory);
         } else if (selectedOption == "Поговорить") {
             startDialog(1, dialogNodes, dialogChoices, dialogNodeId);
-        }
+        } else if (selectedOption == "Показать описания способностей") {
+            showAbilityDescriptions(playerAbilities, abilities);
+        } else if (selectedOption == "Показать описания предметов") {
+            showItemDescriptions(playerAbilities, items);
+        } 
     }
 }
 
