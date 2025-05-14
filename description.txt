@@ -67,17 +67,12 @@
     char type;
     int factor;
     std::string description;
-кол-во диалогов
-диалоги 
-    int id;
-    int currentNodeId;
 кол-во диалоговых узлов
 диалоговые узлы
     int id;
     std::string name;
     std::string text;
     std::vector<int> choices;
-    int dialogId;
 кол-во диалоговых выборов
 диалоговые выборы
     int id;

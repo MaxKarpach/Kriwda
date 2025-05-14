@@ -6,7 +6,6 @@ struct DialogNodeDef{
     std::string name;
     std::string text;
     std::vector<int> choices;
-    int dialogId;
 };
 
 class DialogNode {
@@ -20,9 +19,6 @@ class DialogNode {
          
         std::string getName() const { return name; }
         void setName(std::string value) { name = value; }
-
-        int getDialogId() const { return dialogId; }
-        void setDialogId(int value) { dialogId= value; }
 
         void addChoice(const int& choiceId) {
             choices.push_back(choiceId);
@@ -43,7 +39,6 @@ class DialogNode {
     std::string name;
     std::string text;
     std::vector<int> choices;
-    int dialogId;
 };
 
 

@@ -3,7 +3,7 @@
 
 const int MAX_STRING_LEN = 255;
 
-DialogNode::DialogNode(const DialogNodeDef& def):id(def.id), name(def.name), text(def.text), choices(def.choices), dialogId(def.dialogId){}
+DialogNode::DialogNode(const DialogNodeDef& def):id(def.id), name(def.name), text(def.text), choices(def.choices){}
 
 std::vector<DialogNodeDef> DialogNodeRegistry::getDialogNodes(){
     return dialogNodes;
@@ -33,8 +33,6 @@ void DialogNodeRegistry::load(std::istream& is){
             is >> choiceId;
             dnd.choices.push_back(choiceId);
         }
-    
-        is >> dnd.dialogId;
         dialogNodes.push_back(dnd);
     }
 }
@@ -49,6 +47,5 @@ void DialogNodeRegistry::save(std::ostream& os){
         for (int i = 0; i < dnd.choices.size(); i++) {
             os << dnd.choices[i] << std::endl;
         }
-        os << dnd.dialogId << std::endl;
     }
 }

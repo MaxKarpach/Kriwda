@@ -6,7 +6,6 @@
 #include "../headerFiles/Item.h" 
 #include "../headerFiles/Renderer.h" 
 #include "../headerFiles/Location.h" 
-#include "../headerFiles/Dialog.h" 
 #include "../headerFiles/DialogNode.h" 
 #include "../headerFiles/DialogChoice.h" 
 #include "../headerFiles/Game.h" 
@@ -760,6 +759,10 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
     }
 }
 
+void saveGame(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices){
+
+}
+
 int main(int argc, char* argv[]){
     std::ifstream input("data.txt");
 
@@ -797,14 +800,6 @@ int main(int argc, char* argv[]){
     std::vector<Item> items;
     for (const ItemDef& def : itemDefs) {
         items.push_back(Item(def));
-    }
-
-    DialogRegistry dialogRegistry;
-    dialogRegistry.load(input);
-    std::vector<DialogDef> dialogDefs = dialogRegistry.getDialogs();
-    std::vector<Dialog> dialogs;
-    for (const DialogDef& def : dialogDefs) {
-        dialogs.push_back(Dialog(def));
     }
 
     DialogNodeRegistry dialogNodeRegistry;
