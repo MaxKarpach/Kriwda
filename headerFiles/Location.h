@@ -65,6 +65,7 @@ class LocationRegistry{
     public:
     void load(std::istream& is);
     std::vector<LocationDef> getLocations();
+    void save(std::ostream &os);
 private:
     std::vector<LocationDef> locations;
 };

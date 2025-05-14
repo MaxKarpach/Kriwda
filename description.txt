@@ -65,13 +65,8 @@
     int id;
     std::string name;
     char type;
-    int effectId;
     int factor;
     std::string description;
-кол-во эффектов
-эффекты
-    int id;
-    char type;
 кол-во диалогов
 диалоги 
     int id;

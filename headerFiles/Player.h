@@ -163,6 +163,7 @@ class PlayerRegistry{
     public:
     void load(std::istream& is);
     PlayerDef getPlayer();
+    void save(std::ostream &os);
 private:
     PlayerDef player;
 };

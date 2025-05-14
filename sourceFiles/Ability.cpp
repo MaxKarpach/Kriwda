@@ -4,7 +4,7 @@
 const int MAX_STRING_LEN = 100;
 
 Ability::Ability(const AbilityDef& def)
-:id(def.id), name(def.name), type(def.type), effectId(def.effectId), factor(def.factor),
+:id(def.id), name(def.name), type(def.type), factor(def.factor),
 movesCount(def.movesCount),maxMovesCount(def.maxMovesCount), description(def.description)  {}
 
 std::vector<AbilityDef> AbilityRegistry::getAbilities(){
@@ -23,7 +23,6 @@ void AbilityRegistry::load(std::istream& is){
     is.getline(buf, MAX_STRING_LEN);
     ad.name = buf;
     is >> ad.type;
-    is >> ad.effectId;
     is >> ad.factor;
     is >> ad.movesCount;
     is >> ad.maxMovesCount;
@@ -33,5 +32,18 @@ void AbilityRegistry::load(std::istream& is){
     is.getline(buf2, MAX_STRING_LEN);
     ad.description = buf2;
     abilities.push_back(ad);
+    }
+}
+
+void AbilityRegistry::save(std::ostream& os){
+    os << abilities.size() << std::endl;
+    for (const AbilityDef& ad : abilities) {
+        os << ad.id << std::endl;
+        os << ad.name << std::endl;
+        os << ad.type << std::endl;
+        os << ad.factor << std::endl;
+        os << ad.movesCount << std::endl;
+        os << ad.maxMovesCount << std::endl;
+        os << ad.description << std::endl;
     }
 }

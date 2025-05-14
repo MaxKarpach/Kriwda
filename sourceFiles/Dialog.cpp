@@ -22,3 +22,10 @@ void DialogRegistry::load(std::istream& is){
     dialogs.push_back(dd);
     }
 }
+void DialogRegistry::save(std::ostream& os){
+    os << dialogs.size() << std::endl;
+    for (const DialogDef& dd : dialogs) {
+        os << dd.id << std::endl;
+        os << dd.currentNodeId << std::endl;
+    }
+}

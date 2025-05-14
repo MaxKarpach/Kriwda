@@ -4,7 +4,6 @@
 #include "../headerFiles/Enemy.h" 
 #include "../headerFiles/Ability.h" 
 #include "../headerFiles/Item.h" 
-#include "../headerFiles/Effect.h" 
 #include "../headerFiles/Renderer.h" 
 #include "../headerFiles/Location.h" 
 #include "../headerFiles/Dialog.h" 
@@ -798,14 +797,6 @@ int main(int argc, char* argv[]){
     std::vector<Item> items;
     for (const ItemDef& def : itemDefs) {
         items.push_back(Item(def));
-    }
-
-    EffectRegistry effectRegistry;
-    effectRegistry.load(input);
-    std::vector<EffectDef> effectDefs = effectRegistry.getEffects();
-    std::vector<Effect> effects;
-    for (const EffectDef& def : effectDefs) {
-        effects.push_back(Effect(def));
     }
 
     DialogRegistry dialogRegistry;

@@ -5,7 +5,6 @@ struct ItemDef{
     int id;
     std::string name;
     char type;
-    int effectId;
     int factor;
     std::string description;
 };
@@ -23,9 +22,6 @@ public:
     char getType() const { return type; }
     void setType(char value) { type = value; }
 
-    int getEffect() const { return effectId; }
-    void setEffect(int value) { id = effectId; }
-
     int getFactor() const { return factor; }
     void setFactor(int value) { factor = value; }
 
@@ -36,7 +32,6 @@ private:
 int id;
 std::string name;
 char type;
-int effectId;
 int factor;
 std::string description;
 };
@@ -46,6 +41,7 @@ class ItemRegistry{
     public:
     void load(std::istream& is);
     std::vector<ItemDef> getItems();
+    void save(std::ostream &os);
 private:
     std::vector<ItemDef> items;
 };

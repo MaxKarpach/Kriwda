@@ -58,3 +58,34 @@ void EnemyRegistry::load(std::istream& is){
             enemies.push_back(ed);
     }
 }
+
+void EnemyRegistry::save(std::ostream& os){
+    os << enemies.size() << std::endl;
+    for (const EnemyDef& ed : enemies) {
+        os << ed.id << std::endl;
+        os << ed.name << std::endl;
+        os << ed.hp << std::endl;
+        os << ed.damage << std::endl;
+        os << ed.stamina << std::endl;
+        os << ed.shield << std::endl;
+        os << ed.dodgeCount << std::endl;
+        os << ed.abilities[0] << std::endl;
+        os << ed.abilities[1] << std::endl;
+        os << ed.abilities[2] << std::endl;
+        os << ed.chosenWeaponId << std::endl;
+        os << ed.locationId << std::endl;
+        os << ed.isShieldOn << std::endl;
+        os << ed.isDodgeOn << std::endl;
+        os << ed.staminaFactor << std::endl;
+        os << ed.shieldFactor << std::endl;
+        os << ed.maxDodgeCount << std::endl;
+        os << ed.maxStamina << std::endl;
+        os << ed.maxShield << std::endl;
+        os << ed.staminaRecoveryFactor << std::endl;
+        os << ed.items.size() << std::endl;
+        for (int i = 0; i < ed.items.size(); i++) {
+            os << ed.items[i] << std::endl;
+        }
+        os << ed.description << std::endl;
+    }
+}

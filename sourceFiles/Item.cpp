@@ -5,7 +5,7 @@
 const int MAX_STRING_LEN = 100;
 
 Item::Item(const ItemDef& def)
-:id(def.id), name(def.name), type(def.type), effectId(def.effectId), factor(def.factor), description(def.description){}
+:id(def.id), name(def.name), type(def.type), factor(def.factor), description(def.description){}
 
 std::vector<ItemDef> ItemRegistry::getItems(){
     return items;
@@ -23,7 +23,6 @@ void ItemRegistry::load(std::istream& is){
         is.getline(buf, MAX_STRING_LEN);
         id.name = buf;
         is >> id.type;
-        is >> id.effectId;
         is >> id.factor;
         char buf2[MAX_STRING_LEN + 1] = {0};
         is.getline(buf2, MAX_STRING_LEN);

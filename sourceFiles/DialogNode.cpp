@@ -38,3 +38,17 @@ void DialogNodeRegistry::load(std::istream& is){
         dialogNodes.push_back(dnd);
     }
 }
+
+void DialogNodeRegistry::save(std::ostream& os){
+    os << dialogNodes.size() << std::endl;
+    for (const DialogNodeDef& dnd : dialogNodes) {
+        os << dnd.id << std::endl;
+        os << dnd.name << std::endl;
+        os << dnd.text << std::endl;
+        os << dnd.choices.size() << std::endl;
+        for (int i = 0; i < dnd.choices.size(); i++) {
+            os << dnd.choices[i] << std::endl;
+        }
+        os << dnd.dialogId << std::endl;
+    }
+}

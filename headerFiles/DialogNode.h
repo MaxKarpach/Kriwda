@@ -51,6 +51,7 @@ class DialogNodeRegistry{
     public:
     void load(std::istream& is);
     std::vector<DialogNodeDef> getDialogNodes();
+    void save(std::ostream &os);
 private:
 std::vector<DialogNodeDef> dialogNodes;
 };

@@ -34,6 +34,7 @@ class DialogChoiceRegistry{
     public:
     void load(std::istream& is);
     std::vector<DialogChoiceDef> getDialogChoices();
+    void save(std::ostream &os);
 private:
 std::vector<DialogChoiceDef> dialogChoices;
 };

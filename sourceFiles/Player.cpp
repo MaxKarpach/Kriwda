@@ -51,3 +51,39 @@ void PlayerRegistry::load(std::istream& is){
     is >> pd.staminaRecoveryFactor;
     player = pd;
 }
+
+void PlayerRegistry::save(std::ostream& os) {
+    os << player.hp << std::endl;
+    os << player.damage << std::endl;
+    os << player.stamina << std::endl;
+    os << player.shield << std::endl;
+    os << player.dodgeCount << std::endl;
+    os << player.money << std::endl;
+    os << player.locationId << std::endl;
+    os << player.dialogNodeId << std::endl;
+
+    os << player.inventory.size() << std::endl;
+    for (int itemId : player.inventory) {
+        os << itemId << std::endl;
+    }
+
+    os << player.abilities.size() << std::endl;
+    for (int abilityId : player.abilities) {
+        os << abilityId << std::endl;
+    }
+
+    os << player.chosenAbilities[0] << std::endl;
+    os << player.chosenAbilities[1] << std::endl;
+    os << player.chosenAbilities[2] << std::endl;
+
+    os << player.chosenWeaponId << std::endl;
+    os << player.isShieldOn << std::endl;
+    os << player.isDodgeOn << std::endl;
+
+    os << player.staminaFactor << std::endl;
+    os << player.shieldFactor << std::endl;
+    os << player.maxDodgeCount << std::endl;
+    os << player.maxStamina << std::endl;
+    os << player.maxShield << std::endl;
+    os << player.staminaRecoveryFactor << std::endl;
+}

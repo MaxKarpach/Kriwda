@@ -26,6 +26,7 @@ class DialogRegistry{
     public:
     void load(std::istream& is);
     std::vector<DialogDef> getDialogs();
+    void save(std::ostream &os);
 private:
 std::vector<DialogDef> dialogs;
 };

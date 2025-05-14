@@ -5,7 +5,6 @@ struct AbilityDef{
     int id;
     std::string name;
     char type;
-    int effectId;
     int factor;
     int movesCount;
     int maxMovesCount;
@@ -28,9 +27,6 @@ public:
     char getType() const { return type; }
     void setType(char value) { type = value; }
 
-    int getEffect() const { return effectId; }
-    void setEffect(int value) { id = effectId; }
-
     int getFactor() const { return factor; }
     void setFactor(int value) { factor = value; }
 
@@ -44,7 +40,6 @@ public:
     int id;
     std::string name;
     char type;
-    int effectId;
     int factor;
     int movesCount;
     int maxMovesCount;
@@ -55,6 +50,7 @@ class AbilityRegistry{
     public:
     void load(std::istream& is);
     std::vector<AbilityDef> getAbilities();
+    void save(std::ostream &os);
 private:
     std::vector<AbilityDef> abilities;
 };

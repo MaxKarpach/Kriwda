@@ -128,6 +128,7 @@ class EnemyRegistry{
     public:
     void load(std::istream& is);
     std::vector<EnemyDef> getEnemies();
+    void save(std::ostream &os);
 private:
     std::vector<EnemyDef> enemies;
 };

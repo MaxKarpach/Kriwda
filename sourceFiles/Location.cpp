@@ -46,3 +46,26 @@ void  LocationRegistry::load(std::istream& is){
     locations.push_back(ld);
     }
 }
+
+void LocationRegistry::save(std::ostream& os) {
+    os << locations.size() << std::endl;
+    for (const LocationDef& ld : locations) {
+        os << ld.id << std::endl;
+        os << ld.name << std::endl;
+
+        os << ld.choices.size() << std::endl;
+        for (int choiceId : ld.choices) {
+            os << choiceId << std::endl;
+        }
+
+        os << ld.dialogNodeId << std::endl;
+        os << ld.enemyId << std::endl;
+
+        os << ld.items.size() << std::endl;
+        for (int itemId : ld.items) {
+            os << itemId << std::endl;
+        }
+
+        os << ld.description << std::endl;
+    }
+}

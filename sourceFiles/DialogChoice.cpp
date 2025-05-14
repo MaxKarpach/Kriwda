@@ -25,3 +25,13 @@ void DialogChoiceRegistry::load(std::istream& is){
     dialogChoices.push_back(dcd);
     }
 }
+
+void DialogChoiceRegistry::save(std::ostream& os){
+    os << dialogChoices.size() << std::endl;
+    for (const DialogChoiceDef& dcd : dialogChoices) {
+        os << dcd.id << std::endl;
+        os << dcd.text << std::endl;
+        os << dcd.nextNodeId << std::endl;
+        os << dcd.nodeId << std::endl;
+    }
+}
