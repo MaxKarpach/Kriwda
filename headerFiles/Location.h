@@ -22,6 +22,7 @@ public:
     void setDialogNodeId(int value) { dialogNodeId= value; }
 
     std::vector<int> getItems() const { return items; }
+    std::vector<int> getChoices() const { return choices; }
 
     std::string getName() const { return name; }
     void setName(std::string value) { name = value; }
@@ -65,7 +66,9 @@ class LocationRegistry{
     public:
     void load(std::istream& is);
     std::vector<LocationDef> getLocations();
+    std::vector<LocationDef> toLocationDefs(const std::vector<Location> &locations);
     void save(std::ostream &os);
+    void setLocations(const std::vector<LocationDef>& defs);
 private:
     std::vector<LocationDef> locations;
 };

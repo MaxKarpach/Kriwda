@@ -35,3 +35,18 @@ void DialogChoiceRegistry::save(std::ostream& os){
         os << dcd.nodeId << std::endl;
     }
 }
+std::vector<DialogChoiceDef> DialogChoiceRegistry::toDialogChoiceDefs(const std::vector<DialogChoice>& dialogChoices) {
+        std::vector<DialogChoiceDef> dialogChoiceDefs;
+        for (const auto& dialogChoice : dialogChoices) {
+            DialogChoiceDef def;
+            def.id = dialogChoice.getId();
+            def.text = dialogChoice.getText();
+            def.nextNodeId = dialogChoice.getNextNodeId();
+            def.nodeId = dialogChoice.getNodeId();
+            dialogChoiceDefs.push_back(def);
+        }
+        return dialogChoiceDefs;
+}
+void DialogChoiceRegistry::setDialogChoices(const std::vector<DialogChoiceDef>& defs) {
+    dialogChoices = defs;
+}

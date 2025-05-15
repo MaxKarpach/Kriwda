@@ -87,3 +87,32 @@ void PlayerRegistry::save(std::ostream& os) {
     os << player.maxShield << std::endl;
     os << player.staminaRecoveryFactor << std::endl;
 }
+PlayerDef PlayerRegistry::toPlayerDef(const Player& player) {
+    PlayerDef def;
+
+    def.hp = player.getHp();
+    def.damage = player.getDamage();
+    def.stamina = player.getStamina();
+    def.shield = player.getShield();
+    def.dodgeCount = player.getDodgeCount();
+    def.money = player.getMoney();
+    def.locationId = player.getLocationId();
+    def.dialogNodeId = player.getDialogNodeId();
+    def.inventory = player.getInventory();
+    def.abilities = player.getAbilities();
+    def.chosenAbilities = player.getChosenAbilities();
+    def.chosenWeaponId = player.getChosenWeaponId();
+    def.isShieldOn = player.getIsShieldOn();
+    def.isDodgeOn = player.getIsDodgeOn();
+    def.staminaFactor = player.getStaminaFactor();
+    def.shieldFactor = player.getShieldFactor();
+    def.maxDodgeCount = player.getMaxDodgeCount();
+    def.maxStamina = player.getMaxStamina();
+    def.maxShield = player.getMaxShield();
+    def.staminaRecoveryFactor = player.getStaminaRecoveryFactor();
+
+    return def;
+}
+void PlayerRegistry::setPlayer(const PlayerDef& def) {
+    player = def;
+}

@@ -31,6 +31,8 @@ Enemy(const EnemyDef& def);
     int getId() const { return id; }
     void setId(int value) { id = value; }
 
+    std::array<int, 3> getAbilities() const {return abilities; }
+
     std::string getName() const { return name; }
     void setName(std::string value) { name = value; }
 
@@ -100,6 +102,9 @@ Enemy(const EnemyDef& def);
     int getMaxDodgeCount() const { return maxDodgeCount; }
     void setMaxDodgeCount(int value) {maxDodgeCount = value;}
 
+    std::vector<int> getItems() const { return items; }
+    void setItems(const std::vector<int>& value) { items = value; }
+
 private:
     std::string name;
     int id;
@@ -129,6 +134,8 @@ class EnemyRegistry{
     void load(std::istream& is);
     std::vector<EnemyDef> getEnemies();
     void save(std::ostream &os);
+    std::vector<EnemyDef> toEnemyDefs(const std::vector<Enemy>& enemies);
+    void setEnemies(const std::vector<EnemyDef>& defs);
 private:
     std::vector<EnemyDef> enemies;
 };

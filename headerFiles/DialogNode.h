@@ -34,6 +34,7 @@ class DialogNode {
                 choices.erase(it);
             } 
         }
+        std::vector<int> getChoices() const { return choices; }
     private:
     int id;
     std::string name;
@@ -47,7 +48,9 @@ class DialogNodeRegistry{
     void load(std::istream& is);
     std::vector<DialogNodeDef> getDialogNodes();
     void save(std::ostream &os);
+    std::vector<DialogNodeDef> toDialogNodeDefs(const std::vector<DialogNode> &dialogNodes);
+    void setDialogNodes(const std::vector<DialogNodeDef> &defs);
 private:
-std::vector<DialogNodeDef> dialogNodes;
+    std::vector<DialogNodeDef> dialogNodes;
 };
 #endif

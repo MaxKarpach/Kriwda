@@ -89,3 +89,36 @@ void EnemyRegistry::save(std::ostream& os){
         os << ed.description << std::endl;
     }
 }
+std::vector<EnemyDef> EnemyRegistry::toEnemyDefs(const std::vector<Enemy>& enemies) {
+    std::vector<EnemyDef> defs;
+
+    for (const auto& enemy : enemies) {
+        EnemyDef def;
+        def.id = enemy.getId();
+        def.name = enemy.getName();
+        def.hp = enemy.getHp();
+        def.damage = enemy.getDamage();
+        def.stamina = enemy.getStamina();
+        def.shield = enemy.getShield();
+        def.dodgeCount = enemy.getDodgeCount();
+        def.abilities = enemy.getAbilities();
+        def.chosenWeaponId = enemy.getChosenWeaponId();
+        def.locationId = enemy.getLocationId();
+        def.isShieldOn = enemy.getIsShieldOn();
+        def.isDodgeOn = enemy.getIsDodgeOn();
+        def.staminaFactor = enemy.getStaminaFactor();
+        def.shieldFactor = enemy.getShieldFactor();
+        def.maxDodgeCount = enemy.getMaxDodgeCount();
+        def.maxStamina = enemy.getMaxStamina();
+        def.maxShield = enemy.getMaxShield();
+        def.staminaRecoveryFactor = enemy.getStaminaRecoveryFactor();
+        def.items = enemy.getItems();
+        def.description = enemy.getDescription();
+        defs.push_back(def);
+    }
+
+    return defs;
+}
+void EnemyRegistry::setEnemies(const std::vector<EnemyDef>& defs) {
+    enemies = defs;
+}

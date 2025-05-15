@@ -42,6 +42,8 @@ class ItemRegistry{
     void load(std::istream& is);
     std::vector<ItemDef> getItems();
     void save(std::ostream &os);
+    std::vector<ItemDef> toItemDefs(const std::vector<Item> &items);
+    void setItems(const std::vector<ItemDef>& defs);
 private:
     std::vector<ItemDef> items;
 };

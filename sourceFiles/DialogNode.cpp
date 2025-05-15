@@ -49,3 +49,21 @@ void DialogNodeRegistry::save(std::ostream& os){
         }
     }
 }
+std::vector<DialogNodeDef> DialogNodeRegistry::toDialogNodeDefs(const std::vector<DialogNode>& dialogNodes){
+        std::vector<DialogNodeDef> dialogNodeDefs;
+        
+        for (const auto& dialogNode : dialogNodes) {
+            DialogNodeDef def;
+            def.id = dialogNode.getId();
+            def.name = dialogNode.getName();
+            def.text = dialogNode.getText();
+            def.choices = dialogNode.getChoices();
+
+            dialogNodeDefs.push_back(def);
+        }
+
+        return dialogNodeDefs;
+    }
+void DialogNodeRegistry::setDialogNodes(const std::vector<DialogNodeDef>& defs) {
+    dialogNodes = defs;
+}

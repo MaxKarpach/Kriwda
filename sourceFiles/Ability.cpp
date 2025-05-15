@@ -35,6 +35,21 @@ void AbilityRegistry::load(std::istream& is){
     }
 }
 
+std::vector<AbilityDef> AbilityRegistry::toAbilityDefs(const std::vector<Ability>& abilities) {
+        std::vector<AbilityDef> abilityDefs;
+        for (const auto& ability : abilities) {
+            AbilityDef def;
+            def.id = ability.getId();
+            def.name = ability.getName();
+            def.type = ability.getType();
+            def.factor = ability.getFactor();
+            def.movesCount = ability.getMovesCount();
+            def.maxMovesCount = ability.getMaxMovesCount();
+            def.description = ability.getDescription();
+            abilityDefs.push_back(def);
+        }
+        return abilityDefs;
+}
 void AbilityRegistry::save(std::ostream& os){
     os << abilities.size() << std::endl;
     for (const AbilityDef& ad : abilities) {
@@ -46,4 +61,7 @@ void AbilityRegistry::save(std::ostream& os){
         os << ad.maxMovesCount << std::endl;
         os << ad.description << std::endl;
     }
+}
+void AbilityRegistry::setAbilities(const std::vector<AbilityDef>& defs) {
+    abilities = defs;
 }

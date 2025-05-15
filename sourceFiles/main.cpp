@@ -760,7 +760,41 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
 }
 
 void saveGame(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices){
+    std::ofstream output("data.txt");
+    PlayerRegistry playerRegistry;
+    PlayerDef playerDef = playerRegistry.toPlayerDef(player);
+    playerRegistry.setPlayer(playerDef);
+    playerRegistry.save(output);
 
+    LocationRegistry locationRegistry;
+    std::vector<LocationDef> locationDefs = locationRegistry.toLocationDefs(locations);
+    locationRegistry.setLocations(locationDefs);
+    locationRegistry.save(output);
+
+    EnemyRegistry enemyRegistry;
+    std::vector<EnemyDef> enemyDefs = enemyRegistry.toEnemyDefs(enemies);
+    enemyRegistry.setEnemies(enemyDefs);
+    enemyRegistry.save(output);
+
+    AbilityRegistry abilityRegistry;
+    std::vector<AbilityDef> abilityDefs = abilityRegistry.toAbilityDefs(abilities);
+    abilityRegistry.setAbilities(abilityDefs);
+    abilityRegistry.save(output);
+
+    ItemRegistry itemRegistry;
+    std::vector<ItemDef> itemDefs = itemRegistry.toItemDefs(items);
+    itemRegistry.setItems(itemDefs);
+    itemRegistry.save(output);
+
+    DialogNodeRegistry dialogNodeRegistry;
+    std::vector<DialogNodeDef> dialogNodeDefs = dialogNodeRegistry.toDialogNodeDefs(dialogNodes);
+    dialogNodeRegistry.setDialogNodes(dialogNodeDefs);
+    dialogNodeRegistry.save(output);
+
+    DialogChoiceRegistry dialogChoiceRegistry;
+    std::vector<DialogChoiceDef> dialogChoiceDefs = dialogChoiceRegistry.toDialogChoiceDefs(dialogChoices);
+    dialogChoiceRegistry.setDialogChoices(dialogChoiceDefs);
+    dialogChoiceRegistry.save(output);
 }
 
 int main(int argc, char* argv[]){
@@ -821,5 +855,6 @@ int main(int argc, char* argv[]){
     Game game;
     game.initNewGame();
     showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+    // saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
     return 0;
 }

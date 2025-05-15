@@ -55,7 +55,6 @@
     int id;
     std::string name;
     char type;
-    int effectId;
     int factor;
     int movesCount;
     int maxMovesCount;

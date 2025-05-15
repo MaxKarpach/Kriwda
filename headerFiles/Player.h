@@ -128,12 +128,12 @@ public:
         chosenAbilities[chosenAbilityIndex] = 0;
     }
 
-    std::array<int, 3> getChosenAbilities(){
-        return chosenAbilities;
+    std::vector<int> getAbilities() const {
+    return abilities;
     }
 
-    std::vector<int> getAbilities(){
-        return abilities;
+    std::array<int, 3> getChosenAbilities() const {
+    return chosenAbilities;
     }
 
 private:
@@ -164,6 +164,8 @@ class PlayerRegistry{
     void load(std::istream& is);
     PlayerDef getPlayer();
     void save(std::ostream &os);
+    PlayerDef toPlayerDef(const Player &player);
+    void setPlayer(const PlayerDef& def);
 private:
     PlayerDef player;
 };

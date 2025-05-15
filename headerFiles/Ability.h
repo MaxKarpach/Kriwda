@@ -51,6 +51,8 @@ class AbilityRegistry{
     void load(std::istream& is);
     std::vector<AbilityDef> getAbilities();
     void save(std::ostream &os);
+    std::vector<AbilityDef> toAbilityDefs(const std::vector<Ability> &abilities);
+    void setAbilities(const std::vector<AbilityDef>& defs);
 private:
     std::vector<AbilityDef> abilities;
 };

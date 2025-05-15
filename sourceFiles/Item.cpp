@@ -32,3 +32,29 @@ void ItemRegistry::load(std::istream& is){
         items.push_back(id);
     }
 }
+void ItemRegistry::save(std::ostream& os){
+    os << items.size() << std::endl;
+    for (const ItemDef& id : items) {
+        os << id.id << std::endl;
+        os << id.name << std::endl;
+        os << id.type << std::endl;
+        os << id.factor << std::endl;
+        os << id.description << std::endl;
+    }
+}
+std::vector<ItemDef> ItemRegistry::toItemDefs(const std::vector<Item>& items) {
+    std::vector<ItemDef> itemDefs;
+    for (const auto& item : items) {
+        ItemDef def;
+        def.id = item.getId();
+        def.name = item.getName();
+        def.type = item.getType();
+        def.factor = item.getFactor();
+        def.description = item.getDescription();
+        itemDefs.push_back(def);
+    }
+    return itemDefs;
+}
+void ItemRegistry::setItems(const std::vector<ItemDef>& defs) {
+    items = defs;
+}

@@ -69,3 +69,21 @@ void LocationRegistry::save(std::ostream& os) {
         os << ld.description << std::endl;
     }
 }
+std::vector<LocationDef> LocationRegistry::toLocationDefs(const std::vector<Location>& locations) {
+    std::vector<LocationDef> locationDefs;
+    for (const auto& location : locations) {
+        LocationDef def;
+        def.id = location.getId();
+        def.name = location.getName();
+        def.choices = location.getChoices();
+        def.dialogNodeId = location.getDialogNodeId();
+        def.enemyId = location.getEnemyId();
+        def.items = location.getItems();
+        def.description = location.getDescription();
+        locationDefs.push_back(def);
+    }
+    return locationDefs;
+}
+void LocationRegistry::setLocations(const std::vector<LocationDef>& defs) {
+    locations = defs;
+}
