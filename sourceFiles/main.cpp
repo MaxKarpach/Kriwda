@@ -45,7 +45,7 @@ Item* findItemById(int itemId, std::vector<Item>& items) {
     return nullptr;
 }
 
-void startDialog(int dialogId,std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId) {
+void startDialog(int dialogId,std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Location* currentLocation) {
     while (true)
     {
 
@@ -59,6 +59,11 @@ void startDialog(int dialogId,std::vector<DialogNode>& dialogNodes,std::vector<D
         if (!currentNode) {
             std::cout << "Ошибка: узел диалога не найден." << std::endl;
             break;
+        }
+
+                if (currentNode->getChoices().size() == 0){
+           
+            currentLocation->setDialogNodeId(0);
         }
 
         std::cout << currentNode->getName() << ": " << currentNode->getText() << std::endl;
@@ -907,7 +912,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
             downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         } else if (selectedOption == "Поговорить") {
-            startDialog(1, dialogNodes, dialogChoices, dialogNodeId);
+            startDialog(1, dialogNodes, dialogChoices, dialogNodeId, currentLocation);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
             downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         } else if (selectedOption == "Показать описания способностей") {
