@@ -151,7 +151,6 @@ void downloadData(Player & player, std::vector<Location> & locations, std::vecto
 
 void saveGame(Player & player, std::vector<Location> & locations, std::vector<Enemy> & enemies, std::vector<Ability> & abilities, std::vector<Item> & items, std::vector<DialogNode> & dialogNodes, std::vector<DialogChoice> & dialogChoices) {
         std::ofstream output("data.txt");
-        std::cout << "Отработана функция ыесц" << std::endl;
         PlayerRegistry playerRegistry;
         PlayerDef playerDef = playerRegistry.toPlayerDef(player);
         playerRegistry.setPlayer(playerDef);
@@ -525,7 +524,7 @@ void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
     }
 }
 
-void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities){
+void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, Location* currentLocation){
     Enemy* enemy = findEnemyById(enemyId, enemies);
     Ability *player1Ability = findAbilityById(player.getChosenAbilities()[0], abilities);
     Ability *player2Ability = findAbilityById(player.getChosenAbilities()[1], abilities);
@@ -790,6 +789,9 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
             if (enemy->getHp() <= 0)
             {
                 std::cout << "Вы победили" << std::endl;
+                player.addToEnemies(enemyId);
+                currentLocation->setEnemyId(0);
+                currentLocation->setDialogNodeId(0);
             }
             else if (player.getHp() <= 0)
             {
@@ -895,7 +897,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         }
         else if (selectedOption == "Вступить в бой")
         {
-            fight(player, enemyId, enemies, abilities);
+            fight(player, enemyId, enemies, abilities, currentLocation);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
             downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }

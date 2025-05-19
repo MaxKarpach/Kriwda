@@ -137,6 +137,9 @@ public:
     return enemies;
     }
 
+    void addToEnemies(int enemyId){
+        enemies.push_back(enemyId);
+    }
 
     std::array<int, 3>& getChosenAbilities() {
     return chosenAbilities;
