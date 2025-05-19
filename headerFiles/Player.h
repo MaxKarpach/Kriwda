@@ -22,6 +22,7 @@ struct PlayerDef{
     int maxStamina;
     int maxShield;
     int staminaRecoveryFactor;
+    std::vector<int> enemies;
 };
 
 class Player {
@@ -132,6 +133,11 @@ public:
     return abilities;
     }
 
+    std::vector<int>& getEnemies() {
+    return enemies;
+    }
+
+
     std::array<int, 3>& getChosenAbilities() {
     return chosenAbilities;
     }
@@ -157,6 +163,7 @@ private:
     int maxStamina;
     int maxShield;
     int staminaRecoveryFactor;
+    std::vector<int> enemies;
 };
 
 class PlayerRegistry{
@@ -164,7 +171,7 @@ class PlayerRegistry{
     void load(std::istream& is);
     PlayerDef getPlayer();
     void save(std::ostream &os);
-    PlayerDef toPlayerDef(const Player &player);
+    PlayerDef toPlayerDef(Player &player);
     void setPlayer(const PlayerDef& def);
 private:
     PlayerDef player;

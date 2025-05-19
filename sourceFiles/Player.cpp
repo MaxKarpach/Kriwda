@@ -7,7 +7,7 @@ Player::Player(const PlayerDef& def)
    chosenAbilities(def.chosenAbilities), chosenWeaponId(def.chosenWeaponId), isShieldOn(def.isShieldOn), 
    isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor), shieldFactor(def.shieldFactor),
    maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield), 
-   staminaRecoveryFactor(def.staminaRecoveryFactor) {}
+   staminaRecoveryFactor(def.staminaRecoveryFactor), enemies(def.enemies) {}
 
 PlayerDef PlayerRegistry::getPlayer(){
     return player;
@@ -49,6 +49,13 @@ void PlayerRegistry::load(std::istream& is){
     is >> pd.maxStamina;
     is >> pd.maxShield;
     is >> pd.staminaRecoveryFactor;
+    int enemiesSize = 0;
+    is >> enemiesSize;
+    for (int i = 0; i < enemiesSize; i++){
+        int enemyId = 0;
+        is >> enemyId;
+        pd.enemies.push_back(enemyId);
+    }
     player = pd;
 }
 
@@ -86,8 +93,13 @@ void PlayerRegistry::save(std::ostream& os) {
     os << player.maxStamina << std::endl;
     os << player.maxShield << std::endl;
     os << player.staminaRecoveryFactor << std::endl;
+
+    os << player.enemies.size() << std::endl;
+    for (int enemyId : player.enemies) {
+        os << enemyId << std::endl;
+    }
 }
-PlayerDef PlayerRegistry::toPlayerDef(const Player& player) {
+PlayerDef PlayerRegistry::toPlayerDef(Player& player) {
     PlayerDef def;
 
     def.hp = player.getHp();
@@ -110,7 +122,7 @@ PlayerDef PlayerRegistry::toPlayerDef(const Player& player) {
     def.maxStamina = player.getMaxStamina();
     def.maxShield = player.getMaxShield();
     def.staminaRecoveryFactor = player.getStaminaRecoveryFactor();
-
+    def.enemies = player.getEnemies();
     return def;
 }
 void PlayerRegistry::setPlayer(const PlayerDef& def) {

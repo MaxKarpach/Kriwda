@@ -256,8 +256,10 @@ void move(Player& player, std::vector<Location>& locations){
     }
 }
 
-void showInventory(std::vector<int>& inventory, std::vector<Item>& items, Player& player) {
-    while (true) {
+void showInventory(std::vector<Item>& items, Player& player) {
+    std::vector<int> &inventory = player.getInventory();
+    while (true)
+    {
         std::cout << "Ваш инвентарь:" << std::endl;
 
         if (inventory.empty()) {
@@ -802,7 +804,6 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         int enemyId = currentLocation->getEnemyId();
         int dialogNodeId = currentLocation->getDialogNodeId();
         std::vector<int>& locationItems = currentLocation->getItems();
-        std::vector<int>& inventory = player.getInventory();
         std::vector<int>& playerAbilities = player.getAbilities();
         std::array<int, 3>& playerChosenAbilities = player.getChosenAbilities();
 
@@ -851,7 +852,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         }
         else if (selectedOption == "Показать инвентарь")
         {
-            showInventory(inventory, items, player);
+            showInventory(items, player);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
             downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }

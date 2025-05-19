@@ -19,6 +19,7 @@
     int maxStamina;
     int maxShield;
     int staminaRecoveryFactor;
+    std::vector<int> enemies;
 кол-во локаций
 локации
     int id;
