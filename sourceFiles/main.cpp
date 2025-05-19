@@ -430,6 +430,36 @@ void showAbilityDescriptions(const std::vector<int>& playerAbilities, std::vecto
     }
 }
 
+void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<Enemy>& enemies) {
+    std::cout << "Ваши побежденные враги" << std::endl;
+    while (true)
+    {
+        std::cout << "Выберите врага для просмотра описания (0 для выхода):" << std::endl;
+        for (int i = 0; i < playerEnemies.size(); ++i) {
+            const Enemy* enemy = findEnemyById(playerEnemies[i], enemies);
+            if (enemy != nullptr) {
+                std::cout << i + 1 << ": " << enemy->getName() << std::endl;
+            }
+        }
+
+        int choice;
+        std::cin >> choice;
+
+        if (choice == 0) break;
+
+        if (choice < 1 || choice > playerEnemies.size()) {
+            std::cout << "Некорректный выбор. Попробуйте снова." << std::endl;
+            continue;
+        }
+
+        const Enemy* selected = findEnemyById(playerEnemies[choice - 1], enemies);
+        if (selected) {
+            std::cout << "Описание способности " << selected->getName() << ":" << std::endl;
+            std::cout << selected->getDescription() << std::endl;
+        }
+    }
+}
+
 void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
     char type = ability->getType();
     if (flag){
@@ -817,6 +847,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         options.push_back("Выбрать способности");
         options.push_back("Показать описания способностей");
         options.push_back("Показать описания предметов");
+        options.push_back("Показать описания побеждённых врагов");
         if (player.getChosenWeaponId() != 0){
         options.push_back("Показать оружие");
         }
@@ -883,6 +914,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
             showItemDescriptions(playerAbilities, items);
         } else if (selectedOption == "Показать оружие") {
             showChosenWeapon(player, items);
+        } else if (selectedOption == "Показать описания побеждённых врагов") {
+            showEnemiesDescriptions(player.getEnemies(), enemies);
         }
     }
 }
