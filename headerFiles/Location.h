@@ -21,7 +21,7 @@ public:
     int getDialogNodeId() const { return dialogNodeId; }
     void setDialogNodeId(int value) { dialogNodeId= value; }
 
-    std::vector<int> getItems() const { return items; }
+    std::vector<int>& getItems() { return items; }
     std::vector<int> getChoices() const { return choices; }
 
     std::string getName() const { return name; }

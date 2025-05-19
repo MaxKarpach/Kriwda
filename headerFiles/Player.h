@@ -49,7 +49,7 @@ public:
     int getStaminaRecoveryFactor() const { return staminaRecoveryFactor; }
     void setStaminaRecoveryFactor(int value) { staminaRecoveryFactor = value; }
 
-    std::vector<int> getInventory() const { return inventory; }
+    std::vector<int>& getInventory() { return inventory; }
 
     int getShield() const { return shield; }
     void setShield(int value) { shield = value; }
@@ -128,11 +128,11 @@ public:
         chosenAbilities[chosenAbilityIndex] = 0;
     }
 
-    std::vector<int> getAbilities() const {
+    std::vector<int>& getAbilities() {
     return abilities;
     }
 
-    std::array<int, 3> getChosenAbilities() const {
+    std::array<int, 3>& getChosenAbilities() {
     return chosenAbilities;
     }
 
