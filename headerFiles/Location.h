@@ -9,6 +9,7 @@ struct LocationDef{
     int dialogNodeId;
     std::vector<int> items;
     std::string description;
+    bool isFinalBossLocation;
 };
 
 class Location{
@@ -21,7 +22,7 @@ public:
     int getDialogNodeId() const { return dialogNodeId; }
     void setDialogNodeId(int value) { dialogNodeId= value; }
 
-    std::vector<int>& getItems() { return items; }
+    std::vector<int> getItems() const{ return items; }
     std::vector<int> getChoices() const { return choices; }
 
     std::string getName() const { return name; }
@@ -45,12 +46,12 @@ public:
         } 
     }
 
-    std::vector<int> getChoices(){
-        return choices;
-    }
+    std::vector<int>& getItems() { return items; }
 
     std::string getDescription() const { return description; }
     void setDescription(std::string value) { description = value; }
+
+    bool getIsFinalBossLocation() const { return isFinalBossLocation; }
 
 private:
 int id;
@@ -60,6 +61,7 @@ int dialogNodeId;
 int enemyId;
 std::vector<int>items;
 std::string description;
+bool isFinalBossLocation;
 };
 
 class LocationRegistry{

@@ -29,6 +29,7 @@
     int enemyId;
     std::vector<int> items;
     std::string description;
+    bool isFinalBossLocation;
 кол-во врагов
 враги
     int id;

@@ -145,6 +145,10 @@ public:
     return chosenAbilities;
     }
 
+    int getEnemiesCount(){
+        return enemies.size();
+    }
+
 private:
     int hp;
     int damage;

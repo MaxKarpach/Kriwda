@@ -228,18 +228,26 @@ void loot(std::vector<Item>& items, Player& player, Location* currentLocation) {
     }
 }
 
-void move(Player& player, std::vector<Location>& locations){
+void move(Player& player, std::vector<Location>& locations, int& enemiesCount){
     while (true){
         Location *currentLocation = findLocationById(player.getLocationId(), locations);
         std::cout << "Ваше текущее местоположение: " << currentLocation->getName() << std::endl;
         std::cout << "Вы можете пойти в следующие места: " << std::endl;
         std::vector<Location*> nearlyLocations;
+        int finalBossLocationNum = 0;
         for (int i = 0; i < currentLocation->getChoices().size(); i++)
         {
             Location* nearlyLocation = findLocationById(currentLocation->getChoices()[i], locations);
             if (nearlyLocation) {
                 nearlyLocations.push_back(nearlyLocation);
-                std::cout << i + 1 << ": " << nearlyLocation->getName() << std::endl;
+                if (nearlyLocation->getIsFinalBossLocation() && player.getEnemiesCount() != (enemiesCount - 1)){
+                    std::cout << i + 1 << ": " << nearlyLocation->getName() << "(вы еще не готовы)" << std::endl;
+                    finalBossLocationNum = i + 1;
+                }
+                else
+                {
+                    std::cout << i + 1 << ": " << nearlyLocation->getName() << std::endl;
+                }
             }
         }
         std::cout << currentLocation->getChoices().size()+1 << ": Показать меню" << std::endl;
@@ -250,7 +258,13 @@ void move(Player& player, std::vector<Location>& locations){
         }
         else if (userChoice <= currentLocation->getChoices().size() && userChoice > 0)
         {
-            player.setLocationId(nearlyLocations[userChoice-1]->getId());
+            if (finalBossLocationNum == userChoice && player.getEnemiesCount() != (enemiesCount - 1)){
+                return;
+            }
+            else
+            {
+                player.setLocationId(nearlyLocations[userChoice - 1]->getId());
+            }
         }
         else
         {
@@ -850,7 +864,7 @@ void showChosenWeapon(Player& player, std::vector<Item>& items){
 void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices) {
     int userChoice = 0;
 
-    while (true) {
+    while (player.getEnemiesCount() != enemies.size()) {
         Location* currentLocation = findLocationById(player.getLocationId(), locations);
         int enemyId = currentLocation->getEnemyId();
         int dialogNodeId = currentLocation->getDialogNodeId();
@@ -896,9 +910,10 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
             continue;
         }
         std::string selectedOption = options[userChoice - 1];
-
-        if (selectedOption == "Сменить локацию") {
-            move(player, locations);
+        int enemiesCount = enemies.size();
+        if (selectedOption == "Сменить локацию")
+        {
+            move(player, locations, enemiesCount);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
             downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }

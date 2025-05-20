@@ -5,7 +5,7 @@ const int MAX_STRING_LEN = 100;
 
 Location::Location(const LocationDef& def)
 :id(def.id), name(def.name), choices(def.choices), enemyId(def.enemyId), items(def.items), dialogNodeId(def.dialogNodeId),
-description(def.description){}
+description(def.description), isFinalBossLocation(def.isFinalBossLocation){}
 
 std::vector<LocationDef> LocationRegistry::getLocations(){
     return locations;
@@ -43,6 +43,7 @@ void  LocationRegistry::load(std::istream& is){
     memset(buf2, 0, sizeof(buf2));
     is.getline(buf2, MAX_STRING_LEN);
     ld.description = buf2;
+    is >> ld.isFinalBossLocation;
     locations.push_back(ld);
     }
 }
@@ -67,6 +68,7 @@ void LocationRegistry::save(std::ostream& os) {
         }
 
         os << ld.description << std::endl;
+        os << ld.isFinalBossLocation << std::endl;
     }
 }
 std::vector<LocationDef> LocationRegistry::toLocationDefs(const std::vector<Location>& locations) {
@@ -80,6 +82,7 @@ std::vector<LocationDef> LocationRegistry::toLocationDefs(const std::vector<Loca
         def.enemyId = location.getEnemyId();
         def.items = location.getItems();
         def.description = location.getDescription();
+        def.isFinalBossLocation = location.getIsFinalBossLocation();
         locationDefs.push_back(def);
     }
     return locationDefs;
