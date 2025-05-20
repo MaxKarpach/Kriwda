@@ -61,8 +61,7 @@ void startDialog(int dialogId,std::vector<DialogNode>& dialogNodes,std::vector<D
             break;
         }
 
-                if (currentNode->getChoices().size() == 0){
-           
+        if (currentNode->getChoices().size() == 0){
             currentLocation->setDialogNodeId(0);
         }
 
@@ -537,6 +536,8 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
     Ability *enemy1Ability = findAbilityById(enemy->getAbilities()[0], abilities);
     Ability *enemy2Ability = findAbilityById(enemy->getAbilities()[1], abilities);
     Ability *enemy3Ability = findAbilityById(enemy->getAbilities()[2], abilities);
+    int playerHp = player.getHp();
+    int enemyHp = enemy->getHp();
     std::cout << "Ваш враг: " << enemy->getName() << std::endl;
     do
     {
@@ -801,6 +802,19 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
             else if (player.getHp() <= 0)
             {
                 std::cout << "Вы проиграли" << std::endl;
+                player.setHp(playerHp);
+                player.setStamina(player.getMaxStamina());
+                player.setShield(player.getMaxShield());
+                player.setDodgeCount(0);
+                player.setIsDodgeOn(0);
+                player.setIsShieldOn(0);
+                enemy->setHp(enemyHp);
+                enemy->setStamina(enemy->getMaxStamina());
+                enemy->setShield(enemy->getMaxShield());
+                enemy->setDodgeCount(0);
+                enemy->setIsDodgeOn(0);
+                enemy->setIsShieldOn(0);
+                return;
             }
             else
             {
