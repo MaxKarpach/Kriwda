@@ -569,7 +569,7 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
         std::cout << "6: " << player3Ability->getName() << std::endl;
         int userChoice = 0;
         srand(time(0));
-        int enemyChoice = 2;
+        int enemyChoice = rand() % 6 + 1;
         std::cin >> userChoice;
         if (userChoice == 1 && enemyChoice == 2 && enemy->getShield() > 0 && player.getStamina() > 0){
             enemy->setIsShieldOn(1);
@@ -829,35 +829,29 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         {
             move(player, locations, enemiesCount);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-            downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }
         else if (selectedOption == "Показать инвентарь")
         {
             showInventory(items, player);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-            downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }
         else if (selectedOption == "Выбрать способности")
         {
             changeAbilities(playerAbilities, abilities, playerChosenAbilities);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-            downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }
         else if (selectedOption == "Вступить в бой")
         {
             fight(player, enemyId, enemies, abilities, currentLocation);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-            downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }
         else if (selectedOption == "Осмотреть предметы на локации")
         {
             loot(items, player, currentLocation);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-            downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         } else if (selectedOption == "Поговорить") {
             startDialog(1, dialogNodes, dialogChoices, dialogNodeId, currentLocation);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-            downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         } else if (selectedOption == "Показать описания способностей") {
             showAbilityDescriptions(playerAbilities, abilities);
         } else if (selectedOption == "Показать описания предметов") {
@@ -873,57 +867,15 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
 int main(int argc, char* argv[]){
     std::ifstream input("data.txt");
 
-    PlayerRegistry playerRegistry;
-    playerRegistry.load(input);
-    Player player(playerRegistry.getPlayer());
-    
-    LocationRegistry locationRegistry;
-    locationRegistry.load(input);
-    std::vector<LocationDef> locationDefs = locationRegistry.getLocations();
+    Player player;
     std::vector<Location> locations;
-    for (const LocationDef& def : locationDefs) {
-    locations.push_back(Location(def));
-    }
-
-    EnemyRegistry enemyRegistry;
-    enemyRegistry.load(input);
-    std::vector<EnemyDef> enemyDefs = enemyRegistry.getEnemies();
     std::vector<Enemy> enemies;
-    for (const EnemyDef& def : enemyDefs) {
-    enemies.push_back(Enemy(def));
-    }
-
-    AbilityRegistry abilityRegistry;
-    abilityRegistry.load(input);
-    std::vector<AbilityDef> abilityDefs = abilityRegistry.getAbilities();
     std::vector<Ability> abilities;
-    for (const AbilityDef& def : abilityDefs) {
-        abilities.push_back(Ability(def));
-    }
-
-    ItemRegistry itemRegistry;
-    itemRegistry.load(input);
-    std::vector<ItemDef> itemDefs = itemRegistry.getItems();
     std::vector<Item> items;
-    for (const ItemDef& def : itemDefs) {
-        items.push_back(Item(def));
-    }
-
-    DialogNodeRegistry dialogNodeRegistry;
-    dialogNodeRegistry.load(input);
-    std::vector<DialogNodeDef> dialogNodeDefs = dialogNodeRegistry.getDialogNodes();
     std::vector<DialogNode> dialogNodes;
-    for (const DialogNodeDef& def : dialogNodeDefs) {
-        dialogNodes.push_back(DialogNode(def));
-    }
-
-    DialogChoiceRegistry dialogChoiceRegistry;
-    dialogChoiceRegistry.load(input);
-    std::vector<DialogChoiceDef> dialogChoiceDefs = dialogChoiceRegistry.getDialogChoices();
     std::vector<DialogChoice> dialogChoices;
-    for (const DialogChoiceDef& def : dialogChoiceDefs) {
-        dialogChoices.push_back(DialogChoice(def));
-    }
+
+    downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
 
     Game game;
     game.initNewGame();

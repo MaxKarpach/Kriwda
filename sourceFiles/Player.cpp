@@ -9,6 +9,13 @@ Player::Player(const PlayerDef& def)
    maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield), 
    staminaRecoveryFactor(def.staminaRecoveryFactor), enemies(def.enemies) {}
 
+Player::Player() 
+    : hp(0), damage(0), stamina(0), shield(0), dodgeCount(0),
+      money(0), locationId(0), dialogNodeId(0), chosenWeaponId(0),
+      isShieldOn(false), isDodgeOn(false), staminaFactor(0),
+      shieldFactor(0), maxDodgeCount(0), maxStamina(0),
+      maxShield(0), staminaRecoveryFactor(0) {}
+
 PlayerDef PlayerRegistry::getPlayer(){
     return player;
 }

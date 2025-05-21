@@ -29,6 +29,8 @@ class Player {
 public:
     Player(const PlayerDef& def);
 
+    Player();
+
     int getHp() const { return hp; }
     void setHp(int value) { hp = value; }
 
