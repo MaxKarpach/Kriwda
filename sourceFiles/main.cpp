@@ -489,10 +489,13 @@ void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
                 std::cout << "Вы промахнулись" << std::endl;
                 break;
             } else if (enemy->getIsShieldOn()){
-                enemy->setShield(enemy->getShield() - player.getDamage());
-                if (enemy->getShield() > 0){
+                enemy->setShield(enemy->getShield() - ability->getFactor());
+                if (enemy->getShield() > 0)
+                {
                     std::cout << "Вы ударили в блок" << std::endl;
-                } else {
+                }
+                else
+                {
                     std::cout << "Вы пробили щит" << std::endl;
                     enemy->setHp(enemy->getHp() + enemy->getShield());
                 }
@@ -519,7 +522,7 @@ void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
                 std::cout << "Враг промахнулся" << std::endl;
                 break;
             } else if (player.getIsShieldOn()){
-                player.setShield(player.getShield() - enemy->getDamage());
+                player.setShield(player.getShield() - ability->getFactor());
                 if (player.getShield() > 0){
                     std::cout << "Враг ударил в блок" << std::endl;
                 } else {
@@ -555,25 +558,8 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
     std::cout << "Ваш враг: " << enemy->getName() << std::endl;
     do
     {
-        if (player.getIsDodgeOn() == 1){
-            if (player.getDodgeCount() == player.getMaxDodgeCount()){
-                player.setIsDodgeOn(0);
-                player.setDodgeCount(0);
-            }
-            else
-            {
-                std::cout << "До уклонения осталось: " << player.getMaxDodgeCount() - player.getDodgeCount()<< " хода(/ов)" << std::endl;
-                player.setDodgeCount(player.getDodgeCount() + 1);
-            }
-        }
-        if (enemy->getIsDodgeOn() == 1){
-            if (enemy->getDodgeCount() == enemy->getMaxDodgeCount()){
-                enemy->setIsDodgeOn(0);
-                enemy->setDodgeCount(0);
-            } else {
-                enemy->setDodgeCount(enemy->getDodgeCount() + 1);
-            }
-        }
+        player.initDodgeCount();
+        enemy->initDodgeCount();
         std::cout << "Введите" << std::endl;
         std::cout << "1: Атака" << std::endl;
         std::cout << "2: Защита" << std::endl;
@@ -583,7 +569,7 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
         std::cout << "6: " << player3Ability->getName() << std::endl;
         int userChoice = 0;
         srand(time(0));
-        int enemyChoice = rand() % 6 + 1;
+        int enemyChoice = 2;
         std::cin >> userChoice;
         if (userChoice == 1 && enemyChoice == 2 && enemy->getShield() > 0 && player.getStamina() > 0){
             enemy->setIsShieldOn(1);
@@ -597,7 +583,8 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
                 enemy->setHp(enemy->getHp() + enemy->getShield());
             }
         } else if (userChoice == 1 && enemyChoice == 3 && enemy->getIsDodgeOn() == 0 && player.getStamina() > 0){
-            enemy->setIsDodgeOn(1);            std::cout << "Враг уклонился" << std::endl;
+            enemy->setIsDodgeOn(1);            
+            std::cout << "Враг уклонился" << std::endl;
             player.setStamina(player.getStamina() - player.getStaminaFactor());
             std::cout << "Вы промахнулись" << std::endl;
         } else if (userChoice == 2 && enemyChoice == 1 && player.getShield() > 0 && enemy->getStamina() > 0){
@@ -616,7 +603,13 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
             std::cout << "Вы уклонились" << std::endl;
             enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
             std::cout << "Враг промахнулся" << std::endl;
-        } else if (userChoice >= 4 && userChoice <= 6 && (enemy->getIsDodgeOn() == 0 || enemy->getShield() > 0)) {
+        } else if (userChoice >= 4 && userChoice <= 6 && (enemyChoice <= 3 || enemyChoice >= 2)) {
+            if (enemyChoice == 2 && enemy->getShield() > 0){
+                enemy->setIsShieldOn(1);
+            } 
+            if (enemyChoice == 3 && enemy->getIsDodgeOn() == 0){
+                enemy->setIsDodgeOn(1);          
+            }
             switch (userChoice)
             {
                 case 4:
@@ -644,7 +637,7 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
             default:
                 break;
             }
-        }else {
+        } else {
             switch (userChoice)
             {
             case 1:
@@ -740,114 +733,35 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
                     break;
                 }
         }
-        if (player.getShield() < 0){
-            player.setShield(0);
+        player.refreshStatsAfterRound();
+        enemy->refreshStatsAfterRound();
+        enemy1Ability->refreshMovesCount();
+        enemy2Ability->refreshMovesCount();
+        enemy3Ability->refreshMovesCount();
+        player1Ability->refreshMovesCount();
+        player2Ability->refreshMovesCount();
+        player3Ability->refreshMovesCount();  
+        if (enemy->getHp() <= 0)
+        {
+            std::cout << "Вы победили" << std::endl;
+            player.addToEnemies(enemyId);
+            currentLocation->setEnemyId(0);
+            currentLocation->setDialogNodeId(0);
         }
-        if (enemy->getStamina() < 0){
-            enemy->setStamina(0);
-        }
-        if (enemy->getShield() < 0){
-            enemy->setShield(0);
-        }
-            enemy->setIsShieldOn(0);
-            player.setIsShieldOn(0);
-            if (enemy->getStamina() + enemy->getStaminaFactor() < enemy->getMaxStamina())
-            {
-                enemy->setStamina(enemy->getStamina() + enemy->getStaminaRecoveryFactor());
-            }
-            if (enemy->getShield() + enemy->getShieldFactor() < enemy->getMaxShield()){
-                enemy->setShield(enemy->getShield() + enemy->getShieldFactor());
-            }
-            if (enemy1Ability->getMaxMovesCount() != enemy1Ability->getMovesCount()){
-                if (enemy1Ability->getMovesCount() == -1){
-                    enemy1Ability->setMovesCount(enemy1Ability->getMaxMovesCount());
-                } else {
-                    enemy1Ability->setMovesCount(enemy1Ability->getMovesCount() - 1);
-                }
-            }
-            if (enemy2Ability->getMaxMovesCount() != enemy2Ability->getMovesCount()){
-                if (enemy2Ability->getMovesCount() == -1){
-                    enemy2Ability->setMovesCount(enemy2Ability->getMaxMovesCount());
-                } else {
-                    enemy2Ability->setMovesCount(enemy2Ability->getMovesCount() - 1);
-                }
-            }
-            if (enemy3Ability->getMaxMovesCount() != enemy3Ability->getMovesCount()){
-                if (enemy3Ability->getMovesCount() == -1){
-                    enemy3Ability->setMovesCount(enemy3Ability->getMaxMovesCount());
-                } else {
-                    enemy3Ability->setMovesCount(enemy3Ability->getMovesCount() - 1);
-                }
-            }
-            if (player.getStamina() + player.getStaminaFactor() < player.getMaxStamina()){
-                player.setStamina(player.getStamina() + player.getStaminaRecoveryFactor());
-            }
-            if (player.getShield() + player.getShieldFactor() < player.getMaxShield()){
-                player.setShield(player.getShield() + player.getShieldFactor());
-            }
-            if (player1Ability->getMaxMovesCount() != player1Ability->getMovesCount()){
-                if (player1Ability->getMovesCount() == -1){
-                    player1Ability->setMovesCount(player1Ability->getMaxMovesCount());
-                } else {
-                    player1Ability->setMovesCount(player1Ability->getMovesCount() - 1);
-                }
-            }
-            if (player2Ability->getMaxMovesCount() != player2Ability->getMovesCount()){
-                if (player2Ability->getMovesCount() == -1){
-                    player2Ability->setMovesCount(player2Ability->getMaxMovesCount());
-                } else {
-                    player2Ability->setMovesCount(player2Ability->getMovesCount() - 1);
-                }
-            }
-            if (player3Ability->getMaxMovesCount() != player3Ability->getMovesCount()){
-                if (player3Ability->getMovesCount() == -1){
-                    player3Ability->setMovesCount(player3Ability->getMaxMovesCount());
-                } else {
-                    player3Ability->setMovesCount(player3Ability->getMovesCount() - 1);
-                }
-            }
-            if (enemy->getHp() <= 0)
-            {
-                std::cout << "Вы победили" << std::endl;
-                player.addToEnemies(enemyId);
-                currentLocation->setEnemyId(0);
-                currentLocation->setDialogNodeId(0);
-            }
             else if (player.getHp() <= 0)
             {
                 std::cout << "Вы проиграли" << std::endl;
-                player.setHp(playerHp);
-                player.setStamina(player.getMaxStamina());
-                player.setShield(player.getMaxShield());
-                player.setDodgeCount(0);
-                player.setIsDodgeOn(0);
-                player.setIsShieldOn(0);
-                enemy->setHp(enemyHp);
-                enemy->setStamina(enemy->getMaxStamina());
-                enemy->setShield(enemy->getMaxShield());
-                enemy->setDodgeCount(0);
-                enemy->setIsDodgeOn(0);
-                enemy->setIsShieldOn(0);
+                player.loseRound(playerHp);
+                enemy->winRound(enemyHp);
                 return;
             }
             else
             {
-                std::cout << "Здоровье игрока: " << player.getHp() << std::endl;
-                std::cout << "Щит игрока: " << player.getShield() << std::endl;
-                std::cout << "Выносливость игрока: " << player.getStamina() << std::endl;
-                std::cout << "Здоровье врага: " << enemy->getHp() << std::endl;
-                if (player1Ability->getMaxMovesCount() != player1Ability->getMovesCount())
-                {
-                    std::cout << "До возможности использовать способность " << player1Ability->getName() << " осталось " << player1Ability->getMovesCount() + 2 << " хода(ов)" << std::endl;
-                }
-                if (player2Ability->getMaxMovesCount() != player2Ability->getMovesCount())
-                {
-                    std::cout << "До возможности использовать способность " << player2Ability->getName() << " осталось " << player2Ability->getMovesCount() + 2 << " хода(ов)" << std::endl;
-                }
-                if (player3Ability->getMaxMovesCount() != player3Ability->getMovesCount())
-                {
-                    std::cout << "До возможности использовать способность " << player3Ability->getName() << " осталось " << player3Ability->getMovesCount() + 2 << " хода(ов)" << std::endl;
-                }
+                player.afterRoundInfo();
+                enemy->afterRoundInfo();
+                player1Ability->countMoves();
+                player2Ability->countMoves();
+                player3Ability->countMoves();
             }
 
     } while (enemy->getHp() > 0 && player.getHp() > 0);
@@ -1014,5 +928,6 @@ int main(int argc, char* argv[]){
     Game game;
     game.initNewGame();
     showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+    game.endGame();
     return 0;
 }

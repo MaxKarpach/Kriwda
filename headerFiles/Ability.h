@@ -36,6 +36,25 @@ public:
     int getMaxMovesCount() const { return maxMovesCount; }
     void setMaxMovesCount(int value){maxMovesCount = value;}
 
+    void countMoves(){
+        if (maxMovesCount != movesCount){
+        std::cout << "До возможности использовать способность " << name << " осталось " << movesCount + 2 << " хода(ов)" << std::endl;
+        }
+    }
+
+    void refreshMovesCount(){
+        if (maxMovesCount != movesCount){
+            if (movesCount == -1)
+            {
+                setMovesCount(maxMovesCount);
+            }
+            else
+            {
+                setMovesCount(movesCount - 1);
+            }
+        }
+    }
+
     private: 
     int id;
     std::string name;

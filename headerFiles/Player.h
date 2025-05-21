@@ -149,6 +149,60 @@ public:
         return enemies.size();
     }
 
+        void updateDodgeState() {
+        if (isDodgeOn) {
+            if (dodgeCount >= maxDodgeCount) {
+                isDodgeOn = false;
+                dodgeCount = 0;
+            } else {
+                dodgeCount++;
+            }
+        }
+    }
+
+    void initDodgeCount(){
+            if (isDodgeOn == 1){
+            if (dodgeCount == maxDodgeCount){
+                setIsDodgeOn(0);
+                setDodgeCount(0);
+            }
+            else
+            {
+                std::cout << "До уклонения осталось: " << maxDodgeCount - dodgeCount<< " хода(/ов)" << std::endl;
+                setDodgeCount(dodgeCount + 1);
+            }
+        }
+    }
+
+    void afterRoundInfo(){
+                std::cout << "Здоровье игрока: " << hp << std::endl;
+                std::cout << "Щит игрока: " << shield << std::endl;
+                std::cout << "Выносливость игрока: " << stamina << std::endl;
+    }
+
+    void loseRound(int& playerHp){
+                setHp(playerHp);
+                setStamina(maxStamina);
+                setShield(maxShield);
+                setDodgeCount(0);
+                setIsDodgeOn(0);
+                setIsShieldOn(0);
+    }
+
+    void refreshStatsAfterRound(){
+        if (shield < 0){
+            setShield(0);
+        }
+        setIsShieldOn(0);
+        if (stamina + staminaFactor < maxStamina){
+            setStamina(stamina + staminaRecoveryFactor);
+        }
+        if (shield + shieldFactor < maxShield){
+            setShield(shield + shieldFactor);
+        }
+        
+    }
+
 private:
     int hp;
     int damage;
