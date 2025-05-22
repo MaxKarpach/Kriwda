@@ -124,7 +124,6 @@ Enemy(const EnemyDef& def);
             }
             else
             {
-                std::cout << "До уклонения осталось: " << maxDodgeCount - dodgeCount<< " хода(/ов)" << std::endl;
                 setDodgeCount(dodgeCount + 1);
             }
         }

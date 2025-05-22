@@ -569,7 +569,7 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
         std::cout << "6: " << player3Ability->getName() << std::endl;
         int userChoice = 0;
         srand(time(0));
-        int enemyChoice = rand() % 6 + 1;
+        int enemyChoice = 3;
         std::cin >> userChoice;
         if (userChoice == 1 && enemyChoice == 2 && enemy->getShield() > 0 && player.getStamina() > 0){
             enemy->setIsShieldOn(1);
@@ -745,6 +745,7 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
         {
             std::cout << "Вы победили" << std::endl;
             player.addToEnemies(enemyId);
+            currentLocation->setItems(enemy->getItems());
             currentLocation->setEnemyId(0);
             currentLocation->setDialogNodeId(0);
         }

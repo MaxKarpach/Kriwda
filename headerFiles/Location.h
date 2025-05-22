@@ -46,6 +46,12 @@ public:
         } 
     }
 
+    void setItems(std::vector<int> newItems){
+        for (int item : newItems){
+            items.push_back(item);
+        }
+    }
+
     std::vector<int>& getItems() { return items; }
 
     std::string getDescription() const { return description; }
