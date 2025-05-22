@@ -5,7 +5,7 @@ const int MAX_STRING_LEN = 100;
 
 Location::Location(const LocationDef& def)
 :id(def.id), name(def.name), choices(def.choices), enemyId(def.enemyId), items(def.items), dialogNodeId(def.dialogNodeId),
-description(def.description), isFinalBossLocation(def.isFinalBossLocation){}
+description(def.description), isFinalBossLocation(def.isFinalBossLocation), abilities(def.abilities){}
 
 std::vector<LocationDef> LocationRegistry::getLocations(){
     return locations;
@@ -44,6 +44,13 @@ void  LocationRegistry::load(std::istream& is){
     is.getline(buf2, MAX_STRING_LEN);
     ld.description = buf2;
     is >> ld.isFinalBossLocation;
+    int abilitiesCount = 0;
+    is >> abilitiesCount;
+    for (int i = 0; i < abilitiesCount; i++){
+        int abilityId = 0;
+        is >> abilityId;
+        ld.abilities.push_back(abilityId);
+    }
     locations.push_back(ld);
     }
 }
@@ -69,6 +76,10 @@ void LocationRegistry::save(std::ostream& os) {
 
         os << ld.description << std::endl;
         os << ld.isFinalBossLocation << std::endl;
+        os << ld.abilities.size() << std::endl;
+        for (int abilityId : ld.abilities){
+            os << abilityId << std::endl;
+        }
     }
 }
 std::vector<LocationDef> LocationRegistry::toLocationDefs(const std::vector<Location>& locations) {
@@ -83,6 +94,7 @@ std::vector<LocationDef> LocationRegistry::toLocationDefs(const std::vector<Loca
         def.items = location.getItems();
         def.description = location.getDescription();
         def.isFinalBossLocation = location.getIsFinalBossLocation();
+        def.abilities = location.getAbilities();
         locationDefs.push_back(def);
     }
     return locationDefs;

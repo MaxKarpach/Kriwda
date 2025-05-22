@@ -191,7 +191,7 @@ void saveGame(Player & player, std::vector<Location> & locations, std::vector<En
         dialogChoiceRegistry.save(output);
     }
 
-void loot(std::vector<Item>& items, Player& player, Location* currentLocation) {
+void lootItems(std::vector<Item>& items, Player& player, Location* currentLocation) {
   std::vector<int>& locationItems = currentLocation->getItems();
     std::vector<int>& playerInventory = player.getInventory(); 
     while (!locationItems.empty())
@@ -225,6 +225,43 @@ void loot(std::vector<Item>& items, Player& player, Location* currentLocation) {
 
     if (locationItems.empty()) {
         std::cout << "На локации больше нет предметов." << std::endl;
+    }
+}
+
+void lootAbilities(std::vector<Ability>& abilities, Player& player, Location* currentLocation) {
+  std::vector<int>& locationAbilities= currentLocation->getAbilities();
+    std::vector<int>& playerAbilities = player.getAbilities(); 
+    while (!locationAbilities.empty())
+    {
+        std::cout << "Способности на локации:" << std::endl;
+        std::cout << "0: Выйти" << std::endl;
+        for (int i = 0; i < locationAbilities.size(); ++i) {
+            Ability* ability = findAbilityById(locationAbilities[i], abilities);
+            if (ability) {
+                std::cout << i + 1 << ": " << ability->getName() << std::endl;
+            }
+        }
+
+        int choice = -1;
+        std::cout << "Выберите способность: " << std::endl;
+        std::cin >> choice;
+
+        if (choice == 0) {
+            break;
+        }
+
+        if (choice > 0 && choice <= locationAbilities.size()) {
+            int itemId = locationAbilities[choice - 1];
+            playerAbilities.push_back(itemId); 
+            locationAbilities.erase(locationAbilities.begin() + (choice - 1));
+            std::cout << "Появилась новая способность!" << std::endl;
+        } else {
+            std::cout << "Неверный выбор, попробуйте снова." << std::endl;
+        }
+    }
+
+    if (locationAbilities.empty()) {
+        std::cout << "На локации больше нет способностей." << std::endl;
     }
 }
 
@@ -784,6 +821,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         int enemyId = currentLocation->getEnemyId();
         int dialogNodeId = currentLocation->getDialogNodeId();
         std::vector<int>& locationItems = currentLocation->getItems();
+        std::vector<int>& locationAbilities = currentLocation->getAbilities();
         std::vector<int>& playerAbilities = player.getAbilities();
         std::array<int, 3>& playerChosenAbilities = player.getChosenAbilities();
 
@@ -812,6 +850,9 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         }
         if (!locationItems.empty()) {
             options.push_back("Осмотреть предметы на локации");
+        }
+        if (!locationAbilities.empty()) {
+            options.push_back("Осмотреть способности на локации");
         }
 
         for (int i = 0; i < options.size(); i++) {
@@ -848,7 +889,10 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         }
         else if (selectedOption == "Осмотреть предметы на локации")
         {
-            loot(items, player, currentLocation);
+            lootItems(items, player, currentLocation);
+            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+        }  else if (selectedOption == "Осмотреть способности на локации"){
+            lootAbilities(abilities, player, currentLocation);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         } else if (selectedOption == "Поговорить") {
             startDialog(1, dialogNodes, dialogChoices, dialogNodeId, currentLocation);

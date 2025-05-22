@@ -10,6 +10,7 @@ struct LocationDef{
     std::vector<int> items;
     std::string description;
     bool isFinalBossLocation;
+    std::vector<int> abilities;
 };
 
 class Location{
@@ -24,6 +25,7 @@ public:
 
     std::vector<int> getItems() const{ return items; }
     std::vector<int> getChoices() const { return choices; }
+    std::vector<int> getAbilities() const{ return abilities; }
 
     std::string getName() const { return name; }
     void setName(std::string value) { name = value; }
@@ -53,6 +55,7 @@ public:
     }
 
     std::vector<int>& getItems() { return items; }
+    std::vector<int>& getAbilities() { return abilities; }
 
     std::string getDescription() const { return description; }
     void setDescription(std::string value) { description = value; }
@@ -68,6 +71,7 @@ int enemyId;
 std::vector<int>items;
 std::string description;
 bool isFinalBossLocation;
+std::vector<int> abilities;
 };
 
 class LocationRegistry{

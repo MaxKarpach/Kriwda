@@ -30,6 +30,7 @@
     std::vector<int> items;
     std::string description;
     bool isFinalBossLocation;
+    std::vector<int> abilities;
 кол-во врагов
 враги
     int id;
