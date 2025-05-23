@@ -1,9 +1,9 @@
 SRC_DIR = sourceFiles
 INC_DIR = headerFiles
 
-SRC = $(SRC_DIR)/main.cpp $(SRC_DIR)/Player.cpp $(SRC_DIR)/Enemy.cpp/Ability.cpp/Item.cpp/Renderer.cpp/Location.cpp/DialogNode.cpp/DialogChoice.cpp/Game.cpp
+SRC = $(SRC_DIR)/main.cpp $(SRC_DIR)/Player.cpp $(SRC_DIR)/Enemy.cpp/Ability.cpp/Item.cpp/Renderer.cpp/Location.cpp/DialogNode.cpp/DialogChoice.cpp/Game.cpp/scene.cpp
 
-OBJ = main.o Player.o Enemy.o Ability.o Item.o Renderer.o Location.o DialogNode.o DialogChoice.o Game.o
+OBJ = main.o Player.o Enemy.o Ability.o Item.o Renderer.o Location.o DialogNode.o DialogChoice.o Game.o scene.o
 EXEC = main
 
 CC = g++
@@ -47,6 +47,9 @@ DialogChoice.o: $(SRC_DIR)/DialogChoice.cpp
 
 Game.o: $(SRC_DIR)/Game.cpp
 	$(CC) -c $(SRC_DIR)/Game.cpp $(CFLAGS)
+
+scene.o: $(SRC_DIR)/scene.cpp
+	$(CC) -c $(SRC_DIR)/scene.cpp $(CFLAGS)	
 
 clean:
 	rm -f $(OBJ) $(EXEC)

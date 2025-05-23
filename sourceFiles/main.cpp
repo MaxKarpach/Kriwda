@@ -9,6 +9,7 @@
 #include "../headerFiles/DialogNode.h" 
 #include "../headerFiles/DialogChoice.h" 
 #include "../headerFiles/Game.h" 
+#include "../headerFiles/Scene.h"
 Location* findLocationById(int locationId, std::vector<Location>& locations) {
     for (auto& loc : locations) {
         if (loc.getId() == locationId) {
@@ -96,7 +97,7 @@ void startDialog(int dialogId,std::vector<DialogNode>& dialogNodes,std::vector<D
     }
 }
 
-void downloadData(Player & player, std::vector<Location> & locations, std::vector<Enemy> & enemies, std::vector<Ability> & abilities, std::vector<Item> & items, std::vector<DialogNode> & dialogNodes, std::vector<DialogChoice> & dialogChoices){
+void downloadData(Player & player, std::vector<Location> & locations, std::vector<Enemy> & enemies, std::vector<Ability> & abilities, std::vector<Item> & items, std::vector<DialogNode> & dialogNodes, std::vector<DialogChoice> & dialogChoices, std::vector<Scene> & scenes){
    std::ifstream input("data.txt");
 
     PlayerRegistry playerRegistry;
@@ -109,7 +110,8 @@ void downloadData(Player & player, std::vector<Location> & locations, std::vecto
     items.clear();
     dialogNodes.clear();
     dialogChoices.clear();
-    
+    scenes.clear();
+
     LocationRegistry locationRegistry;
     locationRegistry.load(input);
     std::vector<LocationDef> locationDefs = locationRegistry.getLocations();
@@ -150,6 +152,13 @@ void downloadData(Player & player, std::vector<Location> & locations, std::vecto
     std::vector<DialogChoiceDef> dialogChoiceDefs = dialogChoiceRegistry.getDialogChoices();
     for (const DialogChoiceDef& def : dialogChoiceDefs) {
         dialogChoices.push_back(DialogChoice(def));
+    }
+
+    SceneRegistry sceneRegistry;
+    sceneRegistry.load(input);
+    std::vector<SceneDef> sceneDefs = sceneRegistry.getScenes();
+    for (const SceneDef& def : sceneDefs) {
+        scenes.push_back(Scene(def));
     }
 }
 
@@ -919,9 +928,8 @@ int main(int argc, char* argv[]){
     std::vector<Item> items;
     std::vector<DialogNode> dialogNodes;
     std::vector<DialogChoice> dialogChoices;
-
-    downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-
+    std::vector<Scene> scenes;
+    downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes);
     Game game;
     game.initNewGame();
     showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);

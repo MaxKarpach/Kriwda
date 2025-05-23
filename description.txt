@@ -75,9 +75,14 @@
     std::string name;
     std::string text;
     std::vector<int> choices;
+    std::string description;
 кол-во диалоговых выборов
 диалоговые выборы
     int id;
     std::string text;
     int nextNodeId;
     int nodeId;
+кол-во концовок
+концовки
+int id;
+int dialogNodeId;
