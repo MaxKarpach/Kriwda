@@ -8,8 +8,16 @@
 #include "../headerFiles/Location.h" 
 #include "../headerFiles/DialogNode.h" 
 #include "../headerFiles/DialogChoice.h" 
-#include "../headerFiles/Game.h" 
 #include "../headerFiles/Scene.h"
+void initNewGame(){
+    std::cout << "Начало игры" << std::endl;
+}
+void gameOver(){
+    std::cout << "Вы проиграли" << std::endl;
+}
+void endGame(){
+    std::cout << "Конец игры" << std::endl;
+}
 Location* findLocationById(int locationId, std::vector<Location>& locations) {
     for (auto& loc : locations) {
         if (loc.getId() == locationId) {
@@ -930,10 +938,8 @@ int main(int argc, char* argv[]){
     std::vector<DialogChoice> dialogChoices;
     std::vector<Scene> scenes;
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes);
-    std::cout << scenes[0].getText() << std::endl;
-    Game game;
-    game.initNewGame();
+    initNewGame();
     showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-    game.endGame();
+    endGame();
     return 0;
 }
