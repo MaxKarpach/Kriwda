@@ -15,7 +15,30 @@ void initNewGame(){
 void gameOver(){
     std::cout << "Вы проиграли" << std::endl;
 }
-void endGame(){
+void endGame( std::vector<Scene>& scenes){
+    std::vector<Scene> endings;
+    for (Scene scene : scenes){
+        if (scene.getType() == 'e'){
+            endings.push_back(scene);
+        }
+    }
+    for (int i = 0; i < endings.size(); i++){
+        std::cout << i + 1 << ": " << endings[i].getText() << std::endl;
+    }
+        int choice = 0;
+    while (true) {
+        std::cin >> choice;
+
+        if (choice >= 1 && choice <= endings.size()) {
+            break;
+        } else {
+            std::cout << "Неверный выбор. Пожалуйста, введите число от 1 до " << endings.size() << "." << std::endl;
+        }
+    }
+
+    // Выводим выбранную концовку
+    std::cout << "Выбранная концовка:" << std::endl;;
+    std::cout << endings[choice - 1].getText() << std::endl;
     std::cout << "Конец игры" << std::endl;
 }
 Location* findLocationById(int locationId, std::vector<Location>& locations) {
@@ -940,6 +963,6 @@ int main(int argc, char* argv[]){
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes);
     initNewGame();
     showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-    endGame();
+    endGame(scenes);
     return 0;
 }
