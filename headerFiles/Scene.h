@@ -5,6 +5,7 @@ struct SceneDef{
     int id;
     int dialogNodeId;
     char type;
+    std::string text;
 };
 
 class Scene {
@@ -20,10 +21,14 @@ public:
     char getType() const { return type; }
     void setType(char value) { type = value; }
 
+    std::string getText() const { return text; }
+    void setText(std::string value) {text = value; }
+
 private:
     int id;
     int dialogNodeId;
     char type;
+    std::string text;
 };
 
 

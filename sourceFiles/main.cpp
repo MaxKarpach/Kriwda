@@ -930,7 +930,7 @@ int main(int argc, char* argv[]){
     std::vector<DialogChoice> dialogChoices;
     std::vector<Scene> scenes;
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes);
-
+    std::cout << scenes[0].getText() << std::endl;
     Game game;
     game.initNewGame();
     showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
