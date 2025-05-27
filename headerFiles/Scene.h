@@ -4,6 +4,7 @@
 struct SceneDef{
     int id;
     int dialogNodeId;
+    char type;
 };
 
 class Scene {
@@ -16,10 +17,13 @@ public:
     int getDialogNodeId() const { return dialogNodeId; }
     void setDialogNodeId(int value) { dialogNodeId = value; }
 
+    char getType() const { return type; }
+    void setType(char value) { type = value; }
 
 private:
     int id;
     int dialogNodeId;
+    char type;
 };
 
 

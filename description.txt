@@ -82,7 +82,8 @@
     std::string text;
     int nextNodeId;
     int nodeId;
-кол-во концовок
-концовки
+кол-во сцен
+сцены
 int id;
 int dialogNodeId;
+char type;

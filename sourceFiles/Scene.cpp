@@ -5,7 +5,7 @@
 const int MAX_STRING_LEN = 100;
 
 Scene::Scene(const SceneDef& def)
-:id(def.id), dialogNodeId(def.dialogNodeId){}
+:id(def.id), dialogNodeId(def.dialogNodeId), type(def.type){}
 
 std::vector<SceneDef> SceneRegistry::getScenes(){
     return scenes;
@@ -15,10 +15,11 @@ void SceneRegistry::load(std::istream& is){
     int scenesCount = 0;
     is >> scenesCount;
     for (int i = 0; i < scenesCount;i++){
-        SceneDef ed;
-        is >> ed.id;
-        is >> ed.dialogNodeId;
-        scenes.push_back(ed);
+        SceneDef sd;
+        is >> sd.id;
+        is >> sd.dialogNodeId;
+        is >> sd.type;
+        scenes.push_back(sd);
     }
 }
 void SceneRegistry::save(std::ostream& os){
@@ -26,6 +27,7 @@ void SceneRegistry::save(std::ostream& os){
     for (const SceneDef& sd :scenes) {
         os << sd.id << std::endl;
         os << sd.dialogNodeId << std::endl;
+        os << sd.type << std::endl;
     }
 }
 std::vector<SceneDef> SceneRegistry::toSceneDefs(const std::vector<Scene>& scenes) {
@@ -34,6 +36,7 @@ std::vector<SceneDef> SceneRegistry::toSceneDefs(const std::vector<Scene>& scene
         SceneDef def;
         def.id = scene.getId();
         def.dialogNodeId = scene.getDialogNodeId();
+        def.type = scene.getType();
         sceneDefs.push_back(def);
     }
     return sceneDefs;
