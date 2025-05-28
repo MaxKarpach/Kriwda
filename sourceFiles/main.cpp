@@ -9,13 +9,62 @@
 #include "../headerFiles/DialogNode.h" 
 #include "../headerFiles/DialogChoice.h" 
 #include "../headerFiles/Scene.h"
+void sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId){
+        while (true)
+    {
+
+        DialogNode* currentNode = nullptr;
+        for (auto& node : dialogNodes) {
+            if (node.getId() == currentNodeId) {
+                currentNode = &node;
+                break;
+            }
+        }
+        if (!currentNode) {
+            std::cout << "Ошибка: узел диалога не найден." << std::endl;
+            break;
+        }
+
+        std::cout << currentNode->getName() << ": " << currentNode->getText() << std::endl;
+
+        std::vector<DialogChoice*> currentChoices;
+        for (auto& choice : dialogChoices) {
+            if (choice.getNodeId() == currentNodeId) {
+                currentChoices.push_back(&choice);
+            }
+        }
+
+        if (currentChoices.empty()) {
+            std::cout << "Диалог завершён." << std::endl;
+            break;
+        }
+
+        for (int i = 0; i < currentChoices.size(); ++i) {
+            std::cout << i + 1 << ": " << currentChoices[i]->getText() << std::endl;
+        }
+
+        int userChoice = 0;
+        std::cout << "Выберите вариант (0 — выход): ";
+        std::cin >> userChoice;
+
+        if (userChoice <= 0 || userChoice > currentChoices.size()) {
+            std::cout << "Диалог прерван." << std::endl;
+            break;
+        }
+
+        currentNodeId = currentChoices[userChoice - 1]->getNextNodeId();
+    }
+}
+
 void initNewGame(){
     std::cout << "Начало игры" << std::endl;
 }
+
 void gameOver(){
     std::cout << "Вы проиграли" << std::endl;
 }
-void endGame( std::vector<Scene>& scenes){
+
+void endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices){
     std::vector<Scene> endings;
     for (Scene scene : scenes){
         if (scene.getType() == 'e'){
@@ -36,11 +85,12 @@ void endGame( std::vector<Scene>& scenes){
         }
     }
 
-    // Выводим выбранную концовку
     std::cout << "Выбранная концовка:" << std::endl;;
     std::cout << endings[choice - 1].getText() << std::endl;
+    sceneDialog(dialogNodes, dialogChoices, endings[choice - 1].getDialogNodeId());
     std::cout << "Конец игры" << std::endl;
 }
+
 Location* findLocationById(int locationId, std::vector<Location>& locations) {
     for (auto& loc : locations) {
         if (loc.getId() == locationId) {
@@ -77,7 +127,7 @@ Item* findItemById(int itemId, std::vector<Item>& items) {
     return nullptr;
 }
 
-void startDialog(int dialogId,std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Location* currentLocation) {
+void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Location* currentLocation) {
     while (true)
     {
 
@@ -935,7 +985,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
             lootAbilities(abilities, player, currentLocation);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         } else if (selectedOption == "Поговорить") {
-            startDialog(1, dialogNodes, dialogChoices, dialogNodeId, currentLocation);
+            startDialog(dialogNodes, dialogChoices, dialogNodeId, currentLocation);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         } else if (selectedOption == "Показать описания способностей") {
             showAbilityDescriptions(playerAbilities, abilities);
@@ -963,6 +1013,6 @@ int main(int argc, char* argv[]){
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes);
     initNewGame();
     showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-    endGame(scenes);
+    endGame(scenes, dialogNodes, dialogChoices);
     return 0;
 }
