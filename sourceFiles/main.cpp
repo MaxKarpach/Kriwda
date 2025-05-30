@@ -25,6 +25,10 @@ void sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
             break;
         }
 
+        if (currentNode->getDescription() != ""){
+            std::cout << currentNode->getDescription() << std::endl;
+        }
+
         std::cout << currentNode->getName() << ": " << currentNode->getText() << std::endl;
 
         std::vector<DialogChoice*> currentChoices;
@@ -141,6 +145,10 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
         if (!currentNode) {
             std::cout << "Ошибка: узел диалога не найден." << std::endl;
             break;
+        }
+
+        if (currentNode->getDescription() != ""){
+            std::cout << currentNode->getDescription() << std::endl;
         }
 
         if (currentNode->getChoices().size() == 0){

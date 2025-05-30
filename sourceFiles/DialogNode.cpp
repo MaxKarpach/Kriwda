@@ -34,6 +34,7 @@ void DialogNodeRegistry::load(std::istream& is){
             is >> choiceId;
             dnd.choices.push_back(choiceId);
         }
+        is.ignore();
         char buf3[MAX_STRING_LEN + 1] = {0};
         is.getline(buf3, MAX_STRING_LEN);
         dnd.description = buf3;
