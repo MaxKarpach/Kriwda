@@ -24,6 +24,7 @@ struct PlayerDef{
     int maxShield;
     int staminaRecoveryFactor;
     std::vector<int> enemies;
+    int abilitiesCount;
 };
 
 class Player {
@@ -57,6 +58,9 @@ public:
 
     int getShield() const { return shield; }
     void setShield(int value) { shield = value; }
+
+    int getAbilitiesCount() const { return abilitiesCount; }
+    void setAbilitiesCount(int value) { abilitiesCount = value; }
 
     int getShieldFactor() const { return shieldFactor; }
     void setShieldFactor(int value) { shieldFactor = value; }
@@ -238,6 +242,7 @@ private:
     int maxShield;
     int staminaRecoveryFactor;
     std::vector<int> enemies;
+    int abilitiesCount;
 };
 
 class PlayerRegistry{

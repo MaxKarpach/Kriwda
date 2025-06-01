@@ -23,6 +23,7 @@ struct EnemyDef{
     int staminaRecoveryFactor;
     std::vector<int> items;
     std::string description;
+    int abilitiesCount;
 };
 
 class Enemy{
@@ -100,6 +101,9 @@ Enemy(const EnemyDef& def);
 
     int getMaxShield() const { return maxShield; }
     void setMaxShield(int value) { maxShield = value; }
+
+    int getAbilitiesCount() const { return abilitiesCount; }
+    void setAbilitiesCount(int value) { abilitiesCount = value; }
 
     int getMaxDodgeCount() const { return maxDodgeCount; }
     void setMaxDodgeCount(int value) {maxDodgeCount = value;}
@@ -181,6 +185,7 @@ private:
     int staminaRecoveryFactor;
     std::vector<int> items;
     std::string description;
+    int abilitiesCount;
 };
 
 

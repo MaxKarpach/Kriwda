@@ -9,6 +9,7 @@
     int dialogNodeId;
     std::vector<int> inventory;
     std::vector<int> abilities;
+    int abilitiesCount;
     std::array<int, 3> chosenAbilities;
     int chosenWeaponId;
     bool isShieldOn;
@@ -40,6 +41,7 @@
     int stamina;
     int shield;
     int dodgeCount;
+    int abilitiesCount;
     std::array<int, 3> abilities;
     int chosenWeaponId;
     int locationId;

@@ -7,14 +7,14 @@ Player::Player(const PlayerDef& def)
    chosenAbilities(def.chosenAbilities), chosenWeaponId(def.chosenWeaponId), isShieldOn(def.isShieldOn), 
    isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor), shieldFactor(def.shieldFactor),
    maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield), 
-   staminaRecoveryFactor(def.staminaRecoveryFactor), enemies(def.enemies) {}
+   staminaRecoveryFactor(def.staminaRecoveryFactor), enemies(def.enemies), abilitiesCount(def.abilitiesCount) {}
 
 Player::Player() 
     : hp(0), damage(0), stamina(0), shield(0), dodgeCount(0),
       money(0), locationId(0), dialogNodeId(0), chosenWeaponId(0),
       isShieldOn(false), isDodgeOn(false), staminaFactor(0),
       shieldFactor(0), maxDodgeCount(0), maxStamina(0),
-      maxShield(0), staminaRecoveryFactor(0) {}
+      maxShield(0), staminaRecoveryFactor(0), abilitiesCount(3) {}
 
 PlayerDef PlayerRegistry::getPlayer(){
     return player;
@@ -44,9 +44,10 @@ void PlayerRegistry::load(std::istream& is){
         is >> abilityId;
         pd.abilities.push_back(abilityId);
     }
-    is >> pd.chosenAbilities[0];
-    is >> pd.chosenAbilities[1];
-    is >> pd.chosenAbilities[2];
+    is >> pd.abilitiesCount;
+    for (int i = 0; i < pd.abilitiesCount; i++){
+        is >> pd.chosenAbilities[i];
+    }
     is >> pd.chosenWeaponId;
     is >> pd.isShieldOn;
     is >> pd.isDodgeOn;
@@ -85,10 +86,10 @@ void PlayerRegistry::save(std::ostream& os) {
     for (int abilityId : player.abilities) {
         os << abilityId << std::endl;
     }
-
-    os << player.chosenAbilities[0] << std::endl;
-    os << player.chosenAbilities[1] << std::endl;
-    os << player.chosenAbilities[2] << std::endl;
+    os << player.abilitiesCount << std::endl;
+    for (int i = 0; i < player.abilitiesCount; i++){
+        os << player.chosenAbilities[i] << std::endl;
+    }
 
     os << player.chosenWeaponId << std::endl;
     os << player.isShieldOn << std::endl;
@@ -119,6 +120,7 @@ PlayerDef PlayerRegistry::toPlayerDef(Player& player) {
     def.dialogNodeId = player.getDialogNodeId();
     def.inventory = player.getInventory();
     def.abilities = player.getAbilities();
+    def.abilitiesCount = player.getAbilitiesCount();
     def.chosenAbilities = player.getChosenAbilities();
     def.chosenWeaponId = player.getChosenWeaponId();
     def.isShieldOn = player.getIsShieldOn();

@@ -721,12 +721,21 @@ void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag, Re
 
 void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, Location* currentLocation, Renderer& renderer){
     Enemy* enemy = findEnemyById(enemyId, enemies);
+    
     Ability *player1Ability = findAbilityById(player.getChosenAbilities()[0], abilities);
     Ability *player2Ability = findAbilityById(player.getChosenAbilities()[1], abilities);
     Ability *player3Ability = findAbilityById(player.getChosenAbilities()[2], abilities);
     Ability *enemy1Ability = findAbilityById(enemy->getAbilities()[0], abilities);
     Ability *enemy2Ability = findAbilityById(enemy->getAbilities()[1], abilities);
     Ability *enemy3Ability = findAbilityById(enemy->getAbilities()[2], abilities);
+
+    Ability* playerAbilities[player.getAbilitiesCount()];
+    Ability* enemyAbilities[enemy->getAbilitiesCount()];
+
+    for (int i = 0; i < player.getAbilitiesCount(); i++) {
+    playerAbilities[i] = findAbilityById(player.getChosenAbilities()[i], abilities);
+    enemyAbilities[i] = findAbilityById(enemy->getAbilities()[i], abilities);
+    }
     int playerHp = player.getHp();
     int enemyHp = enemy->getHp();
     renderer.printText("Ваш враг: ");
@@ -739,12 +748,11 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
         renderer.printEndlineText("1: Атака");
         renderer.printEndlineText("2: Защита");
         renderer.printEndlineText("3: Уклонение");
-        renderer.printText("4: ");
-        renderer.printEndlineText(player1Ability->getName());
-        renderer.printText("5: ");
-        renderer.printEndlineText(player2Ability->getName());
-        renderer.printText("6: ");
-        renderer.printEndlineText(player3Ability->getName());
+        for (int i = 0; i < 3; i++) {
+            renderer.printText(i + 4);
+            renderer.printText(": ");
+            renderer.printEndlineText(playerAbilities[i]->getName());
+        }
         int userChoice = 0;
         srand(time(0));
         int enemyChoice = rand() % 6 + 1;
@@ -922,12 +930,10 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
         }
         player.refreshStatsAfterRound();
         enemy->refreshStatsAfterRound();
-        enemy1Ability->refreshMovesCount();
-        enemy2Ability->refreshMovesCount();
-        enemy3Ability->refreshMovesCount();
-        player1Ability->refreshMovesCount();
-        player2Ability->refreshMovesCount();
-        player3Ability->refreshMovesCount();  
+        for (int i = 0; i < player.getAbilitiesCount(); i++) {
+            playerAbilities[i]->refreshMovesCount();
+            enemyAbilities[i]->refreshMovesCount();
+        }
         if (enemy->getHp() <= 0)
         {
             renderer.printEndlineText("Вы победили");
@@ -947,9 +953,9 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
             {
                 player.afterRoundInfo();
                 enemy->afterRoundInfo();
-                player1Ability->countMoves();
-                player2Ability->countMoves();
-                player3Ability->countMoves();
+                for (int i = 0; i < player.getAbilitiesCount(); i++) {
+                playerAbilities[i]->countMoves();
+                }
             }
 
     } while (enemy->getHp() > 0 && player.getHp() > 0);

@@ -8,7 +8,7 @@ Enemy::Enemy(const EnemyDef& def)
 abilities(def.abilities), chosenWeaponId(def.chosenWeaponId),locationId(def.locationId), isShieldOn(def.isShieldOn), 
 isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor),shieldFactor(def.shieldFactor),
 maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield),
-staminaRecoveryFactor(def.staminaRecoveryFactor), items(def.items), description(def.description) {}
+staminaRecoveryFactor(def.staminaRecoveryFactor), items(def.items), description(def.description), abilitiesCount(def.abilitiesCount) {}
 
 std::vector<EnemyDef> EnemyRegistry::getEnemies(){
     return enemies;
@@ -30,9 +30,10 @@ void EnemyRegistry::load(std::istream& is){
         is >> ed.stamina;
         is >> ed.shield;
         is >> ed.dodgeCount;
-        is >> ed.abilities[0];
-        is >> ed.abilities[1];
-        is >> ed.abilities[2];
+        is >> ed.abilitiesCount;
+        for (int i = 0; i < ed.abilitiesCount; i++){
+              is >> ed.abilities[i];
+        }
         is >> ed.chosenWeaponId;
         is >> ed.locationId;
         is >> ed.isShieldOn;
@@ -69,9 +70,10 @@ void EnemyRegistry::save(std::ostream& os){
         os << ed.stamina << std::endl;
         os << ed.shield << std::endl;
         os << ed.dodgeCount << std::endl;
-        os << ed.abilities[0] << std::endl;
-        os << ed.abilities[1] << std::endl;
-        os << ed.abilities[2] << std::endl;
+        os << ed.abilitiesCount << std::endl;
+        for (int i = 0; i < ed.abilitiesCount; i++){
+        os << ed.abilities[i] << std::endl;
+        }
         os << ed.chosenWeaponId << std::endl;
         os << ed.locationId << std::endl;
         os << ed.isShieldOn << std::endl;
@@ -101,6 +103,7 @@ std::vector<EnemyDef> EnemyRegistry::toEnemyDefs(const std::vector<Enemy>& enemi
         def.stamina = enemy.getStamina();
         def.shield = enemy.getShield();
         def.dodgeCount = enemy.getDodgeCount();
+        def.abilitiesCount = enemy.getAbilitiesCount();
         def.abilities = enemy.getAbilities();
         def.chosenWeaponId = enemy.getChosenWeaponId();
         def.locationId = enemy.getLocationId();
