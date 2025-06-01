@@ -1,6 +1,7 @@
 #include <iostream>
 #ifndef LOCATION_H
 #define LOCATION_H
+#include <Renderer.h>
 struct LocationDef{
     int id;
     std::string name;
@@ -38,7 +39,8 @@ public:
     }
     void showChoices(){
         for (int i = 0; i < choices.size(); i++){
-            std::cout << choices[i] << std::endl;
+            Renderer renderer;
+            renderer.printEndlineText(choices[i]);
         }
     }
     void removeChoice(int choiceId) {

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <Renderer.h>
 #ifndef ABILITY_H
 #define ABILITY_H
 struct AbilityDef{
@@ -38,7 +39,12 @@ public:
 
     void countMoves(){
         if (maxMovesCount != movesCount){
-        std::cout << "До возможности использовать способность " << name << " осталось " << movesCount + 2 << " хода(ов)" << std::endl;
+            Renderer renderer;
+            renderer.printText("До возможности использовать способность ");
+            renderer.printText(name);
+            renderer.printText(" осталось ");
+            renderer.printText(movesCount + 2);
+            renderer.printEndlineText(" хода(ов)");
         }
     }
 

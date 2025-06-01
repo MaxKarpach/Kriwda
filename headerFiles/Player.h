@@ -1,6 +1,7 @@
 #include <iostream>
 #ifndef PLAYER_H
 #define PLAYER_H
+#include <Renderer.h>
 struct PlayerDef{
     int hp;
     int damage;
@@ -90,7 +91,8 @@ public:
      {
          for (int i = 0; i < inventory.size(); i++)
          {
-             std::cout << inventory[i] << std::endl;
+             Renderer renderer;
+             renderer.printEndlineText(inventory[i]);
          }
     }
     void addItemToInventory(int itemId){
@@ -105,7 +107,8 @@ public:
 
     void showAbilities(){
         for (int i = 0; i < abilities.size(); i++){
-            std::cout << abilities[i] << std::endl;
+            Renderer renderer;
+            renderer.printEndlineText(abilities[i]);
         }
     }
     void addAbility(int abilityId){
@@ -119,7 +122,8 @@ public:
     }
     void showChosenAbilities(){
         for (int i = 0; i < chosenAbilities.size(); i++){
-            std::cout << chosenAbilities[i] << std::endl;
+            Renderer renderer;
+            renderer.printEndlineText(chosenAbilities[i]);
         }
     }
     void addChosenAbility(int abilityId, int chosenAbilityIndex){
@@ -170,16 +174,23 @@ public:
             }
             else
             {
-                std::cout << "До уклонения осталось: " << maxDodgeCount - dodgeCount<< " хода(/ов)" << std::endl;
+                Renderer renderer;
+                renderer.printText("До уклонения осталось: ");
+                renderer.printText(maxDodgeCount - dodgeCount);
+                renderer.printEndlineText(" хода(/ов)");
                 setDodgeCount(dodgeCount + 1);
             }
         }
     }
 
     void afterRoundInfo(){
-                std::cout << "Здоровье игрока: " << hp << std::endl;
-                std::cout << "Щит игрока: " << shield << std::endl;
-                std::cout << "Выносливость игрока: " << stamina << std::endl;
+        Renderer renderer;
+        renderer.printText("Здоровье игрока: ");
+        renderer.printEndlineText(hp);
+        renderer.printText("Щит игрока: ");
+        renderer.printEndlineText(shield);
+        renderer.printText("Выносливость игрока: ");
+        renderer.printEndlineText(stamina);
     }
 
     void loseRound(int& playerHp){

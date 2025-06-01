@@ -9,7 +9,7 @@
 #include "../headerFiles/DialogNode.h" 
 #include "../headerFiles/DialogChoice.h" 
 #include "../headerFiles/Scene.h"
-void sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId){
+void sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Renderer& renderer){
         while (true)
     {
 
@@ -21,15 +21,17 @@ void sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
             }
         }
         if (!currentNode) {
-            std::cout << "Ошибка: узел диалога не найден." << std::endl;
+            renderer.printEndlineText("Ошибка: узел диалога не найден.");
             break;
         }
 
         if (currentNode->getDescription() != ""){
-            std::cout << currentNode->getDescription() << std::endl;
+            renderer.printEndlineText(currentNode->getDescription());
         }
 
-        std::cout << currentNode->getName() << ": " << currentNode->getText() << std::endl;
+        renderer.printText(currentNode->getName());
+        renderer.printText(": ");
+        renderer.printEndlineText(currentNode->getText());
 
         std::vector<DialogChoice*> currentChoices;
         for (auto& choice : dialogChoices) {
@@ -39,20 +41,22 @@ void sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
         }
 
         if (currentChoices.empty()) {
-            std::cout << "Диалог завершён." << std::endl;
+            renderer.printEndlineText("Диалог завершён.");
             break;
         }
 
         for (int i = 0; i < currentChoices.size(); ++i) {
-            std::cout << i + 1 << ": " << currentChoices[i]->getText() << std::endl;
+            renderer.printText(i + 1);
+            renderer.printText(": ");
+            renderer.printEndlineText(currentChoices[i]->getText());
         }
 
         int userChoice = 0;
-        std::cout << "Выберите вариант (0 — выход): ";
+        renderer.printText("Выберите вариант (0 — выход): ");
         std::cin >> userChoice;
 
         if (userChoice <= 0 || userChoice > currentChoices.size()) {
-            std::cout << "Диалог прерван." << std::endl;
+            renderer.printEndlineText("Диалог прерван.");
             break;
         }
 
@@ -60,15 +64,15 @@ void sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
     }
 }
 
-void initNewGame(){
-    std::cout << "Начало игры" << std::endl;
+void initNewGame(Renderer& renderer){
+    renderer.printEndlineText("Начало игры");
 }
 
-void gameOver(){
-    std::cout << "Вы проиграли" << std::endl;
+void gameOver(Renderer& renderer){
+    renderer.printEndlineText("Вы проиграли");
 }
 
-void endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices){
+void endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer){
     std::vector<Scene> endings;
     for (Scene scene : scenes){
         if (scene.getType() == 'e'){
@@ -76,7 +80,9 @@ void endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,s
         }
     }
     for (int i = 0; i < endings.size(); i++){
-        std::cout << i + 1 << ": " << endings[i].getText() << std::endl;
+        renderer.printText(i + 1);
+        renderer.printText(": ");
+        renderer.printEndlineText(endings[i].getText());
     }
         int choice = 0;
     while (true) {
@@ -85,14 +91,14 @@ void endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,s
         if (choice >= 1 && choice <= endings.size()) {
             break;
         } else {
-            std::cout << "Неверный выбор. Пожалуйста, введите число от 1 до " << endings.size() << "." << std::endl;
+            renderer.printText("Неверный выбор. Пожалуйста, введите число от 1 до ");
+            renderer.printEndlineText(endings.size());
         }
     }
-
-    std::cout << "Выбранная концовка:" << std::endl;;
-    std::cout << endings[choice - 1].getText() << std::endl;
-    sceneDialog(dialogNodes, dialogChoices, endings[choice - 1].getDialogNodeId());
-    std::cout << "Конец игры" << std::endl;
+    renderer.printEndlineText("Выбранная концовка:");
+    renderer.printEndlineText(endings[choice - 1].getText());
+    sceneDialog(dialogNodes, dialogChoices, endings[choice - 1].getDialogNodeId(), renderer);
+    renderer.printEndlineText("Конец игры");
 }
 
 Location* findLocationById(int locationId, std::vector<Location>& locations) {
@@ -131,7 +137,7 @@ Item* findItemById(int itemId, std::vector<Item>& items) {
     return nullptr;
 }
 
-void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Location* currentLocation) {
+void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Location* currentLocation, Renderer& renderer) {
     while (true)
     {
 
@@ -143,19 +149,21 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
             }
         }
         if (!currentNode) {
-            std::cout << "Ошибка: узел диалога не найден." << std::endl;
+            renderer.printEndlineText("Ошибка: узел диалога не найден.");
             break;
         }
 
         if (currentNode->getDescription() != ""){
-            std::cout << currentNode->getDescription() << std::endl;
+            renderer.printEndlineText(currentNode->getDescription());
         }
 
         if (currentNode->getChoices().size() == 0){
             currentLocation->setDialogNodeId(0);
         }
 
-        std::cout << currentNode->getName() << ": " << currentNode->getText() << std::endl;
+        renderer.printText(currentNode->getName());
+        renderer.printText(": ");
+        renderer.printEndlineText(currentNode->getText());
 
         std::vector<DialogChoice*> currentChoices;
         for (auto& choice : dialogChoices) {
@@ -165,20 +173,22 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
         }
 
         if (currentChoices.empty()) {
-            std::cout << "Диалог завершён." << std::endl;
+            renderer.printEndlineText("Диалог завершён.");
             break;
         }
 
         for (int i = 0; i < currentChoices.size(); ++i) {
-            std::cout << i + 1 << ": " << currentChoices[i]->getText() << std::endl;
+            renderer.printText(i + 1);
+            renderer.printText(": ");
+            renderer.printEndlineText(currentChoices[i]->getText());
         }
 
         int userChoice = 0;
-        std::cout << "Выберите вариант (0 — выход): ";
+        renderer.printText("Выберите вариант (0 — выход): ");
         std::cin >> userChoice;
 
         if (userChoice <= 0 || userChoice > currentChoices.size()) {
-            std::cout << "Диалог прерван." << std::endl;
+            renderer.printEndlineText("Диалог прерван.");
             break;
         }
 
@@ -289,22 +299,24 @@ void saveGame(Player & player, std::vector<Location> & locations, std::vector<En
         dialogChoiceRegistry.save(output);
     }
 
-void lootItems(std::vector<Item>& items, Player& player, Location* currentLocation) {
+void lootItems(std::vector<Item>& items, Player& player, Location* currentLocation, Renderer& renderer) {
   std::vector<int>& locationItems = currentLocation->getItems();
     std::vector<int>& playerInventory = player.getInventory(); 
     while (!locationItems.empty())
     {
-        std::cout << "Предметы на локации:" << std::endl;
-        std::cout << "0: Выйти" << std::endl;
+        renderer.printEndlineText("Предметы на локации:");
+        renderer.printEndlineText("0: Выйти");
         for (int i = 0; i < locationItems.size(); ++i) {
             Item* item = findItemById(locationItems[i], items);
             if (item) {
-                std::cout << i + 1 << ": " << item->getName() << std::endl;
+                renderer.printText(i + 1);
+                renderer.printText(": ");
+                renderer.printEndlineText(item->getName());
             }
         }
 
         int choice = -1;
-        std::cout << "Выберите предмет для подбора: " << std::endl;
+        renderer.printEndlineText("Выберите предмет для подбора: ");
         std::cin >> choice;
 
         if (choice == 0) {
@@ -315,33 +327,35 @@ void lootItems(std::vector<Item>& items, Player& player, Location* currentLocati
             int itemId = locationItems[choice - 1];
             playerInventory.push_back(itemId); 
             locationItems.erase(locationItems.begin() + (choice - 1));
-            std::cout << "Предмет подобран!" << std::endl;
+            renderer.printEndlineText("Предмет подобран!");
         } else {
-            std::cout << "Неверный выбор, попробуйте снова." << std::endl;
+            renderer.printEndlineText("Неверный выбор, попробуйте снова.");
         }
     }
 
     if (locationItems.empty()) {
-        std::cout << "На локации больше нет предметов." << std::endl;
+        renderer.printEndlineText("На локации больше нет предметов.");
     }
 }
 
-void lootAbilities(std::vector<Ability>& abilities, Player& player, Location* currentLocation) {
+void lootAbilities(std::vector<Ability>& abilities, Player& player, Location* currentLocation, Renderer& renderer) {
   std::vector<int>& locationAbilities= currentLocation->getAbilities();
     std::vector<int>& playerAbilities = player.getAbilities(); 
     while (!locationAbilities.empty())
     {
-        std::cout << "Способности на локации:" << std::endl;
-        std::cout << "0: Выйти" << std::endl;
+        renderer.printEndlineText("Способности на локации:");
+        renderer.printEndlineText("0: Выйти");
         for (int i = 0; i < locationAbilities.size(); ++i) {
             Ability* ability = findAbilityById(locationAbilities[i], abilities);
             if (ability) {
-                std::cout << i + 1 << ": " << ability->getName() << std::endl;
+                renderer.printText(i + 1);
+                renderer.printText(": ");
+                renderer.printEndlineText(ability->getName());
             }
         }
 
         int choice = -1;
-        std::cout << "Выберите способность: " << std::endl;
+        renderer.printEndlineText("Выберите способность: ");
         std::cin >> choice;
 
         if (choice == 0) {
@@ -352,22 +366,23 @@ void lootAbilities(std::vector<Ability>& abilities, Player& player, Location* cu
             int itemId = locationAbilities[choice - 1];
             playerAbilities.push_back(itemId); 
             locationAbilities.erase(locationAbilities.begin() + (choice - 1));
-            std::cout << "Появилась новая способность!" << std::endl;
+            renderer.printEndlineText("Появилась новая способность!");
         } else {
-            std::cout << "Неверный выбор, попробуйте снова." << std::endl;
+            renderer.printEndlineText("Неверный выбор, попробуйте снова.");
         }
     }
 
     if (locationAbilities.empty()) {
-        std::cout << "На локации больше нет способностей." << std::endl;
+        renderer.printEndlineText("На локации больше нет способностей.");
     }
 }
 
-void move(Player& player, std::vector<Location>& locations, int& enemiesCount){
+void move(Player& player, std::vector<Location>& locations, int& enemiesCount, Renderer& renderer){
     while (true){
         Location *currentLocation = findLocationById(player.getLocationId(), locations);
-        std::cout << "Ваше текущее местоположение: " << currentLocation->getName() << std::endl;
-        std::cout << "Вы можете пойти в следующие места: " << std::endl;
+        renderer.printText("Ваше текущее местоположение: ");
+        renderer.printEndlineText(currentLocation->getName());
+        renderer.printEndlineText("Вы можете пойти в следующие места: ");
         std::vector<Location*> nearlyLocations;
         int finalBossLocationNum = 0;
         for (int i = 0; i < currentLocation->getChoices().size(); i++)
@@ -376,16 +391,22 @@ void move(Player& player, std::vector<Location>& locations, int& enemiesCount){
             if (nearlyLocation) {
                 nearlyLocations.push_back(nearlyLocation);
                 if (nearlyLocation->getIsFinalBossLocation() && player.getEnemiesCount() != (enemiesCount - 1)){
-                    std::cout << i + 1 << ": " << nearlyLocation->getName() << "(вы еще не готовы)" << std::endl;
+                    renderer.printText(i + 1);
+                    renderer.printText(": ");
+                    renderer.printText(nearlyLocation->getName());
+                    renderer.printEndlineText("(вы еще не готовы)");
                     finalBossLocationNum = i + 1;
                 }
                 else
                 {
-                    std::cout << i + 1 << ": " << nearlyLocation->getName() << std::endl;
+                    renderer.printText(i + 1);
+                    renderer.printText(": ");
+                    renderer.printEndlineText(nearlyLocation->getName());
                 }
             }
         }
-        std::cout << currentLocation->getChoices().size()+1 << ": Показать меню" << std::endl;
+        renderer.printText(currentLocation->getChoices().size() + 1);
+        renderer.printEndlineText(": Показать меню");
         int userChoice = 0;
         std::cin >> userChoice;
         if (userChoice == currentLocation->getChoices().size()+1){
@@ -403,37 +424,38 @@ void move(Player& player, std::vector<Location>& locations, int& enemiesCount){
         }
         else
         {
-            std::cout << "Такого варианта нет" << std::endl;
+            renderer.printEndlineText("Такого варианта нет");
         }
     }
 }
 
-void showInventory(std::vector<Item>& items, Player& player) {
+void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer) {
     std::vector<int> &inventory = player.getInventory();
     while (true)
     {
-        std::cout << "Ваш инвентарь:" << std::endl;
+        renderer.printEndlineText("Ваш инвентарь:");
 
         if (inventory.empty()) {
-            std::cout << "Инвентарь пуст." << std::endl;
+            renderer.printEndlineText("Инвентарь пуст.");
             return;
         }
 
         for (int i = 0; i < inventory.size(); i++) {
             Item* item = findItemById(inventory[i], items);
             if (item != nullptr) {
-                std::cout << i + 1 << ": " << item->getName() << std::endl;
+                renderer.printText(i + 1);
+                renderer.printText(": ");
+                renderer.printEndlineText(item->getName());
             }
         }
-
-        std::cout << "Введите номер предмета, чтобы использовать (0 для выхода): ";
+        renderer.printText("Введите номер предмета, чтобы использовать (0 для выхода): ");
         int input;
         std::cin >> input;
 
         if (input == 0) break;
 
         if (input < 1 || input > inventory.size()) {
-            std::cout << "Неверный выбор. Попробуйте снова." << std::endl;
+            renderer.printEndlineText("Неверный выбор. Попробуйте снова.");
             continue;
         }
 
@@ -441,7 +463,7 @@ void showInventory(std::vector<Item>& items, Player& player) {
         Item* item = findItemById(itemId, items);
 
         if (!item) {
-            std::cout << "Ошибка: предмет не найден." << std::endl;
+            renderer.printEndlineText("Ошибка: предмет не найден.");
             continue;
         }
 
@@ -449,15 +471,19 @@ void showInventory(std::vector<Item>& items, Player& player) {
         switch (type) {
             case 'f':
                 player.setHp(player.getHp() + item->getFactor());
-                std::cout << "Вы выбрали еду: " << item->getName() << std::endl;
-                std::cout << "Вы восстановили " << item->getFactor() << " здоровья." << std::endl;
+                renderer.printText("Вы выбрали еду: ");
+                renderer.printEndlineText(item->getName());
+                renderer.printText("Вы восстановили ");
+                renderer.printText(item->getFactor());
+                renderer.printEndlineText(" здоровья.");
                 break;
             case 'w':
                 player.setChosenWeaponId(item->getId());
-                std::cout << "Вы выбрали оружие: " << item->getName() << std::endl;
+                renderer.printText("Вы выбрали оружие: ");
+                renderer.printEndlineText(item->getName());
                 break;
             default:
-                std::cout << "Предмет не может быть использован." << std::endl;
+                renderer.printEndlineText("Предмет не может быть использован.");
                 continue;
         }
 
@@ -467,34 +493,36 @@ void showInventory(std::vector<Item>& items, Player& player) {
     }
 }
 
-void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abilities, std::array<int, 3>& playerChosenAbilities) {
+void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abilities, std::array<int, 3>& playerChosenAbilities, Renderer& renderer) {
     int inputAbilityIndex = -1;
     int replaceIndex = -1;
 
     while (true) {
-        std::cout << "Все способности:" <<std::endl;
+        renderer.printEndlineText("Все способности:");
         for (int i = 0; i < playerAbilities.size(); i++) {
             Ability* ability = findAbilityById(playerAbilities[i], abilities);
             if (ability != nullptr) {
-                std::cout << i + 1 << ": " << ability->getName() << std::endl;
+                renderer.printText(i + 1);
+                renderer.printText(": ");
+                renderer.printEndlineText(ability->getName());
             }
         }
-
-        std::cout << "Выбранные способности:" <<std::endl;
+        renderer.printEndlineText("Выбранные способности:");
         for (int i = 0; i < playerChosenAbilities.size(); i++) {
             Ability* ability = findAbilityById(playerChosenAbilities[i], abilities);
             if (ability != nullptr) {
-                std::cout << i + 1 << ": " << ability->getName() << std::endl;
+                renderer.printText(i + 1);
+                renderer.printText(": ");
+                renderer.printEndlineText(ability->getName());
             }
         }
-
-        std::cout << "Введите номер способности для замены (0 для выхода): ";
+        renderer.printEndlineText("Введите номер способности для замены (0 для выхода): ");
         std::cin >> inputAbilityIndex;
 
         if (inputAbilityIndex == 0) break;
 
         if (inputAbilityIndex < 1 || inputAbilityIndex > playerAbilities.size()) {
-            std::cout << "Некорректный ввод. Попробуйте снова." << std::endl;
+            renderer.printEndlineText("Некорректный ввод. Попробуйте снова.");
             continue;
         }
 
@@ -509,30 +537,31 @@ void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& ab
         }
 
         if (alreadyChosen) {
-            std::cout << "Эта способность уже выбрана. Выберите другую."<<std::endl;
+            renderer.printEndlineText("Эта способность уже выбрана. Выберите другую.");
             continue;
         }
-
-        std::cout << "Введите номер выбранной способности, которую хотите заменить (1-3): ";
+        renderer.printEndlineText("Введите номер выбранной способности, которую хотите заменить (1-3): ");
         std::cin >> replaceIndex;
 
         if (replaceIndex < 1 || replaceIndex > 3) {
-            std::cout << "Некорректный выбор замены." << std::endl;
+            renderer.printEndlineText("Некорректный выбор замены.");
             continue;
         }
 
         playerChosenAbilities[replaceIndex - 1] = selectedAbilityId;
-        std::cout << "Способность заменена!" <<std::endl;
+        renderer.printEndlineText("Способность заменена!");
     }
 }
 
-void showItemDescriptions(const std::vector<int>& inventory, std::vector<Item>& items) {
+void showItemDescriptions(const std::vector<int>& inventory, std::vector<Item>& items, Renderer& renderer) {
     while (true) {
-        std::cout << "Ваш инвентарь. Введите номер предмета для просмотра описания (0 для выхода):" << std::endl;
+        renderer.printEndlineText("Ваш инвентарь. Введите номер предмета для просмотра описания (0 для выхода):");
         for (int i = 0; i < inventory.size(); ++i) {
             const Item* item = findItemById(inventory[i], items);
             if (item != nullptr) {
-                std::cout << i + 1 << ": " << item->getName() << std::endl;
+                renderer.printText(i + 1);
+                renderer.printText(": ");
+                renderer.printEndlineText(item->getName());
             }
         }
 
@@ -542,25 +571,29 @@ void showItemDescriptions(const std::vector<int>& inventory, std::vector<Item>& 
         if (choice == 0) break;
 
         if (choice < 1 || choice > inventory.size()) {
-            std::cout << "Некорректный выбор. Попробуйте снова." << std::endl;
+            renderer.printEndlineText("Некорректный выбор. Попробуйте снова.");
             continue;
         }
 
         const Item* selected = findItemById(inventory[choice - 1], items);
         if (selected) {
-            std::cout << "Описание предмета " << selected->getName() << ":" << std::endl;
-            std::cout << selected->getDescription()<< std::endl;
+            renderer.printText("Описание предмета ");
+            renderer.printText(selected->getName());
+            renderer.printEndlineText(":");
+            renderer.printEndlineText(selected->getDescription());
         }
     }
 }
 
-void showAbilityDescriptions(const std::vector<int>& playerAbilities, std::vector<Ability>& abilities) {
+void showAbilityDescriptions(const std::vector<int>& playerAbilities, std::vector<Ability>& abilities, Renderer& renderer) {
     while (true) {
-        std::cout << "Выберите способность для просмотра описания (0 для выхода):" << std::endl;
+        renderer.printEndlineText("Выберите способность для просмотра описания (0 для выхода):");
         for (int i = 0; i < playerAbilities.size(); ++i) {
             const Ability* ability = findAbilityById(playerAbilities[i], abilities);
             if (ability != nullptr) {
-                std::cout << i + 1 << ": " << ability->getName() << std::endl;
+                renderer.printText(i + 1);
+                renderer.printText(": ");
+                renderer.printEndlineText(ability->getName());
             }
         }
 
@@ -570,27 +603,31 @@ void showAbilityDescriptions(const std::vector<int>& playerAbilities, std::vecto
         if (choice == 0) break;
 
         if (choice < 1 || choice > playerAbilities.size()) {
-            std::cout << "Некорректный выбор. Попробуйте снова." << std::endl;
+            renderer.printEndlineText("Некорректный выбор. Попробуйте снова.");
             continue;
         }
 
         const Ability* selected = findAbilityById(playerAbilities[choice - 1], abilities);
         if (selected) {
-            std::cout << "Описание способности " << selected->getName() << ":" << std::endl;
-            std::cout << selected->getDescription() << std::endl;
+            renderer.printText("Описание способности ");
+            renderer.printText(selected->getName());
+            renderer.printEndlineText(":");
+            renderer.printEndlineText(selected->getDescription());
         }
     }
 }
 
-void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<Enemy>& enemies) {
-    std::cout << "Ваши побежденные враги" << std::endl;
+void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<Enemy>& enemies, Renderer& renderer) {
+    renderer.printEndlineText("Ваши побежденные враги");
     while (true)
     {
-        std::cout << "Выберите врага для просмотра описания (0 для выхода):" << std::endl;
+        renderer.printEndlineText("Выберите врага для просмотра описания (0 для выхода):");
         for (int i = 0; i < playerEnemies.size(); ++i) {
             const Enemy* enemy = findEnemyById(playerEnemies[i], enemies);
             if (enemy != nullptr) {
-                std::cout << i + 1 << ": " << enemy->getName() << std::endl;
+                renderer.printText(i + 1);
+                renderer.printText(": ");
+                renderer.printEndlineText(enemy->getName());
             }
         }
 
@@ -600,19 +637,21 @@ void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<
         if (choice == 0) break;
 
         if (choice < 1 || choice > playerEnemies.size()) {
-            std::cout << "Некорректный выбор. Попробуйте снова." << std::endl;
+            renderer.printEndlineText("Некорректный выбор. Попробуйте снова.");
             continue;
         }
 
         const Enemy* selected = findEnemyById(playerEnemies[choice - 1], enemies);
         if (selected) {
-            std::cout << "Описание способности " << selected->getName() << ":" << std::endl;
-            std::cout << selected->getDescription() << std::endl;
+            renderer.printText("Описание способности ");
+            renderer.printText(selected->getName());
+            renderer.printEndlineText(":");
+            renderer.printEndlineText(selected->getDescription());
         }
     }
 }
 
-void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
+void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag, Renderer& renderer){
     char type = ability->getType();
     if (flag){
         switch (type)
@@ -621,22 +660,22 @@ void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
             break; 
         case 'd':
             if (enemy->getIsDodgeOn()){
-                std::cout << "Вы промахнулись" << std::endl;
+                renderer.printEndlineText("Вы промахнулись");
                 break;
             } else if (enemy->getIsShieldOn()){
                 enemy->setShield(enemy->getShield() - ability->getFactor());
                 if (enemy->getShield() > 0)
                 {
-                    std::cout << "Вы ударили в блок" << std::endl;
+                    renderer.printEndlineText("Вы ударили в блок");
                 }
                 else
                 {
-                    std::cout << "Вы пробили щит" << std::endl;
+                    renderer.printEndlineText("Вы пробили щит");
                     enemy->setHp(enemy->getHp() + enemy->getShield());
                 }
             } else {
             enemy->setHp(enemy->getHp() - ability->getFactor());
-            std::cout << "Вы попали" << std::endl;  
+            renderer.printEndlineText("Вы попали");
             }
             break;
         case 'h':
@@ -654,19 +693,19 @@ void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
             break; 
         case 'd':
             if (player.getIsDodgeOn()){
-                std::cout << "Враг промахнулся" << std::endl;
+                renderer.printEndlineText("Враг промахнулся");
                 break;
             } else if (player.getIsShieldOn()){
                 player.setShield(player.getShield() - ability->getFactor());
                 if (player.getShield() > 0){
-                    std::cout << "Враг ударил в блок" << std::endl;
+                    renderer.printEndlineText("Враг ударил в блок");
                 } else {
-                    std::cout << "Враг пробил щит" << std::endl;
+                    renderer.printEndlineText("Враг пробил щит");
                     player.setHp(player.getHp() + player.getShield());
                 }
             } else {
                 player.setHp(player.getHp() - ability->getFactor());
-                std::cout << "Враг попал" << std::endl;   
+                renderer.printEndlineText("Враг попал");
             }
             break;
         case 'h':
@@ -680,7 +719,7 @@ void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag){
     }
 }
 
-void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, Location* currentLocation){
+void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, Location* currentLocation, Renderer& renderer){
     Enemy* enemy = findEnemyById(enemyId, enemies);
     Ability *player1Ability = findAbilityById(player.getChosenAbilities()[0], abilities);
     Ability *player2Ability = findAbilityById(player.getChosenAbilities()[1], abilities);
@@ -690,54 +729,58 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
     Ability *enemy3Ability = findAbilityById(enemy->getAbilities()[2], abilities);
     int playerHp = player.getHp();
     int enemyHp = enemy->getHp();
-    std::cout << "Ваш враг: " << enemy->getName() << std::endl;
+    renderer.printText("Ваш враг: ");
+    renderer.printEndlineText(enemy->getName());
     do
     {
         player.initDodgeCount();
         enemy->initDodgeCount();
-        std::cout << "Введите" << std::endl;
-        std::cout << "1: Атака" << std::endl;
-        std::cout << "2: Защита" << std::endl;
-        std::cout << "3: Уклонение" << std::endl;
-        std::cout << "4: " << player1Ability->getName() << std::endl;
-        std::cout << "5: " << player2Ability->getName() << std::endl;
-        std::cout << "6: " << player3Ability->getName() << std::endl;
+        renderer.printEndlineText("Введите");
+        renderer.printEndlineText("1: Атака");
+        renderer.printEndlineText("2: Защита");
+        renderer.printEndlineText("3: Уклонение");
+        renderer.printText("4: ");
+        renderer.printEndlineText(player1Ability->getName());
+        renderer.printText("5: ");
+        renderer.printEndlineText(player2Ability->getName());
+        renderer.printText("6: ");
+        renderer.printEndlineText(player3Ability->getName());
         int userChoice = 0;
         srand(time(0));
-        int enemyChoice = 3;
+        int enemyChoice = rand() % 6 + 1;
         std::cin >> userChoice;
         if (userChoice == 1 && enemyChoice == 2 && enemy->getShield() > 0 && player.getStamina() > 0){
             enemy->setIsShieldOn(1);
             enemy->setShield(enemy->getShield() - player.getDamage());
             player.setStamina(player.getStamina() - player.getStaminaFactor());
             if (enemy->getShield() > 0){
-                std::cout << "Враг поставил блок" << std::endl;
-                std::cout << "Вы ударили в блок" << std::endl;
+                renderer.printEndlineText("Враг поставил блок");
+                renderer.printEndlineText("Вы ударили в блок");
             } else {
-                std::cout << "Вы пробили щит" << std::endl;
+                renderer.printEndlineText("Вы пробили щит");
                 enemy->setHp(enemy->getHp() + enemy->getShield());
             }
         } else if (userChoice == 1 && enemyChoice == 3 && enemy->getIsDodgeOn() == 0 && player.getStamina() > 0){
-            enemy->setIsDodgeOn(1);            
-            std::cout << "Враг уклонился" << std::endl;
+            enemy->setIsDodgeOn(1);
+            renderer.printEndlineText("Враг уклонился");
             player.setStamina(player.getStamina() - player.getStaminaFactor());
-            std::cout << "Вы промахнулись" << std::endl;
+            renderer.printEndlineText("Вы промахнулись");
         } else if (userChoice == 2 && enemyChoice == 1 && player.getShield() > 0 && enemy->getStamina() > 0){
             player.setIsShieldOn(1);
             player.setShield(player.getShield() - enemy->getDamage());
             enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
             if (player.getShield() > 0){
-                std::cout << "Вы поставили блок" << std::endl;
-                std::cout << "Враг ударил в блок" << std::endl;
+                renderer.printEndlineText("Вы поставили блок");
+                renderer.printEndlineText("Враг ударил в блок");
             } else {
-                std::cout << "Враг пробил щит" << std::endl;
+                renderer.printEndlineText("Враг пробил щит");
                 player.setHp(player.getHp() + player.getShield());
             }
         } else if (userChoice == 3 && enemyChoice == 1 && player.getIsDodgeOn() == 0 && enemy->getStamina() > 0) {
             player.setIsDodgeOn(1);
-            std::cout << "Вы уклонились" << std::endl;
+            renderer.printEndlineText("Вы уклонились");
             enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
-            std::cout << "Враг промахнулся" << std::endl;
+            renderer.printEndlineText("Враг промахнулся");
         } else if (userChoice >= 4 && userChoice <= 6 && (enemyChoice <= 3 || enemyChoice >= 2)) {
             if (enemyChoice == 2 && enemy->getShield() > 0){
                 enemy->setIsShieldOn(1);
@@ -749,22 +792,25 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
             {
                 case 4:
                 if (player1Ability->getMovesCount() == player1Ability->getMaxMovesCount()){
-                    abilityEffect(player1Ability, enemy, player, 1);
-                    std::cout << "Вы использовали способность " << player1Ability->getName() << std::endl;
+                    abilityEffect(player1Ability, enemy, player, 1, renderer);
+                    renderer.printText("Вы использовали способность ");
+                    renderer.printEndlineText(player1Ability->getName());
                     player1Ability->setMovesCount(player1Ability->getMovesCount() - 1);
                     break;
                 }
             case 5:
             if (player2Ability->getMovesCount() == player2Ability->getMaxMovesCount()){
-                abilityEffect(player2Ability, enemy, player, 1);
-                std::cout << "Вы использовали способность " << player2Ability->getName() << std::endl;
+                abilityEffect(player2Ability, enemy, player, 1, renderer);
+                renderer.printText("Вы использовали способность ");
+                renderer.printEndlineText(player2Ability->getName());
                 player2Ability->setMovesCount(player2Ability->getMovesCount() - 1);
                 break;
             }
             case 6:
             if (player3Ability->getMovesCount() == player3Ability->getMaxMovesCount()){
-                abilityEffect(player3Ability, enemy, player, 1);
-                std::cout << "Вы использовали способность " << player3Ability->getName() << std::endl;
+                abilityEffect(player3Ability, enemy, player, 1, renderer);
+                renderer.printText("Вы использовали способность ");
+                renderer.printEndlineText(player3Ability->getName());
                 player3Ability->setMovesCount(player3Ability->getMovesCount() - 1);
                 break;
             }
@@ -779,7 +825,7 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
                 if (player.getStamina() > 0)
                 {
                     player.setStamina(player.getStamina() - player.getStaminaFactor());
-                    std::cout << "Вы попали" << std::endl;
+                    renderer.printEndlineText("Вы попали");
                     enemy->setHp(enemy->getHp() - player.getDamage());
                 }
                 break;
@@ -787,39 +833,42 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
                 if (player.getShield() > 0)
                 {
                     player.setIsShieldOn(1);
-                    std::cout << "Вы поставили блок" << std::endl;
+                    renderer.printEndlineText("Вы поставили блок");
                 }
                 break;
             case 3:
                 if (player.getIsDodgeOn() == 0)
                 {
-                    std::cout << "Вы уклонились" << std::endl;
+                    renderer.printText("Вы уклонились");
                     player.setIsDodgeOn(1);
                 }
                 break;
             case 4:
                 if (player1Ability->getMovesCount() == player1Ability->getMaxMovesCount()){
-                    abilityEffect(player1Ability, enemy, player, 1);
-                    std::cout << "Вы использовали способность " << player1Ability->getName() << std::endl;
+                    abilityEffect(player1Ability, enemy, player, 1, renderer);
+                    renderer.printText("Вы использовали способность ");
+                    renderer.printEndlineText(player1Ability->getName());
                     player1Ability->setMovesCount(player1Ability->getMovesCount() - 1);
                     break;
                 }
             case 5:
             if (player2Ability->getMovesCount() == player2Ability->getMaxMovesCount()){
-                abilityEffect(player2Ability, enemy, player, 1);
-                std::cout << "Вы использовали способность " << player2Ability->getName() << std::endl;
+                abilityEffect(player2Ability, enemy, player, 1, renderer);
+                    renderer.printText("Вы использовали способность ");
+                    renderer.printEndlineText(player2Ability->getName());
                 player2Ability->setMovesCount(player2Ability->getMovesCount() - 1);
                 break;
             }
             case 6:
             if (player3Ability->getMovesCount() == player3Ability->getMaxMovesCount()){
-                abilityEffect(player3Ability, enemy, player, 1);
-                std::cout << "Вы использовали способность " << player3Ability->getName() << std::endl;
+                abilityEffect(player3Ability, enemy, player, 1, renderer) ;
+                    renderer.printText("Вы использовали способность ");
+                    renderer.printEndlineText(player3Ability->getName());
                 player3Ability->setMovesCount(player3Ability->getMovesCount() - 1);
                 break;
             }
             default:
-                std::cout << "Такой опции нет" << std::endl;
+                renderer.printEndlineText("Такой опции нет");
                 break;
             }
             switch (enemyChoice)
@@ -828,39 +877,42 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
                     if (enemy->getStamina() > 0){
                         enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
                             player.setHp(player.getHp() - enemy->getDamage());
-                            std::cout << "Враг попал" << std::endl;
+                            renderer.printEndlineText("Враг попал");
                     }
                     break;
                 case 2:
                     if (enemy->getShield() > 0){
                         enemy->setIsShieldOn(1);
-                        std::cout << "Враг поставил блок" << std::endl;
+                        renderer.printEndlineText("Враг поставил блок");
                     }
                     break;
                 case 3:
                     if (enemy->getIsDodgeOn() == 0){
                         enemy->setIsDodgeOn(1);
-                        std::cout << "Враг уклонился" << std::endl;
+                        renderer.printEndlineText("Враг уклонился");
                     }
                     break;
                     case 4:
                     if (enemy1Ability->getMovesCount() == enemy1Ability->getMaxMovesCount()){
-                        abilityEffect(enemy1Ability, enemy, player, 0);
-                        std::cout << "Враг использовали способность " << enemy1Ability->getName() << std::endl;
+                        abilityEffect(enemy1Ability, enemy, player, 0, renderer);
+                        renderer.printText("Враг использовали способность ");
+                        renderer.printEndlineText(enemy1Ability->getName());
                         enemy1Ability->setMovesCount(enemy1Ability->getMovesCount() - 1);
                         break;
                     }
                 case 5:
                 if (enemy2Ability->getMovesCount() == enemy2Ability->getMaxMovesCount()){
-                    abilityEffect(enemy2Ability, enemy, player, 0);
-                    std::cout << "Враг использовал способность " << enemy2Ability->getName() << std::endl;
+                    abilityEffect(enemy2Ability, enemy, player, 0, renderer);
+                        renderer.printText("Враг использовали способность ");
+                        renderer.printEndlineText(enemy2Ability->getName());
                     enemy2Ability->setMovesCount(enemy2Ability->getMovesCount() - 1);
                     break;
                 }
                 case 6:
                 if (enemy3Ability->getMovesCount() == enemy3Ability->getMaxMovesCount()){
-                    abilityEffect(enemy3Ability, enemy, player, 0);
-                    std::cout << "Враг использовал способность " << enemy3Ability->getName() << std::endl;
+                    abilityEffect(enemy3Ability, enemy, player, 0, renderer);
+                        renderer.printText("Враг использовали способность ");
+                        renderer.printEndlineText(enemy1Ability->getName());
                     enemy3Ability->setMovesCount(enemy3Ability->getMovesCount() - 1);
                     break;
                 }
@@ -878,7 +930,7 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
         player3Ability->refreshMovesCount();  
         if (enemy->getHp() <= 0)
         {
-            std::cout << "Вы победили" << std::endl;
+            renderer.printEndlineText("Вы победили");
             player.addToEnemies(enemyId);
             currentLocation->setItems(enemy->getItems());
             currentLocation->setEnemyId(0);
@@ -886,7 +938,7 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
         }
             else if (player.getHp() <= 0)
             {
-                std::cout << "Вы проиграли" << std::endl;
+                renderer.printEndlineText("Вы проиграли");
                 player.loseRound(playerHp);
                 enemy->winRound(enemyHp);
                 return;
@@ -903,15 +955,16 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
     } while (enemy->getHp() > 0 && player.getHp() > 0);
 }
 
-void showChosenWeapon(Player& player, std::vector<Item>& items){
+void showChosenWeapon(Player& player, std::vector<Item>& items, Renderer& renderer){
     Item* item = findItemById(player.getChosenWeaponId(), items);
     if (item != nullptr){
-    std::cout << "Вы используете оружие: " << item->getName() << std::endl;
-    std::cout << item->getDescription() << std::endl;
+        renderer.printText("Вы используете оружие: ");
+        renderer.printEndlineText(item->getName());
+        renderer.printEndlineText(item->getDescription());
     } 
 }
 
-void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices) {
+void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, Renderer& renderer) {
     int userChoice = 0;
 
     while (player.getEnemiesCount() != enemies.size()) {
@@ -922,10 +975,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         std::vector<int>& locationAbilities = currentLocation->getAbilities();
         std::vector<int>& playerAbilities = player.getAbilities();
         std::array<int, 3>& playerChosenAbilities = player.getChosenAbilities();
-
-        std::cout << currentLocation->getDescription() << std::endl;
-
-        std::cout << "Меню:" << std::endl;
+        renderer.printEndlineText(currentLocation->getDescription());
+        renderer.printEndlineText("Меню:");
 
         std::vector<std::string> options;
         options.push_back("Сменить локацию");
@@ -940,7 +991,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         if (enemyId != 0)
         {
             options.push_back("Вступить в бой");
-            std::cout << "На локации присутсвтует враг " << findEnemyById(enemyId, enemies)->getName() << std::endl;
+            renderer.printText("На локации присутсвтует враг ");
+            renderer.printEndlineText(findEnemyById(enemyId, enemies)->getName());
         }
         if (dialogNodeId != 0)
         {
@@ -954,55 +1006,57 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         }
 
         for (int i = 0; i < options.size(); i++) {
-            std::cout << (i + 1) << ": " << options[i] << std::endl;
+            renderer.printText(i + 1);
+            renderer.printText(": ");
+            renderer.printEndlineText(options[i]);
         }
 
         std::cin >> userChoice;
 
         if (userChoice < 1 || userChoice > options.size()) {
-            std::cout << "Неверный ввод. Попробуйте снова." << std::endl;
+            renderer.printEndlineText("Неверный ввод. Попробуйте снова.");
             continue;
         }
         std::string selectedOption = options[userChoice - 1];
         int enemiesCount = enemies.size();
         if (selectedOption == "Сменить локацию")
         {
-            move(player, locations, enemiesCount);
+            move(player, locations, enemiesCount, renderer);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }
         else if (selectedOption == "Показать инвентарь")
         {
-            showInventory(items, player);
+            showInventory(items, player, renderer);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }
         else if (selectedOption == "Выбрать способности")
         {
-            changeAbilities(playerAbilities, abilities, playerChosenAbilities);
+            changeAbilities(playerAbilities, abilities, playerChosenAbilities, renderer);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }
         else if (selectedOption == "Вступить в бой")
         {
-            fight(player, enemyId, enemies, abilities, currentLocation);
+            fight(player, enemyId, enemies, abilities, currentLocation, renderer);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }
         else if (selectedOption == "Осмотреть предметы на локации")
         {
-            lootItems(items, player, currentLocation);
+            lootItems(items, player, currentLocation, renderer);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         }  else if (selectedOption == "Осмотреть способности на локации"){
-            lootAbilities(abilities, player, currentLocation);
+            lootAbilities(abilities, player, currentLocation, renderer);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         } else if (selectedOption == "Поговорить") {
-            startDialog(dialogNodes, dialogChoices, dialogNodeId, currentLocation);
+            startDialog(dialogNodes, dialogChoices, dialogNodeId, currentLocation, renderer);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
         } else if (selectedOption == "Показать описания способностей") {
-            showAbilityDescriptions(playerAbilities, abilities);
+            showAbilityDescriptions(playerAbilities, abilities, renderer);
         } else if (selectedOption == "Показать описания предметов") {
-            showItemDescriptions(playerAbilities, items);
+            showItemDescriptions(playerAbilities, items, renderer);
         } else if (selectedOption == "Показать оружие") {
-            showChosenWeapon(player, items);
+            showChosenWeapon(player, items, renderer);
         } else if (selectedOption == "Показать описания побеждённых врагов") {
-            showEnemiesDescriptions(player.getEnemies(), enemies);
+            showEnemiesDescriptions(player.getEnemies(), enemies, renderer);
         }
     }
 }
@@ -1018,9 +1072,10 @@ int main(int argc, char* argv[]){
     std::vector<DialogNode> dialogNodes;
     std::vector<DialogChoice> dialogChoices;
     std::vector<Scene> scenes;
+    Renderer renderer;
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes);
-    initNewGame();
-    showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
-    endGame(scenes, dialogNodes, dialogChoices);
+    initNewGame(renderer);
+    showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, renderer);
+    endGame(scenes, dialogNodes, dialogChoices, renderer);
     return 0;
 }

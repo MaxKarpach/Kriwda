@@ -1,6 +1,7 @@
 #include <iostream>
 #ifndef DIALOGNODE_H
 #define DIALOGNODE_H
+#include <Renderer.h>
 struct DialogNodeDef{
     int id;
     std::string name;
@@ -29,7 +30,8 @@ class DialogNode {
         }
         void showChoices(){
             for (int i = 0; i < choices.size(); i++){
-                std::cout << choices[i] << std::endl;
+                Renderer renderer;
+                renderer.printEndlineText(choices[i]);
             }
         }
         void removeChoice(int choiceId) {

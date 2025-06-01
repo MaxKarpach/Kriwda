@@ -1,6 +1,7 @@
 #include <iostream>
 #ifndef ENEMY_H
 #define ENEMY_H
+#include <Renderer.h>
 struct EnemyDef{
     int id;
     std::string name;
@@ -77,7 +78,8 @@ Enemy(const EnemyDef& def);
 
     void showAbilities(){
         for (int i = 0; i < abilities.size(); i++){
-            std::cout << abilities[i] << std::endl;
+            Renderer renderer;
+            renderer.printEndlineText(abilities[i]);
         }
     }
     void addAbility(int abilityId, int abilityIndex){
@@ -130,7 +132,9 @@ Enemy(const EnemyDef& def);
     }
 
         void afterRoundInfo(){
-                std::cout << "Здоровье врага: " << hp << std::endl;
+            Renderer renderer;
+            renderer.printText("Здоровье врага: ");
+            renderer.printEndlineText(hp);
     }
 
         void winRound(int& enemyHp){
