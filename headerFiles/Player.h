@@ -159,7 +159,7 @@ public:
         return enemies.size();
     }
 
-        void updateDodgeState() {
+    void updateDodgeState() {
         if (isDodgeOn) {
             if (dodgeCount >= maxDodgeCount) {
                 isDodgeOn = false;
