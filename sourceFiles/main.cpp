@@ -651,84 +651,8 @@ void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<
     }
 }
 
-void abilityEffect(Ability* ability, Enemy* enemy, Player& player, bool flag, Renderer& renderer){
-    char type = ability->getType();
-    if (flag){
-        switch (type)
-        {
-        case 'p':
-            break; 
-        case 'd':
-            if (enemy->getIsDodgeOn()){
-                renderer.printEndlineText("Вы промахнулись");
-                break;
-            } else if (enemy->getIsShieldOn()){
-                enemy->setShield(enemy->getShield() - ability->getFactor());
-                if (enemy->getShield() > 0)
-                {
-                    renderer.printEndlineText("Вы ударили в блок");
-                }
-                else
-                {
-                    renderer.printEndlineText("Вы пробили щит");
-                    enemy->setHp(enemy->getHp() + enemy->getShield());
-                }
-            } else {
-            enemy->setHp(enemy->getHp() - ability->getFactor());
-            renderer.printEndlineText("Вы попали");
-            }
-            break;
-        case 'h':
-            player.setHp(player.getHp() + ability->getFactor());
-            break;
-        case 'n':
-            break; 
-        default:
-            break;
-        }
-    } else {
-        switch (type)
-        {
-        case 'p':
-            break; 
-        case 'd':
-            if (player.getIsDodgeOn()){
-                renderer.printEndlineText("Враг промахнулся");
-                break;
-            } else if (player.getIsShieldOn()){
-                player.setShield(player.getShield() - ability->getFactor());
-                if (player.getShield() > 0){
-                    renderer.printEndlineText("Враг ударил в блок");
-                } else {
-                    renderer.printEndlineText("Враг пробил щит");
-                    player.setHp(player.getHp() + player.getShield());
-                }
-            } else {
-                player.setHp(player.getHp() - ability->getFactor());
-                renderer.printEndlineText("Враг попал");
-            }
-            break;
-        case 'h':
-            enemy->setHp(enemy->getHp() + ability->getFactor());
-            break;
-        case 'n':
-            break; 
-        default:
-            break;
-        }
-    }
-}
-
 void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, Location* currentLocation, Renderer& renderer){
     Enemy* enemy = findEnemyById(enemyId, enemies);
-    
-    Ability *player1Ability = findAbilityById(player.getChosenAbilities()[0], abilities);
-    Ability *player2Ability = findAbilityById(player.getChosenAbilities()[1], abilities);
-    Ability *player3Ability = findAbilityById(player.getChosenAbilities()[2], abilities);
-    Ability *enemy1Ability = findAbilityById(enemy->getAbilities()[0], abilities);
-    Ability *enemy2Ability = findAbilityById(enemy->getAbilities()[1], abilities);
-    Ability *enemy3Ability = findAbilityById(enemy->getAbilities()[2], abilities);
-
     Ability* playerAbilities[player.getAbilitiesCount()];
     Ability* enemyAbilities[enemy->getAbilitiesCount()];
 
@@ -748,186 +672,135 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
         renderer.printEndlineText("1: Атака");
         renderer.printEndlineText("2: Защита");
         renderer.printEndlineText("3: Уклонение");
-        for (int i = 0; i < 3; i++) {
-            renderer.printText(i + 4);
+        for (int i = 0; i < player.getAbilitiesCount(); i++) {
+            renderer.printText(i + player.getAbilitiesCount() + 1);
             renderer.printText(": ");
             renderer.printEndlineText(playerAbilities[i]->getName());
         }
         int userChoice = 0;
         srand(time(0));
-        int enemyChoice = rand() % 6 + 1;
+        int enemyChoice = rand() % (3+player.getAbilitiesCount()) + 1;
         std::cin >> userChoice;
-        if (userChoice == 1 && enemyChoice == 2 && enemy->getShield() > 0 && player.getStamina() > 0){
-            enemy->setIsShieldOn(1);
-            enemy->setShield(enemy->getShield() - player.getDamage());
-            player.setStamina(player.getStamina() - player.getStaminaFactor());
-            if (enemy->getShield() > 0){
-                renderer.printEndlineText("Враг поставил блок");
-                renderer.printEndlineText("Вы ударили в блок");
-            } else {
-                renderer.printEndlineText("Вы пробили щит");
-                enemy->setHp(enemy->getHp() + enemy->getShield());
-            }
-        } else if (userChoice == 1 && enemyChoice == 3 && enemy->getIsDodgeOn() == 0 && player.getStamina() > 0){
-            enemy->setIsDodgeOn(1);
-            renderer.printEndlineText("Враг уклонился");
-            player.setStamina(player.getStamina() - player.getStaminaFactor());
-            renderer.printEndlineText("Вы промахнулись");
-        } else if (userChoice == 2 && enemyChoice == 1 && player.getShield() > 0 && enemy->getStamina() > 0){
-            player.setIsShieldOn(1);
-            player.setShield(player.getShield() - enemy->getDamage());
-            enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
-            if (player.getShield() > 0){
-                renderer.printEndlineText("Вы поставили блок");
-                renderer.printEndlineText("Враг ударил в блок");
-            } else {
-                renderer.printEndlineText("Враг пробил щит");
-                player.setHp(player.getHp() + player.getShield());
-            }
-        } else if (userChoice == 3 && enemyChoice == 1 && player.getIsDodgeOn() == 0 && enemy->getStamina() > 0) {
-            player.setIsDodgeOn(1);
-            renderer.printEndlineText("Вы уклонились");
-            enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
-            renderer.printEndlineText("Враг промахнулся");
-        } else if (userChoice >= 4 && userChoice <= 6 && (enemyChoice <= 3 || enemyChoice >= 2)) {
-            if (enemyChoice == 2 && enemy->getShield() > 0){
-                enemy->setIsShieldOn(1);
-            } 
-            if (enemyChoice == 3 && enemy->getIsDodgeOn() == 0){
-                enemy->setIsDodgeOn(1);          
-            }
-            switch (userChoice)
-            {
-                case 4:
-                if (player1Ability->getMovesCount() == player1Ability->getMaxMovesCount()){
-                    abilityEffect(player1Ability, enemy, player, 1, renderer);
-                    renderer.printText("Вы использовали способность ");
-                    renderer.printEndlineText(player1Ability->getName());
-                    player1Ability->setMovesCount(player1Ability->getMovesCount() - 1);
-                    break;
-                }
-            case 5:
-            if (player2Ability->getMovesCount() == player2Ability->getMaxMovesCount()){
-                abilityEffect(player2Ability, enemy, player, 1, renderer);
-                renderer.printText("Вы использовали способность ");
-                renderer.printEndlineText(player2Ability->getName());
-                player2Ability->setMovesCount(player2Ability->getMovesCount() - 1);
-                break;
-            }
-            case 6:
-            if (player3Ability->getMovesCount() == player3Ability->getMaxMovesCount()){
-                abilityEffect(player3Ability, enemy, player, 1, renderer);
-                renderer.printText("Вы использовали способность ");
-                renderer.printEndlineText(player3Ability->getName());
-                player3Ability->setMovesCount(player3Ability->getMovesCount() - 1);
-                break;
-            }
-            
-            default:
-                break;
-            }
-        } else {
-            switch (userChoice)
-            {
-            case 1:
-                if (player.getStamina() > 0)
-                {
+        if (userChoice == 1){
+            if (player.getStamina() > 0){
+                if (enemyChoice == 2){
+                    enemy->setIsShieldOn(1);
+                    enemy->setShield(enemy->getShield() - player.getDamage());
+                    player.setStamina(player.getStamina() - player.getStaminaFactor());
+                    if (enemy->getShield() > 0){
+                    renderer.printEndlineText("Враг поставил блок");
+                    renderer.printEndlineText("Вы ударили в блок");
+                    } else {
+                    renderer.printEndlineText("Вы пробили щит");
+                     enemy->setHp(enemy->getHp() + enemy->getShield());
+                    }
+                } else if(enemyChoice == 3){
+                            enemy->setIsDodgeOn(1);
+                            renderer.printEndlineText("Враг уклонился");
+                            player.setStamina(player.getStamina() - player.getStaminaFactor());
+                            renderer.printEndlineText("Вы промахнулись");
+                } else {
                     player.setStamina(player.getStamina() - player.getStaminaFactor());
                     renderer.printEndlineText("Вы попали");
                     enemy->setHp(enemy->getHp() - player.getDamage());
                 }
-                break;
-            case 2:
-                if (player.getShield() > 0)
-                {
+            } else {
+                    renderer.printEndlineText("Не хватает выносливости");
+            }
+        } else if (userChoice == 2){
+                if (player.getShield() > 0){
                     player.setIsShieldOn(1);
                     renderer.printEndlineText("Вы поставили блок");
-                }
-                break;
-            case 3:
-                if (player.getIsDodgeOn() == 0)
-                {
-                    renderer.printText("Вы уклонились");
-                    player.setIsDodgeOn(1);
-                }
-                break;
-            case 4:
-                if (player1Ability->getMovesCount() == player1Ability->getMaxMovesCount()){
-                    abilityEffect(player1Ability, enemy, player, 1, renderer);
-                    renderer.printText("Вы использовали способность ");
-                    renderer.printEndlineText(player1Ability->getName());
-                    player1Ability->setMovesCount(player1Ability->getMovesCount() - 1);
-                    break;
-                }
-            case 5:
-            if (player2Ability->getMovesCount() == player2Ability->getMaxMovesCount()){
-                abilityEffect(player2Ability, enemy, player, 1, renderer);
-                    renderer.printText("Вы использовали способность ");
-                    renderer.printEndlineText(player2Ability->getName());
-                player2Ability->setMovesCount(player2Ability->getMovesCount() - 1);
-                break;
-            }
-            case 6:
-            if (player3Ability->getMovesCount() == player3Ability->getMaxMovesCount()){
-                abilityEffect(player3Ability, enemy, player, 1, renderer) ;
-                    renderer.printText("Вы использовали способность ");
-                    renderer.printEndlineText(player3Ability->getName());
-                player3Ability->setMovesCount(player3Ability->getMovesCount() - 1);
-                break;
-            }
-            default:
-                renderer.printEndlineText("Такой опции нет");
-                break;
-            }
-            switch (enemyChoice)
-            {
-                case 1:
-                    if (enemy->getStamina() > 0){
+                    if (enemyChoice == 1){
+                        player.setShield(player.getShield() - enemy->getDamage());
                         enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
-                            player.setHp(player.getHp() - enemy->getDamage());
-                            renderer.printEndlineText("Враг попал");
+                        if (player.getShield() > 0){
+                            renderer.printEndlineText("Враг ударил в блок");
+                        } else {
+                            renderer.printEndlineText("Враг пробил щит");
+                            player.setHp(player.getHp() + player.getShield());
+                        }
+                    } else if (enemyChoice > 3 && enemyAbilities[enemyChoice - 4]->getType() == 'd'){
+                            player.setShield(player.getShield() - enemyAbilities[enemyChoice - 4]->getFactor());
+                            enemyAbilities[enemyChoice - 4]->setMovesCount(enemyAbilities[enemyChoice - 4]->getMovesCount() - 1);
+                            if (player.getShield() > 0){
+                               renderer.printEndlineText("Враг ударил в блок");
+                            } else {
+                                renderer.printEndlineText("Враг пробил щит");
+                                player.setHp(player.getHp() + player.getShield());
+                            }
                     }
-                    break;
-                case 2:
-                    if (enemy->getShield() > 0){
+                } else {
+                    renderer.printEndlineText("Щита нет");
+                }
+        } else if (userChoice == 3){
+                if (player.getIsDodgeOn() == 0){
+                    renderer.printEndlineText("Вы уклонились");
+                    player.setIsDodgeOn(1);
+                    if (enemyChoice == 1){
+                        enemy->setStamina(enemy->getStamina() - enemy->getStaminaFactor());
+                        renderer.printEndlineText("Враг промахнулся");
+                    } else if (enemyChoice > 3 && enemyAbilities[enemyChoice - 4]->getType() == 'd'){
+                            renderer.printEndlineText("Враг промахнулся");
+                            enemyAbilities[enemyChoice - 4]->setMovesCount(enemyAbilities[enemyChoice - 4]->getMovesCount() - 1);
+                    }
+                } else {
+                    renderer.printEndlineText("Вы не можете уклониться");
+                }
+        } else if (userChoice >= 4 && userChoice <= (3+player.getAbilitiesCount())){
+            if (playerAbilities[userChoice-4]->getMovesCount() == playerAbilities[userChoice-4]->getMaxMovesCount()){
+                playerAbilities[userChoice-4]->setMovesCount(playerAbilities[userChoice-4]->getMovesCount() - 1);
+                renderer.printText("Вы использовали способность ");
+                renderer.printEndlineText(playerAbilities[userChoice-4]->getName());
+                if (playerAbilities[userChoice-4]->getType() == 'd'){
+                    if (enemyChoice == 2){
                         enemy->setIsShieldOn(1);
-                        renderer.printEndlineText("Враг поставил блок");
-                    }
-                    break;
-                case 3:
-                    if (enemy->getIsDodgeOn() == 0){
+                        enemy->setShield(enemy->getShield() - playerAbilities[userChoice-4]->getFactor());
+                        if (enemy->getShield() > 0){
+                        renderer.printEndlineText("Вы ударили в блок");
+                        }
+                        else {
+                        renderer.printEndlineText("Вы пробили щит");
+                        enemy->setHp(enemy->getHp() + enemy->getShield());
+                        }
+                    } else if (enemyChoice == 3){
                         enemy->setIsDodgeOn(1);
-                        renderer.printEndlineText("Враг уклонился");
+                        renderer.printEndlineText("Вы промахнулись");
+                    } else {
+                        enemy->setHp(enemy->getHp() - playerAbilities[userChoice-4]->getFactor());
+                        renderer.printEndlineText("Вы попали");
                     }
-                    break;
-                    case 4:
-                    if (enemy1Ability->getMovesCount() == enemy1Ability->getMaxMovesCount()){
-                        abilityEffect(enemy1Ability, enemy, player, 0, renderer);
-                        renderer.printText("Враг использовали способность ");
-                        renderer.printEndlineText(enemy1Ability->getName());
-                        enemy1Ability->setMovesCount(enemy1Ability->getMovesCount() - 1);
-                        break;
-                    }
-                case 5:
-                if (enemy2Ability->getMovesCount() == enemy2Ability->getMaxMovesCount()){
-                    abilityEffect(enemy2Ability, enemy, player, 0, renderer);
-                        renderer.printText("Враг использовали способность ");
-                        renderer.printEndlineText(enemy2Ability->getName());
-                    enemy2Ability->setMovesCount(enemy2Ability->getMovesCount() - 1);
-                    break;
+                } else {
+                    player.setHp(player.getHp() + playerAbilities[userChoice-4]->getFactor());
                 }
-                case 6:
-                if (enemy3Ability->getMovesCount() == enemy3Ability->getMaxMovesCount()){
-                    abilityEffect(enemy3Ability, enemy, player, 0, renderer);
-                        renderer.printText("Враг использовали способность ");
-                        renderer.printEndlineText(enemy1Ability->getName());
-                    enemy3Ability->setMovesCount(enemy3Ability->getMovesCount() - 1);
-                    break;
-                }
-                default:
-                    break;
+            } else {
+                renderer.printEndlineText("Вы не можете использовать эту способность");
+            }
+        }
+        else {
+            renderer.printEndlineText("Неверный ввод");
+        }
+        if (enemyChoice == 1){
+            player.setHp(player.getHp() - enemy->getDamage());
+            renderer.printEndlineText("Враг попал");
+        } else if (enemyChoice == 2) {
+            enemy->setIsShieldOn(1);
+            renderer.printEndlineText("Враг поставил блок");
+        } else if (enemyChoice == 3) {
+            enemy->setIsDodgeOn(1);
+            renderer.printEndlineText("Враг уклонился");
+        } else if (enemyChoice >= 4 && enemyChoice <= (3+enemy->getAbilitiesCount())){
+                enemyAbilities[enemyChoice-4]->setMovesCount(enemyAbilities[enemyChoice-4]->getMovesCount() - 1);
+                renderer.printText("Враг использовал способность ");
+                renderer.printEndlineText(enemyAbilities[enemyChoice-4]->getName());
+                if (playerAbilities[userChoice-4]->getType() == 'd'){
+                    player.setHp(player.getHp() - enemyAbilities[enemyChoice-4]->getFactor());
+                    renderer.printEndlineText("Враг попал");  
+                } else {
+                    enemy->setHp(enemy->getHp() + enemyAbilities[enemyChoice-4]->getFactor());
                 }
         }
+
         player.refreshStatsAfterRound();
         enemy->refreshStatsAfterRound();
         for (int i = 0; i < player.getAbilitiesCount(); i++) {
