@@ -661,8 +661,8 @@ std::vector<Ability*> enemyAbilities;
         playerAbilities.push_back(findAbilityById(player.getChosenAbilities()[i], abilities));
         enemyAbilities.push_back(findAbilityById(enemy->getAbilities()[i], abilities));
     }
-    BattleSystem bs(player, enemy, renderer, abilities, currentLocation, playerAbilities, enemyAbilities);
-    bs.battle();
+    BattleSystem battleSystem(player, enemy, renderer, currentLocation, playerAbilities, enemyAbilities);
+    battleSystem.battle();
 }
 
 void showChosenWeapon(Player& player, std::vector<Item>& items, Renderer& renderer){

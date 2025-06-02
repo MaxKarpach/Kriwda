@@ -1,9 +1,9 @@
 #include "BattleSystem.h"
 #include <iostream>
 BattleSystem::BattleSystem(Player& player, Enemy* enemy, Renderer& renderer,
-     std::vector<Ability>& abilities, Location* location, std::vector<Ability*>& 
+    Location* location, std::vector<Ability*>& 
      playerAbilities, std::vector<Ability*>& enemyAbilities)
-    :player(player),enemy(enemy), renderer(renderer), abilities(abilities), currentLocation(location),
+    :player(player),enemy(enemy), renderer(renderer), currentLocation(location),
     playerAbilities(playerAbilities), enemyAbilities(enemyAbilities){}
 
 void BattleSystem::prepareBattle(){

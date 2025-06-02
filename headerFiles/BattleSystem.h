@@ -9,7 +9,7 @@
 
 class BattleSystem {
 public:
-    BattleSystem(Player& player, Enemy* enemy, Renderer& renderer, std::vector<Ability>& abilities, Location* location, 
+    BattleSystem(Player& player, Enemy* enemy, Renderer& renderer, Location* location, 
     std::vector<Ability*>& playerAbilities, std::vector<Ability*>& enemyAbilities);
 
     void prepareBattle();
@@ -27,7 +27,6 @@ private:
     Enemy* enemy;
     Renderer& renderer;
     Location* currentLocation;
-    std::vector<Ability>& abilities;
  std::vector<Ability*> playerAbilities;
 std::vector<Ability*> enemyAbilities;
     int playerHp;
