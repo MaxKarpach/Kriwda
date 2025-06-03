@@ -12,6 +12,7 @@ void BattleSystem::prepareBattle(){
     renderer.printText("Ваш враг: ");
     renderer.printEndlineText(enemy->getName());
 }
+
 void BattleSystem::startBattle(){
         player.initDodgeCount();
         enemy->initDodgeCount();
@@ -25,14 +26,13 @@ void BattleSystem::startBattle(){
             renderer.printEndlineText(playerAbilities[i]->getName());
         }
         userChoice = 0;
-        srand(time(0));
-        enemyChoice = rand() % (3+player.getAbilitiesCount()) + 1;
+        enemyChoice = enemyMove();
         std::cin >> userChoice;
 }
 
 bool BattleSystem::endBattle(){
        player.refreshStatsAfterRound();
-        enemy->refreshStatsAfterRound();
+       enemy->refreshStatsAfterRound();
         for (int i = 0; i < player.getAbilitiesCount(); i++) {
             playerAbilities[i]->refreshMovesCount();
             enemyAbilities[i]->refreshMovesCount();
@@ -43,13 +43,21 @@ bool BattleSystem::endBattle(){
             currentLocation->setItems(enemy->getItems());
             currentLocation->setEnemyId(0);
             currentLocation->setDialogNodeId(0);
+            for (int i = 0; i < enemyAbilities.size();i++){
+                    enemyAbilities[i]->setMovesCount(enemyAbilities[i]->getMaxMovesCount());
+                    playerAbilities[i]->setMovesCount(playerAbilities[i]->getMaxMovesCount());
+            }
             return true;
         }
         else if (player.getHp() <= 0){
                 renderer.printEndlineText("Вы проиграли");
                 player.loseRound(playerHp);
                 enemy->winRound(enemyHp);
-                return true;
+                for (int i = 0; i < enemyAbilities.size();i++){
+                    enemyAbilities[i]->setMovesCount(enemyAbilities[i]->getMaxMovesCount());
+                    playerAbilities[i]->setMovesCount(playerAbilities[i]->getMaxMovesCount());
+                }
+                    return true;
             }
             else{
                 player.afterRoundInfo();
@@ -159,6 +167,7 @@ void BattleSystem::clash(){
         else {
             renderer.printEndlineText("Неверный ввод");
         }
+        
         if (enemyChoice == 1){
             player.setHp(player.getHp() - enemy->getDamage());
             renderer.printEndlineText("Враг попал");
@@ -179,6 +188,33 @@ void BattleSystem::clash(){
                     enemy->setHp(enemy->getHp() + enemyAbilities[enemyChoice-4]->getFactor());
                 }
         }
+}
+
+int BattleSystem::enemyMove(){
+    srand(time(0));
+    while (true)
+    {
+        enemyChoice = rand() % (3+enemy->getAbilitiesCount()) + 1;
+        std::cout << enemyChoice << std::endl;
+        if (enemyChoice == 1) {
+            if (enemy->getStamina() > 0){
+                break;
+            }
+        } else if (enemyChoice == 2) {
+            if (enemy->getShield() > 0){
+                break;
+            }
+        } else if (enemyChoice == 3) {
+            if (enemy->getIsDodgeOn() == 0){
+                break;
+            }
+        } else if (enemyChoice >= 4 && enemyChoice <= (3+enemy->getAbilitiesCount())){
+            if (enemyAbilities[enemyChoice-4]->getMovesCount() == enemyAbilities[enemyChoice-4]->getMaxMovesCount()){
+                break;
+            }
+    }
+    }
+    return enemyChoice;
 }
 
 void BattleSystem::battle(){

@@ -22,6 +22,8 @@ public:
 
     void battle();
 
+    int enemyMove();
+
 private:
     Player& player;
     Enemy* enemy;

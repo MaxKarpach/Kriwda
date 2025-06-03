@@ -654,8 +654,8 @@ void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<
 
 void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, Location* currentLocation, Renderer& renderer){
     Enemy* enemy = findEnemyById(enemyId, enemies);
-std::vector<Ability*> playerAbilities;
-std::vector<Ability*> enemyAbilities;
+    std::vector<Ability*> playerAbilities;
+    std::vector<Ability*> enemyAbilities;
 
     for (int i = 0; i < player.getAbilitiesCount(); i++) {
         playerAbilities.push_back(findAbilityById(player.getChosenAbilities()[i], abilities));
