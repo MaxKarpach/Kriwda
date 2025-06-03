@@ -1,7 +1,7 @@
 #include "../headerFiles/Ability.h" 
 #include <iostream>
 
-const int MAX_STRING_LEN = 100;
+const int MAX_STRING_LEN = 255;
 
 Ability::Ability(const AbilityDef& def)
 :id(def.id), name(def.name), type(def.type), factor(def.factor),
@@ -14,32 +14,22 @@ std::vector<AbilityDef> AbilityRegistry::getAbilities(){
 void AbilityRegistry::load(std::istream& is){
     int abilitiesCount = 0;
     is >> abilitiesCount;
-    is.ignore(); // чтобы убрать '\n' после числа
-
     for (int i = 0; i < abilitiesCount; i++){
         AbilityDef ad;
 
         is >> ad.id;
-        is.ignore(); // убрать '\n' после числа
-
-        char buf[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf, MAX_STRING_LEN);
-        ad.name = buf;
-
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, ad.name);
         is >> ad.type;
         is >> ad.factor;
         is >> ad.movesCount;
         is >> ad.maxMovesCount;
-        is.ignore();
-
-        char buf2[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf2, MAX_STRING_LEN);
-        ad.description = buf2;
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, ad.description);
 
         abilities.push_back(ad);
     }
 }
-
 
 std::vector<AbilityDef> AbilityRegistry::toAbilityDefs(const std::vector<Ability>& abilities) {
         std::vector<AbilityDef> abilityDefs;

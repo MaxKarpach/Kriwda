@@ -2,7 +2,7 @@
 #include <iostream>
 #include <climits>
 
-const int MAX_STRING_LEN = 120;
+const int MAX_STRING_LEN = 255;
 
 Scene::Scene(const SceneDef& def)
 :id(def.id), dialogNodeId(def.dialogNodeId), type(def.type), text(def.text){}
@@ -19,10 +19,8 @@ void SceneRegistry::load(std::istream& is){
         is >> sd.id;
         is >> sd.dialogNodeId;
         is >> sd.type;
-        is.ignore();
-        char buf[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf, MAX_STRING_LEN);
-        sd.text = buf;
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, sd.text);
         scenes.push_back(sd);
     }
 }

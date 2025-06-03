@@ -2,7 +2,7 @@
 #include <iostream>
 #include <climits>
 
-const int MAX_STRING_LEN = 100;
+const int MAX_STRING_LEN = 255;
 
 Item::Item(const ItemDef& def)
 :id(def.id), name(def.name), type(def.type), factor(def.factor), description(def.description){}
@@ -17,18 +17,12 @@ void ItemRegistry::load(std::istream& is){
     for (int i = 0; i < itemsCount;i++){
         ItemDef id;
         is >> id.id;
-        char buf[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf, MAX_STRING_LEN);
-        memset(buf, 0, sizeof(buf));
-        is.getline(buf, MAX_STRING_LEN);
-        id.name = buf;
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, id.name);
         is >> id.type;
         is >> id.factor;
-        char buf2[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf2, MAX_STRING_LEN);
-        memset(buf2, 0, sizeof(buf2));
-        is.getline(buf2, MAX_STRING_LEN);
-        id.description = buf2;
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, id.description);
         items.push_back(id);
     }
 }

@@ -1,7 +1,7 @@
 #include "../headerFiles/Enemy.h" 
 #include <iostream>
 
-const int MAX_STRING_LEN = 100;
+const int MAX_STRING_LEN = 255;
 
 Enemy::Enemy(const EnemyDef& def)
 : id(def.id), name(def.name), hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount),
@@ -20,11 +20,8 @@ void EnemyRegistry::load(std::istream& is){
     for (int i = 0; i < enemiesCount;i++){
         EnemyDef ed;
         is >> ed.id;
-        char buf[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf, MAX_STRING_LEN);
-        memset(buf, 0, sizeof(buf));
-        is.getline(buf, MAX_STRING_LEN);
-        ed.name = buf;
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, ed.name);
         is >> ed.hp;
         is >> ed.damage;
         is >> ed.stamina;
@@ -51,12 +48,9 @@ void EnemyRegistry::load(std::istream& is){
             is >> itemId;
             ed.items.push_back(itemId);
         }
-        char buf2[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf2, MAX_STRING_LEN);
-        memset(buf2, 0, sizeof(buf2));
-        is.getline(buf2, MAX_STRING_LEN);
-        ed.description = buf2;
-            enemies.push_back(ed);
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, ed.description);
+        enemies.push_back(ed);
     }
 }
 

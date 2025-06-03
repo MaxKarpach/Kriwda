@@ -1,7 +1,7 @@
 #include "../headerFiles/Location.h" 
 #include <iostream>
 
-const int MAX_STRING_LEN = 100;
+const int MAX_STRING_LEN = 255;
 
 Location::Location(const LocationDef& def)
 :id(def.id), name(def.name), choices(def.choices), enemyId(def.enemyId), items(def.items), dialogNodeId(def.dialogNodeId),
@@ -17,11 +17,8 @@ void  LocationRegistry::load(std::istream& is){
     for (int i = 0; i < locationsCount; i++){
         LocationDef ld;
     is >> ld.id;
-    char buf[MAX_STRING_LEN + 1] = {0};
-    is.getline(buf, MAX_STRING_LEN);
-    memset(buf, 0, sizeof(buf));
-    is.getline(buf, MAX_STRING_LEN);
-    ld.name = buf;
+    is.ignore(MAX_STRING_LEN, '\n');
+    std::getline(is, ld.name);
     int choicesCount = 0;
     is >> choicesCount;
     for (int i = 0; i < choicesCount;i++){
@@ -38,11 +35,8 @@ void  LocationRegistry::load(std::istream& is){
         is >> itemId;
         ld.items.push_back(itemId);
     }
-    char buf2[MAX_STRING_LEN + 1] = {0};
-    is.getline(buf2, MAX_STRING_LEN);
-    memset(buf2, 0, sizeof(buf2));
-    is.getline(buf2, MAX_STRING_LEN);
-    ld.description = buf2;
+    is.ignore(MAX_STRING_LEN, '\n');
+    std::getline(is, ld.description);
     is >> ld.isFinalBossLocation;
     int abilitiesCount = 0;
     is >> abilitiesCount;

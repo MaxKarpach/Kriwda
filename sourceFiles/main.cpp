@@ -719,7 +719,6 @@ int main(int argc, char* argv[]){
     Renderer renderer;
     Game game(scenes, dialogNodes, dialogChoices, renderer);
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes, game);
-    std::cout << game.getIsGameStarted() << " " << game.getIsGameLoopEnded() << " " << game.getIsGameEnded() << std::endl;
     if (!game.getIsGameStarted()){
         game.initNewGame(renderer);
     }

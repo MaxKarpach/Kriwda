@@ -17,15 +17,10 @@ void DialogNodeRegistry::load(std::istream& is){
     {
         DialogNodeDef dnd;
         is >> dnd.id;
-        is.ignore();
-    
-        char buf1[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf1, MAX_STRING_LEN);
-        dnd.name = buf1;
-    
-        char buf2[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf2, MAX_STRING_LEN);
-        dnd.text = buf2;
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, dnd.name);
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, dnd.text);
     
         int choicesCount = 0;
         is >> choicesCount;
@@ -34,10 +29,8 @@ void DialogNodeRegistry::load(std::istream& is){
             is >> choiceId;
             dnd.choices.push_back(choiceId);
         }
-        is.ignore();
-        char buf3[MAX_STRING_LEN + 1] = {0};
-        is.getline(buf3, MAX_STRING_LEN);
-        dnd.description = buf3;
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, dnd.description);
         dialogNodes.push_back(dnd);
     }
 }

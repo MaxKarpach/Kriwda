@@ -15,11 +15,8 @@ void DialogChoiceRegistry::load(std::istream& is){
     for (int i = 0; i < dialogChoicesCount; i++){
     DialogChoiceDef dcd;
     is >> dcd.id;
-    char buf[MAX_STRING_LEN + 1] = {0};
-    is.getline(buf, MAX_STRING_LEN);
-    memset(buf, 0, sizeof(buf));
-    is.getline(buf, MAX_STRING_LEN);
-    dcd.text = buf;
+    is.ignore(MAX_STRING_LEN, '\n');
+    std::getline(is, dcd.text);
     is >> dcd.nextNodeId;
     is >> dcd.nodeId;
     dialogChoices.push_back(dcd);
