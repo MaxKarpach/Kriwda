@@ -10,98 +10,7 @@
 #include "../headerFiles/DialogChoice.h" 
 #include "../headerFiles/Scene.h"
 #include "../headerFiles/BattleSystem.h"
-void sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Renderer& renderer){
-        while (true)
-    {
-
-        DialogNode* currentNode = nullptr;
-        for (auto& node : dialogNodes) {
-            if (node.getId() == currentNodeId) {
-                currentNode = &node;
-                break;
-            }
-        }
-        if (!currentNode) {
-            renderer.printEndlineText("Ошибка: узел диалога не найден.");
-            break;
-        }
-
-        if (currentNode->getDescription() != ""){
-            renderer.printEndlineText(currentNode->getDescription());
-        }
-
-        renderer.printText(currentNode->getName());
-        renderer.printText(": ");
-        renderer.printEndlineText(currentNode->getText());
-
-        std::vector<DialogChoice*> currentChoices;
-        for (auto& choice : dialogChoices) {
-            if (choice.getNodeId() == currentNodeId) {
-                currentChoices.push_back(&choice);
-            }
-        }
-
-        if (currentChoices.empty()) {
-            renderer.printEndlineText("Диалог завершён.");
-            break;
-        }
-
-        for (int i = 0; i < currentChoices.size(); ++i) {
-            renderer.printText(i + 1);
-            renderer.printText(": ");
-            renderer.printEndlineText(currentChoices[i]->getText());
-        }
-
-        int userChoice = 0;
-        renderer.printText("Выберите вариант (0 — выход): ");
-        std::cin >> userChoice;
-
-        if (userChoice <= 0 || userChoice > currentChoices.size()) {
-            renderer.printEndlineText("Диалог прерван.");
-            break;
-        }
-
-        currentNodeId = currentChoices[userChoice - 1]->getNextNodeId();
-    }
-}
-
-void initNewGame(Renderer& renderer){
-    renderer.printEndlineText("Начало игры");
-}
-
-void gameOver(Renderer& renderer){
-    renderer.printEndlineText("Вы проиграли");
-}
-
-void endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer){
-    std::vector<Scene> endings;
-    for (Scene scene : scenes){
-        if (scene.getType() == 'e'){
-            endings.push_back(scene);
-        }
-    }
-    for (int i = 0; i < endings.size(); i++){
-        renderer.printText(i + 1);
-        renderer.printText(": ");
-        renderer.printEndlineText(endings[i].getText());
-    }
-        int choice = 0;
-    while (true) {
-        std::cin >> choice;
-
-        if (choice >= 1 && choice <= endings.size()) {
-            break;
-        } else {
-            renderer.printText("Неверный выбор. Пожалуйста, введите число от 1 до ");
-            renderer.printEndlineText(endings.size());
-        }
-    }
-    renderer.printEndlineText("Выбранная концовка:");
-    renderer.printEndlineText(endings[choice - 1].getText());
-    sceneDialog(dialogNodes, dialogChoices, endings[choice - 1].getDialogNodeId(), renderer);
-    renderer.printEndlineText("Конец игры");
-}
-
+#include "../headerFiles/Game.h" 
 Location* findLocationById(int locationId, std::vector<Location>& locations) {
     for (auto& loc : locations) {
         if (loc.getId() == locationId) {
@@ -197,7 +106,7 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
     }
 }
 
-void downloadData(Player & player, std::vector<Location> & locations, std::vector<Enemy> & enemies, std::vector<Ability> & abilities, std::vector<Item> & items, std::vector<DialogNode> & dialogNodes, std::vector<DialogChoice> & dialogChoices, std::vector<Scene> & scenes){
+void downloadData(Player & player, std::vector<Location> & locations, std::vector<Enemy> & enemies, std::vector<Ability> & abilities, std::vector<Item> & items, std::vector<DialogNode> & dialogNodes, std::vector<DialogChoice> & dialogChoices, std::vector<Scene> & scenes, Game& game){
    std::ifstream input("data.txt");
 
     PlayerRegistry playerRegistry;
@@ -260,9 +169,15 @@ void downloadData(Player & player, std::vector<Location> & locations, std::vecto
     for (const SceneDef& def : sceneDefs) {
         scenes.push_back(Scene(def));
     }
+
+    GameRegistry gameRegistry;
+    gameRegistry.load(input);
+    game.setIsGameStarted(gameRegistry.getGameStats().isGameStarted);
+    game.setIsGameLoopEnded(gameRegistry.getGameStats().isGameLoopEnded);
+    game.setIsGameEnded(gameRegistry.getGameStats().isGameEnded);
 }
 
-void saveGame(Player & player, std::vector<Location> & locations, std::vector<Enemy> & enemies, std::vector<Ability> & abilities, std::vector<Item> & items, std::vector<DialogNode> & dialogNodes, std::vector<DialogChoice> & dialogChoices) {
+void saveGame(Player & player, std::vector<Location> & locations, std::vector<Enemy> & enemies, std::vector<Ability> & abilities, std::vector<Item> & items, std::vector<DialogNode> & dialogNodes, std::vector<DialogChoice> & dialogChoices, Game& game, std::vector<Scene>& scenes) {
         std::ofstream output("data.txt");
         PlayerRegistry playerRegistry;
         PlayerDef playerDef = playerRegistry.toPlayerDef(player);
@@ -298,45 +213,62 @@ void saveGame(Player & player, std::vector<Location> & locations, std::vector<En
         std::vector<DialogChoiceDef> dialogChoiceDefs = dialogChoiceRegistry.toDialogChoiceDefs(dialogChoices);
         dialogChoiceRegistry.setDialogChoices(dialogChoiceDefs);
         dialogChoiceRegistry.save(output);
-    }
 
-void lootItems(std::vector<Item>& items, Player& player, Location* currentLocation, Renderer& renderer) {
-  std::vector<int>& locationItems = currentLocation->getItems();
-    std::vector<int>& playerInventory = player.getInventory(); 
-    while (!locationItems.empty())
-    {
-        renderer.printEndlineText("Предметы на локации:");
-        renderer.printEndlineText("0: Выйти");
-        for (int i = 0; i < locationItems.size(); ++i) {
-            Item* item = findItemById(locationItems[i], items);
-            if (item) {
-                renderer.printText(i + 1);
-                renderer.printText(": ");
-                renderer.printEndlineText(item->getName());
+        SceneRegistry sceneRegistry;
+        std::vector<SceneDef> sceneDefs = sceneRegistry.toSceneDefs(scenes);
+        sceneRegistry.setScenes(sceneDefs);
+        sceneRegistry.save(output);
+
+        GameRegistry gameRegistry;
+        GameStatsDef gameDef = gameRegistry.toGameStatsDef(game);
+        gameRegistry.setGameStats(gameDef);
+        gameRegistry.save(output);
+}
+
+void lootItems(std::vector<Item> & items, Player & player, Location * currentLocation, Renderer & renderer){
+            std::vector<int> &locationItems = currentLocation->getItems();
+            std::vector<int> &playerInventory = player.getInventory();
+            while (!locationItems.empty())
+            {
+                renderer.printEndlineText("Предметы на локации:");
+                renderer.printEndlineText("0: Выйти");
+                for (int i = 0; i < locationItems.size(); ++i)
+                {
+                    Item *item = findItemById(locationItems[i], items);
+                    if (item)
+                    {
+                        renderer.printText(i + 1);
+                        renderer.printText(": ");
+                        renderer.printEndlineText(item->getName());
+                    }
+                }
+
+                int choice = -1;
+                renderer.printEndlineText("Выберите предмет для подбора: ");
+                std::cin >> choice;
+
+                if (choice == 0)
+                {
+                    break;
+                }
+
+                if (choice > 0 && choice <= locationItems.size())
+                {
+                    int itemId = locationItems[choice - 1];
+                    playerInventory.push_back(itemId);
+                    locationItems.erase(locationItems.begin() + (choice - 1));
+                    renderer.printEndlineText("Предмет подобран!");
+                }
+                else
+                {
+                    renderer.printEndlineText("Неверный выбор, попробуйте снова.");
+                }
             }
-        }
 
-        int choice = -1;
-        renderer.printEndlineText("Выберите предмет для подбора: ");
-        std::cin >> choice;
-
-        if (choice == 0) {
-            break;
-        }
-
-        if (choice > 0 && choice <= locationItems.size()) {
-            int itemId = locationItems[choice - 1];
-            playerInventory.push_back(itemId); 
-            locationItems.erase(locationItems.begin() + (choice - 1));
-            renderer.printEndlineText("Предмет подобран!");
-        } else {
-            renderer.printEndlineText("Неверный выбор, попробуйте снова.");
-        }
-    }
-
-    if (locationItems.empty()) {
-        renderer.printEndlineText("На локации больше нет предметов.");
-    }
+            if (locationItems.empty())
+            {
+                renderer.printEndlineText("На локации больше нет предметов.");
+            }
 }
 
 void lootAbilities(std::vector<Ability>& abilities, Player& player, Location* currentLocation, Renderer& renderer) {
@@ -674,7 +606,7 @@ void showChosenWeapon(Player& player, std::vector<Item>& items, Renderer& render
     } 
 }
 
-void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, Renderer& renderer) {
+void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, Renderer& renderer, Game& game, std::vector<Scene>& scenes) {
     int userChoice = 0;
 
     while (player.getEnemiesCount() != enemies.size()) {
@@ -732,33 +664,33 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         if (selectedOption == "Сменить локацию")
         {
             move(player, locations, enemiesCount, renderer);
-            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
         }
         else if (selectedOption == "Показать инвентарь")
         {
             showInventory(items, player, renderer);
-            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
         }
         else if (selectedOption == "Выбрать способности")
         {
             changeAbilities(playerAbilities, abilities, playerChosenAbilities, renderer);
-            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
         }
         else if (selectedOption == "Вступить в бой")
         {
             fight(player, enemyId, enemies, abilities, currentLocation, renderer);
-            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
         }
         else if (selectedOption == "Осмотреть предметы на локации")
         {
             lootItems(items, player, currentLocation, renderer);
-            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
         }  else if (selectedOption == "Осмотреть способности на локации"){
             lootAbilities(abilities, player, currentLocation, renderer);
-            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
         } else if (selectedOption == "Поговорить") {
             startDialog(dialogNodes, dialogChoices, dialogNodeId, currentLocation, renderer);
-            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices);
+            saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
         } else if (selectedOption == "Показать описания способностей") {
             showAbilityDescriptions(playerAbilities, abilities, renderer);
         } else if (selectedOption == "Показать описания предметов") {
@@ -769,6 +701,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
             showEnemiesDescriptions(player.getEnemies(), enemies, renderer);
         }
     }
+    game.setIsGameLoopEnded(1);
+    saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
 }
 
 int main(int argc, char* argv[]){
@@ -783,9 +717,17 @@ int main(int argc, char* argv[]){
     std::vector<DialogChoice> dialogChoices;
     std::vector<Scene> scenes;
     Renderer renderer;
-    downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes);
-    initNewGame(renderer);
-    showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, renderer);
-    endGame(scenes, dialogNodes, dialogChoices, renderer);
+    Game game(scenes, dialogNodes, dialogChoices, renderer);
+    downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes, game);
+    std::cout << game.getIsGameStarted() << " " << game.getIsGameLoopEnded() << " " << game.getIsGameEnded() << std::endl;
+    if (!game.getIsGameStarted()){
+        game.initNewGame(renderer);
+    }
+    if (!game.getIsGameLoopEnded()){
+        showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, renderer, game, scenes);
+    }
+    if (!game.getIsGameEnded()){
+        game.endGame(scenes, dialogNodes, dialogChoices, renderer);
+    }
     return 0;
 }

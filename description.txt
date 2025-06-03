@@ -90,3 +90,7 @@ int id;
 int dialogNodeId;
 char type;
 std::string text;
+игра
+bool isGameStarted;
+bool isGameLoopEnded;
+bool isGameEnded;
