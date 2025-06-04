@@ -618,7 +618,6 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         std::vector<int>& playerAbilities = player.getAbilities();
         std::array<int, 3>& playerChosenAbilities = player.getChosenAbilities();
         renderer.printEndlineText(currentLocation->getDescription());
-        renderer.printEndlineText("Меню:");
 
         std::vector<std::string> options;
         options.push_back("Сменить локацию");

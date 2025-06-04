@@ -157,7 +157,7 @@ void BattleSystem::clash(){
                         enemy->setHp(enemy->getHp() - playerAbilities[userChoice-4]->getFactor());
                         renderer.printEndlineText("Вы попали");
                     }
-                } else {
+                } else if (playerAbilities[userChoice-4]->getType() == 'h') {
                     player.setHp(player.getHp() + playerAbilities[userChoice-4]->getFactor());
                 }
             } else {
@@ -184,7 +184,7 @@ void BattleSystem::clash(){
                 if (enemyAbilities[enemyChoice-4]->getType() == 'd'){
                     player.setHp(player.getHp() - enemyAbilities[enemyChoice-4]->getFactor());
                     renderer.printEndlineText("Враг попал");  
-                } else {
+                } else if (enemyAbilities[enemyChoice-4]->getType() == 'h') {
                     enemy->setHp(enemy->getHp() + enemyAbilities[enemyChoice-4]->getFactor());
                 }
         }
