@@ -11,37 +11,10 @@
 #include "../headerFiles/Scene.h"
 #include "../headerFiles/BattleSystem.h"
 #include "../headerFiles/Game.h" 
-Location* findLocationById(int locationId, std::vector<Location>& locations) {
-    for (auto& loc : locations) {
-        if (loc.getId() == locationId) {
-            return &loc;
-        }
-    }
-    return nullptr;
-}
-
-Enemy* findEnemyById(int enemyId, std::vector<Enemy>& enemies) {
-    for (auto& enemy : enemies) {
-        if (enemy.getId() == enemyId) {
-            return &enemy;
-        }
-    }
-    return nullptr;
-}
-
-Ability* findAbilityById(int abilityId, std::vector<Ability>& abilities) {
-    for (auto& ability : abilities) {
-        if (ability.getId() == abilityId) {
-            return &ability;
-        }
-    }
-    return nullptr;
-}
-
-Item* findItemById(int itemId, std::vector<Item>& items) {
-    for (auto& item : items) {
-        if (item.getId() == itemId) {
-            return &item;
+template<typename T> T* findById(int id, std::vector<T>& vec) {
+    for (auto& obj : vec) {
+        if (obj.getId() == id) {
+            return &obj;
         }
     }
     return nullptr;
@@ -234,9 +207,8 @@ void lootItems(std::vector<Item> & items, Player & player, Location * currentLoc
                 renderer.printEndlineText("0: Выйти");
                 for (int i = 0; i < locationItems.size(); ++i)
                 {
-                    Item *item = findItemById(locationItems[i], items);
-                    if (item)
-                    {
+                    Item *item = findById<Item>(locationItems[i], items);
+                    if (item){
                         renderer.printText(i + 1);
                         renderer.printText(": ");
                         renderer.printEndlineText(item->getName());
@@ -279,7 +251,7 @@ void lootAbilities(std::vector<Ability>& abilities, Player& player, Location* cu
         renderer.printEndlineText("Способности на локации:");
         renderer.printEndlineText("0: Выйти");
         for (int i = 0; i < locationAbilities.size(); ++i) {
-            Ability* ability = findAbilityById(locationAbilities[i], abilities);
+            Ability* ability = findById<Ability>(locationAbilities[i], abilities);
             if (ability) {
                 renderer.printText(i + 1);
                 renderer.printText(": ");
@@ -312,7 +284,7 @@ void lootAbilities(std::vector<Ability>& abilities, Player& player, Location* cu
 
 void move(Player& player, std::vector<Location>& locations, int& enemiesCount, Renderer& renderer){
     while (true){
-        Location *currentLocation = findLocationById(player.getLocationId(), locations);
+        Location *currentLocation = findById<Location>(player.getLocationId(), locations);
         renderer.printText("Ваше текущее местоположение: ");
         renderer.printEndlineText(currentLocation->getName());
         renderer.printEndlineText("Вы можете пойти в следующие места: ");
@@ -320,7 +292,7 @@ void move(Player& player, std::vector<Location>& locations, int& enemiesCount, R
         int finalBossLocationNum = 0;
         for (int i = 0; i < currentLocation->getChoices().size(); i++)
         {
-            Location* nearlyLocation = findLocationById(currentLocation->getChoices()[i], locations);
+            Location* nearlyLocation = findById<Location>(currentLocation->getChoices()[i], locations);
             if (nearlyLocation) {
                 nearlyLocations.push_back(nearlyLocation);
                 if (nearlyLocation->getIsFinalBossLocation() && player.getEnemiesCount() != (enemiesCount - 1)){
@@ -374,7 +346,7 @@ void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer)
         }
 
         for (int i = 0; i < inventory.size(); i++) {
-            Item* item = findItemById(inventory[i], items);
+            Item* item = findById<Item>(inventory[i], items);
             if (item != nullptr) {
                 renderer.printText(i + 1);
                 renderer.printText(": ");
@@ -393,7 +365,7 @@ void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer)
         }
 
         int itemId = inventory[input - 1];
-        Item* item = findItemById(itemId, items);
+        Item* item = findById<Item>(itemId, items);
 
         if (!item) {
             renderer.printEndlineText("Ошибка: предмет не найден.");
@@ -433,7 +405,7 @@ void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& ab
     while (true) {
         renderer.printEndlineText("Все способности:");
         for (int i = 0; i < playerAbilities.size(); i++) {
-            Ability* ability = findAbilityById(playerAbilities[i], abilities);
+            Ability* ability = findById<Ability>(playerAbilities[i], abilities);
             if (ability != nullptr) {
                 renderer.printText(i + 1);
                 renderer.printText(": ");
@@ -442,7 +414,7 @@ void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& ab
         }
         renderer.printEndlineText("Выбранные способности:");
         for (int i = 0; i < playerChosenAbilities.size(); i++) {
-            Ability* ability = findAbilityById(playerChosenAbilities[i], abilities);
+            Ability* ability = findById<Ability>(playerChosenAbilities[i], abilities);
             if (ability != nullptr) {
                 renderer.printText(i + 1);
                 renderer.printText(": ");
@@ -490,7 +462,7 @@ void showItemDescriptions(const std::vector<int>& inventory, std::vector<Item>& 
     while (true) {
         renderer.printEndlineText("Ваш инвентарь. Введите номер предмета для просмотра описания (0 для выхода):");
         for (int i = 0; i < inventory.size(); ++i) {
-            const Item* item = findItemById(inventory[i], items);
+            const Item* item = findById<Item>(inventory[i], items);
             if (item != nullptr) {
                 renderer.printText(i + 1);
                 renderer.printText(": ");
@@ -508,7 +480,7 @@ void showItemDescriptions(const std::vector<int>& inventory, std::vector<Item>& 
             continue;
         }
 
-        const Item* selected = findItemById(inventory[choice - 1], items);
+        const Item* selected = findById<Item>(inventory[choice - 1], items);
         if (selected) {
             renderer.printText("Описание предмета ");
             renderer.printText(selected->getName());
@@ -522,7 +494,7 @@ void showAbilityDescriptions(const std::vector<int>& playerAbilities, std::vecto
     while (true) {
         renderer.printEndlineText("Выберите способность для просмотра описания (0 для выхода):");
         for (int i = 0; i < playerAbilities.size(); ++i) {
-            const Ability* ability = findAbilityById(playerAbilities[i], abilities);
+            const Ability* ability = findById<Ability>(playerAbilities[i], abilities);
             if (ability != nullptr) {
                 renderer.printText(i + 1);
                 renderer.printText(": ");
@@ -540,7 +512,7 @@ void showAbilityDescriptions(const std::vector<int>& playerAbilities, std::vecto
             continue;
         }
 
-        const Ability* selected = findAbilityById(playerAbilities[choice - 1], abilities);
+        const Ability* selected = findById<Ability>(playerAbilities[choice - 1], abilities);
         if (selected) {
             renderer.printText("Описание способности ");
             renderer.printText(selected->getName());
@@ -556,7 +528,7 @@ void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<
     {
         renderer.printEndlineText("Выберите врага для просмотра описания (0 для выхода):");
         for (int i = 0; i < playerEnemies.size(); ++i) {
-            const Enemy* enemy = findEnemyById(playerEnemies[i], enemies);
+            const Enemy* enemy = findById<Enemy>(playerEnemies[i], enemies);
             if (enemy != nullptr) {
                 renderer.printText(i + 1);
                 renderer.printText(": ");
@@ -574,7 +546,7 @@ void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<
             continue;
         }
 
-        const Enemy* selected = findEnemyById(playerEnemies[choice - 1], enemies);
+        const Enemy* selected = findById<Enemy>(playerEnemies[choice - 1], enemies);
         if (selected) {
             renderer.printText("Описание способности ");
             renderer.printText(selected->getName());
@@ -585,20 +557,20 @@ void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<
 }
 
 void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, Location* currentLocation, Renderer& renderer){
-    Enemy* enemy = findEnemyById(enemyId, enemies);
+    Enemy* enemy = findById<Enemy>(enemyId, enemies);
     std::vector<Ability*> playerAbilities;
     std::vector<Ability*> enemyAbilities;
 
     for (int i = 0; i < player.getAbilitiesCount(); i++) {
-        playerAbilities.push_back(findAbilityById(player.getChosenAbilities()[i], abilities));
-        enemyAbilities.push_back(findAbilityById(enemy->getAbilities()[i], abilities));
+        playerAbilities.push_back(findById<Ability>(player.getChosenAbilities()[i], abilities));
+        enemyAbilities.push_back(findById<Ability>(enemy->getAbilities()[i], abilities));
     }
     BattleSystem battleSystem(player, enemy, renderer, currentLocation, playerAbilities, enemyAbilities);
     battleSystem.battle();
 }
 
 void showChosenWeapon(Player& player, std::vector<Item>& items, Renderer& renderer){
-    Item* item = findItemById(player.getChosenWeaponId(), items);
+    Item* item = findById<Item>(player.getChosenWeaponId(), items);
     if (item != nullptr){
         renderer.printText("Вы используете оружие: ");
         renderer.printEndlineText(item->getName());
@@ -610,7 +582,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
     int userChoice = 0;
 
     while (player.getEnemiesCount() != enemies.size()) {
-        Location* currentLocation = findLocationById(player.getLocationId(), locations);
+        Location* currentLocation = findById<Location>(player.getLocationId(), locations);
         int enemyId = currentLocation->getEnemyId();
         int dialogNodeId = currentLocation->getDialogNodeId();
         std::vector<int>& locationItems = currentLocation->getItems();
@@ -633,7 +605,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         {
             options.push_back("Вступить в бой");
             renderer.printText("На локации присутсвтует враг ");
-            renderer.printEndlineText(findEnemyById(enemyId, enemies)->getName());
+            renderer.printEndlineText(findById<Enemy>(enemyId, enemies)->getName());
         }
         if (dialogNodeId != 0)
         {
