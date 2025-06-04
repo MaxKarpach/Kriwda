@@ -79,7 +79,7 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
     }
 }
 
-void downloadData(Player & player, std::vector<Location> & locations, std::vector<Enemy> & enemies, std::vector<Ability> & abilities, std::vector<Item> & items, std::vector<DialogNode> & dialogNodes, std::vector<DialogChoice> & dialogChoices, std::vector<Scene> & scenes, Game& game){
+void downloadData(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, std::vector<Scene>& scenes, Game& game){
    std::ifstream input("data.txt");
 
     PlayerRegistry playerRegistry;
@@ -150,7 +150,7 @@ void downloadData(Player & player, std::vector<Location> & locations, std::vecto
     game.setIsGameEnded(gameRegistry.getGameStats().isGameEnded);
 }
 
-void saveGame(Player & player, std::vector<Location> & locations, std::vector<Enemy> & enemies, std::vector<Ability> & abilities, std::vector<Item> & items, std::vector<DialogNode> & dialogNodes, std::vector<DialogChoice> & dialogChoices, Game& game, std::vector<Scene>& scenes) {
+void saveGame(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, Game& game, std::vector<Scene>& scenes) {
         std::ofstream output("data.txt");
         PlayerRegistry playerRegistry;
         PlayerDef playerDef = playerRegistry.toPlayerDef(player);
@@ -198,7 +198,7 @@ void saveGame(Player & player, std::vector<Location> & locations, std::vector<En
         gameRegistry.save(output);
 }
 
-void lootItems(std::vector<Item> & items, Player & player, Location * currentLocation, Renderer & renderer){
+void lootItems(std::vector<Item>& items, Player& player, Location * currentLocation, Renderer & renderer){
             std::vector<int> &locationItems = currentLocation->getItems();
             std::vector<int> &playerInventory = player.getInventory();
             while (!locationItems.empty())
@@ -691,7 +691,7 @@ int main(int argc, char* argv[]){
     Game game(scenes, dialogNodes, dialogChoices, renderer);
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes, game);
     if (!game.getIsGameStarted()){
-        game.initNewGame(renderer);
+        game.initNewGame(scenes, dialogNodes, dialogChoices, renderer);
     }
     if (!game.getIsGameLoopEnded()){
         showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, renderer, game, scenes);

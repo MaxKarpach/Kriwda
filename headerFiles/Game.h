@@ -37,7 +37,7 @@ public:
 
     void sceneDialog(std::vector<DialogNode> &dialogNodes, std::vector<DialogChoice> &dialogChoices, int currentNodeId, Renderer &renderer);
 
-    void initNewGame(Renderer &renderer);
+    void initNewGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer);
     void gameOver(Renderer& renderer);
     void endGame(std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer);
 

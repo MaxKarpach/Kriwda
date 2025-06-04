@@ -59,13 +59,24 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
     }
 }
 
-void Game::initNewGame(Renderer& renderer){
-    renderer.printEndlineText("Начало игры");
-    isGameStarted = true;
+void Game::initNewGame(std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer){
+    std::vector<Scene> endings;
+    Scene* beginning;
+    for (Scene scene : scenes)
+    {
+        if (scene.getType() == 'b'){
+            beginning = &scene;
+            break;
+        }
+    }
+    sceneDialog(dialogNodes, dialogChoices, beginning->getDialogNodeId(), renderer);
+    isGameStarted = 1;
 }
+
 void Game::gameOver(Renderer& renderer){
     renderer.printEndlineText("Вы проиграли");
 }
+
 void Game::endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer){
     std::vector<Scene> endings;
     for (Scene scene : scenes){
