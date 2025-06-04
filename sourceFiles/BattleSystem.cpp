@@ -139,8 +139,9 @@ void BattleSystem::clash(){
                 playerAbilities[userChoice-4]->setMovesCount(playerAbilities[userChoice-4]->getMovesCount() - 1);
                 renderer.printText("Вы использовали способность ");
                 renderer.printEndlineText(playerAbilities[userChoice-4]->getName());
-                if (playerAbilities[userChoice-4]->getType() == 'd'){
-                    if (enemyChoice == 2){
+                switch (playerAbilities[userChoice-4]->getType()){
+                    case 'd':
+                        if (enemyChoice == 2){
                         enemy->setIsShieldOn(1);
                         enemy->setShield(enemy->getShield() - playerAbilities[userChoice-4]->getFactor());
                         if (enemy->getShield() > 0){
@@ -150,16 +151,21 @@ void BattleSystem::clash(){
                         renderer.printEndlineText("Вы пробили щит");
                         enemy->setHp(enemy->getHp() + enemy->getShield());
                         }
-                    } else if (enemyChoice == 3){
+                        } else if (enemyChoice == 3){
                         enemy->setIsDodgeOn(1);
                         renderer.printEndlineText("Вы промахнулись");
-                    } else {
+                        } else {
                         enemy->setHp(enemy->getHp() - playerAbilities[userChoice-4]->getFactor());
                         renderer.printEndlineText("Вы попали");
+                        }
+                         break;
+                    case 'h':
+                        player.setHp(player.getHp() + playerAbilities[userChoice-4]->getFactor());
+                         break;
+
+                    default:
+                        break;
                     }
-                } else if (playerAbilities[userChoice-4]->getType() == 'h') {
-                    player.setHp(player.getHp() + playerAbilities[userChoice-4]->getFactor());
-                }
             } else {
                 renderer.printEndlineText("Вы не можете использовать эту способность");
             }
@@ -181,11 +187,17 @@ void BattleSystem::clash(){
                 enemyAbilities[enemyChoice-4]->setMovesCount(enemyAbilities[enemyChoice-4]->getMovesCount() - 1);
                 renderer.printText("Враг использовал способность ");
                 renderer.printEndlineText(enemyAbilities[enemyChoice-4]->getName());
-                if (enemyAbilities[enemyChoice-4]->getType() == 'd'){
+                switch (enemyAbilities[enemyChoice-4]->getType())
+                {
+                case 'd':
                     player.setHp(player.getHp() - enemyAbilities[enemyChoice-4]->getFactor());
-                    renderer.printEndlineText("Враг попал");  
-                } else if (enemyAbilities[enemyChoice-4]->getType() == 'h') {
+                    renderer.printEndlineText("Враг попал"); 
+                    break;
+                case 'h':
                     enemy->setHp(enemy->getHp() + enemyAbilities[enemyChoice-4]->getFactor());
+                    break;
+                default:
+                    break;
                 }
         }
 }
@@ -195,7 +207,6 @@ int BattleSystem::enemyMove(){
     while (true)
     {
         enemyChoice = rand() % (3+enemy->getAbilitiesCount()) + 1;
-        std::cout << enemyChoice << std::endl;
         if (enemyChoice == 1) {
             if (enemy->getStamina() > 0){
                 break;

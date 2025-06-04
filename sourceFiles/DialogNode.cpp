@@ -19,7 +19,6 @@ void DialogNodeRegistry::load(std::istream& is){
         is >> dnd.id;
         is.ignore(MAX_STRING_LEN, '\n');
         std::getline(is, dnd.name);
-        is.ignore(MAX_STRING_LEN, '\n');
         std::getline(is, dnd.text);
     
         int choicesCount = 0;
