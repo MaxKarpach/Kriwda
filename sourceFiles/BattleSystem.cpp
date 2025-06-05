@@ -175,8 +175,10 @@ void BattleSystem::clash(){
         }
         
         if (enemyChoice == 1){
-            player.setHp(player.getHp() - enemy->getDamage());
-            renderer.printEndlineText("Враг попал");
+            if (userChoice != 2 && userChoice != 3){
+                player.setHp(player.getHp() - enemy->getDamage());
+                renderer.printEndlineText("Враг попал");
+            }
         } else if (enemyChoice == 2) {
             enemy->setIsShieldOn(1);
             renderer.printEndlineText("Враг поставил блок");
@@ -190,8 +192,10 @@ void BattleSystem::clash(){
                 switch (enemyAbilities[enemyChoice-4]->getType())
                 {
                 case 'd':
+                    if (userChoice != 2 && userChoice != 3){
                     player.setHp(player.getHp() - enemyAbilities[enemyChoice-4]->getFactor());
                     renderer.printEndlineText("Враг попал"); 
+                    }
                     break;
                 case 'h':
                     enemy->setHp(enemy->getHp() + enemyAbilities[enemyChoice-4]->getFactor());

@@ -197,87 +197,41 @@ void saveGame(Player& player, std::vector<Location>& locations, std::vector<Enem
         gameRegistry.save(output);
 }
 
-void lootItems(std::vector<Item>& items, Player& player, Location * currentLocation, Renderer & renderer){
-            std::vector<int> &locationItems = currentLocation->getItems();
-            std::vector<int> &playerInventory = player.getInventory();
-            while (!locationItems.empty())
-            {
-                renderer.printEndlineText("Предметы на локации:");
-                renderer.printEndlineText("0: Выйти");
-                for (int i = 0; i < locationItems.size(); ++i)
-                {
-                    Item *item = findById<Item>(locationItems[i], items);
-                    if (item){
-                        renderer.printText(i + 1);
-                        renderer.printText(": ");
-                        renderer.printEndlineText(item->getName());
-                    }
-                }
+template <typename T> void loot(std::vector<T>& dataPool, Player& player, Location* currentLocation, Renderer& renderer, std::vector<int>& (Location::*getLocationData)(), std::vector<int>& (Player::*getPlayerData)(),const std::string& title, const std::string& successMessage, const std::string& emptyMessage) {
+    std::vector<int>& locationData = (currentLocation->*getLocationData)();
+    std::vector<int>& playerData = (player.*getPlayerData)();
 
-                int choice = -1;
-                renderer.printEndlineText("Выберите предмет для подбора: ");
-                std::cin >> choice;
-
-                if (choice == 0)
-                {
-                    break;
-                }
-
-                if (choice > 0 && choice <= locationItems.size())
-                {
-                    int itemId = locationItems[choice - 1];
-                    playerInventory.push_back(itemId);
-                    locationItems.erase(locationItems.begin() + (choice - 1));
-                    renderer.printEndlineText("Предмет подобран!");
-                }
-                else
-                {
-                    renderer.printEndlineText("Неверный выбор, попробуйте снова.");
-                }
-            }
-
-            if (locationItems.empty())
-            {
-                renderer.printEndlineText("На локации больше нет предметов.");
-            }
-}
-
-void lootAbilities(std::vector<Ability>& abilities, Player& player, Location* currentLocation, Renderer& renderer) {
-  std::vector<int>& locationAbilities= currentLocation->getAbilities();
-    std::vector<int>& playerAbilities = player.getAbilities(); 
-    while (!locationAbilities.empty())
-    {
-        renderer.printEndlineText("Способности на локации:");
+    while (!locationData.empty()) {
+        renderer.printEndlineText(title + " на локации" + ":");
         renderer.printEndlineText("0: Выйти");
-        for (int i = 0; i < locationAbilities.size(); ++i) {
-            Ability* ability = findById<Ability>(locationAbilities[i], abilities);
-            if (ability) {
+
+        for (int i = 0; i < locationData.size(); ++i) {
+            T* item = findById<T>(locationData[i], dataPool);
+            if (item) {
                 renderer.printText(i + 1);
                 renderer.printText(": ");
-                renderer.printEndlineText(ability->getName());
+                renderer.printEndlineText(item->getName());
             }
         }
 
         int choice = -1;
-        renderer.printEndlineText("Выберите способность: ");
+        renderer.printEndlineText("Выберите элемент: ");
         std::cin >> choice;
 
-        if (choice == 0) {
-            break;
-        }
+        if (choice == 0) break;
 
-        if (choice > 0 && choice <= locationAbilities.size()) {
-            int itemId = locationAbilities[choice - 1];
-            playerAbilities.push_back(itemId); 
-            locationAbilities.erase(locationAbilities.begin() + (choice - 1));
-            renderer.printEndlineText("Появилась новая способность!");
+        if (choice > 0 && choice <= locationData.size()) {
+            int id = locationData[choice - 1];
+            playerData.push_back(id);
+            locationData.erase(locationData.begin() + (choice - 1));
+            renderer.printEndlineText(successMessage);
         } else {
             renderer.printEndlineText("Неверный выбор, попробуйте снова.");
         }
     }
 
-    if (locationAbilities.empty()) {
-        renderer.printEndlineText("На локации больше нет способностей.");
+    if (locationData.empty()) {
+        renderer.printEndlineText("На локации больше нет " + emptyMessage);
     }
 }
 
@@ -482,7 +436,7 @@ template <typename T> void showDataDescription(const std::vector<int>& playerDat
 
         const T* selected = findById<T>(playerData[choice - 1], data);
         if (selected) {
-            renderer.printText("Описание");
+            renderer.printText("Описание ");
             renderer.printText(selected->getName());
             renderer.printEndlineText(":");
             renderer.printEndlineText(selected->getDescription());
@@ -626,10 +580,10 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         }
         else if (selectedOption == "Осмотреть предметы на локации")
         {
-            lootItems(items, player, currentLocation, renderer);
+            loot<Item>(items,player,currentLocation,renderer,&Location::getItems,&Player::getInventory,"Предметы","Предмет подобран!", "предметов.");
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
         }  else if (selectedOption == "Осмотреть способности на локации"){
-            lootAbilities(abilities, player, currentLocation, renderer);
+            loot<Ability>(abilities,player,currentLocation,renderer,&Location::getAbilities,&Player::getAbilities,"Способности","Появилась новая способность!",  "способностей.");
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
         } else if (selectedOption == "Поговорить") {
             startDialog(dialogNodes, dialogChoices, dialogNodeId, currentLocation, renderer);
