@@ -457,15 +457,16 @@ void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& ab
     }
 }
 
-void showItemDescriptions(const std::vector<int>& inventory, std::vector<Item>& items, Renderer& renderer) {
+template <typename T> void showDataDescription(const std::vector<int>& playerData, std::vector<T>& data, Renderer& renderer, const std::string& description){
     while (true) {
-        renderer.printEndlineText("Ваш инвентарь. Введите номер предмета для просмотра описания (0 для выхода):");
-        for (int i = 0; i < inventory.size(); ++i) {
-            const Item* item = findById<Item>(inventory[i], items);
-            if (item != nullptr) {
+        renderer.printText(description);
+        renderer.printEndlineText(" Введите номер предмета для просмотра описания (0 для выхода):");
+        for (int i = 0; i < playerData.size(); ++i) {
+            const T* subject = findById<T>(playerData[i], data);
+            if (subject != nullptr) {
                 renderer.printText(i + 1);
                 renderer.printText(": ");
-                renderer.printEndlineText(item->getName());
+                renderer.printEndlineText(subject->getName());
             }
         }
 
@@ -474,80 +475,14 @@ void showItemDescriptions(const std::vector<int>& inventory, std::vector<Item>& 
 
         if (choice == 0) break;
 
-        if (choice < 1 || choice > inventory.size()) {
+        if (choice < 1 || choice > playerData.size()) {
             renderer.printEndlineText("Некорректный выбор. Попробуйте снова.");
             continue;
         }
 
-        const Item* selected = findById<Item>(inventory[choice - 1], items);
+        const T* selected = findById<T>(playerData[choice - 1], data);
         if (selected) {
-            renderer.printText("Описание предмета ");
-            renderer.printText(selected->getName());
-            renderer.printEndlineText(":");
-            renderer.printEndlineText(selected->getDescription());
-        }
-    }
-}
-
-void showAbilityDescriptions(const std::vector<int>& playerAbilities, std::vector<Ability>& abilities, Renderer& renderer) {
-    while (true) {
-        renderer.printEndlineText("Выберите способность для просмотра описания (0 для выхода):");
-        for (int i = 0; i < playerAbilities.size(); ++i) {
-            const Ability* ability = findById<Ability>(playerAbilities[i], abilities);
-            if (ability != nullptr) {
-                renderer.printText(i + 1);
-                renderer.printText(": ");
-                renderer.printEndlineText(ability->getName());
-            }
-        }
-
-        int choice;
-        std::cin >> choice;
-
-        if (choice == 0) break;
-
-        if (choice < 1 || choice > playerAbilities.size()) {
-            renderer.printEndlineText("Некорректный выбор. Попробуйте снова.");
-            continue;
-        }
-
-        const Ability* selected = findById<Ability>(playerAbilities[choice - 1], abilities);
-        if (selected) {
-            renderer.printText("Описание способности ");
-            renderer.printText(selected->getName());
-            renderer.printEndlineText(":");
-            renderer.printEndlineText(selected->getDescription());
-        }
-    }
-}
-
-void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<Enemy>& enemies, Renderer& renderer) {
-    renderer.printEndlineText("Ваши побежденные враги");
-    while (true)
-    {
-        renderer.printEndlineText("Выберите врага для просмотра описания (0 для выхода):");
-        for (int i = 0; i < playerEnemies.size(); ++i) {
-            const Enemy* enemy = findById<Enemy>(playerEnemies[i], enemies);
-            if (enemy != nullptr) {
-                renderer.printText(i + 1);
-                renderer.printText(": ");
-                renderer.printEndlineText(enemy->getName());
-            }
-        }
-
-        int choice;
-        std::cin >> choice;
-
-        if (choice == 0) break;
-
-        if (choice < 1 || choice > playerEnemies.size()) {
-            renderer.printEndlineText("Некорректный выбор. Попробуйте снова.");
-            continue;
-        }
-
-        const Enemy* selected = findById<Enemy>(playerEnemies[choice - 1], enemies);
-        if (selected) {
-            renderer.printText("Описание способности ");
+            renderer.printText("Описание");
             renderer.printText(selected->getName());
             renderer.printEndlineText(":");
             renderer.printEndlineText(selected->getDescription());
@@ -581,15 +516,15 @@ void showDescriptions(Player& player, std::vector<Item>& items, std::vector<Abil
 
     std::string selectedOption = options[userChoice - 1];
     if (selectedOption == "Показать описания способностей"){
-        showAbilityDescriptions(player.getAbilities(), abilities, renderer);
+        showDataDescription<Ability>(player.getAbilities(), abilities, renderer, "Ваши способности");
         break;
     }
     else if (selectedOption == "Показать описания предметов"){
-        showItemDescriptions(player.getInventory(), items, renderer);
+        showDataDescription<Item>(player.getInventory(), items, renderer, "Ваши инвентарь");
         break;
     }
     else if (selectedOption == "Показать описания побеждённых врагов"){
-        showEnemiesDescriptions(player.getEnemies(), enemies, renderer);
+        showDataDescription<Enemy>(player.getEnemies(), enemies, renderer, "Ваши враги");
         break;
     }
     }
