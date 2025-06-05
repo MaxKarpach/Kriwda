@@ -5,7 +5,7 @@ Game::Game( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std
 scenes(scenes), dialogNodes(dialogNodes), dialogChoices(dialogChoices), renderer(renderer){}
 
 void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Renderer& renderer){
-        while (true)
+    while (true)
     {
 
         DialogNode* currentNode = nullptr;
@@ -35,11 +35,6 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
             }
         }
 
-        if (currentChoices.empty()) {
-            renderer.printEndlineText("Диалог завершён.");
-            break;
-        }
-
         for (int i = 0; i < currentChoices.size(); ++i) {
             renderer.printText(i + 1);
             renderer.printText(": ");
@@ -47,13 +42,13 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
         }
 
         int userChoice = 0;
-        renderer.printText("Выберите вариант (0 — выход): ");
-        std::cin >> userChoice;
 
-        if (userChoice <= 0 || userChoice > currentChoices.size()) {
-            renderer.printEndlineText("Диалог прерван.");
-            break;
-        }
+        do {
+            std::cin >> userChoice;
+            if (userChoice <= 0 || userChoice > currentChoices.size()){
+                renderer.printEndlineText("Неверный ввод");
+            }
+        } while (userChoice <= 0 || userChoice > currentChoices.size());
 
         currentNodeId = currentChoices[userChoice - 1]->getNextNodeId();
     }
