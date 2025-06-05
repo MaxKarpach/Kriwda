@@ -555,6 +555,46 @@ void showEnemiesDescriptions(const std::vector<int>& playerEnemies, std::vector<
     }
 }
 
+void showDescriptions(Player& player, std::vector<Item>& items, std::vector<Ability>& abilities, std::vector<Enemy>& enemies, Renderer& renderer){
+    int userChoice = 0;
+    while (true){
+    std::vector<std::string> options;
+    options.push_back("Показать описания способностей");
+    options.push_back("Показать описания предметов");
+    options.push_back("Показать описания побеждённых врагов");
+    renderer.printEndlineText("Введите 0 для выхода");
+    for (int i = 0; i < options.size(); i++){
+        renderer.printText(i + 1);
+        renderer.printText(": ");
+        renderer.printEndlineText(options[i]);
+    }
+    std::cin >> userChoice;
+
+    if (userChoice < 0 || userChoice > options.size()) {
+            renderer.printEndlineText("Неверный ввод. Попробуйте снова.");
+            continue;
+    }
+
+    if (userChoice == 0){
+        break;
+    }
+
+    std::string selectedOption = options[userChoice - 1];
+    if (selectedOption == "Показать описания способностей"){
+        showAbilityDescriptions(player.getAbilities(), abilities, renderer);
+        break;
+    }
+    else if (selectedOption == "Показать описания предметов"){
+        showItemDescriptions(player.getInventory(), items, renderer);
+        break;
+    }
+    else if (selectedOption == "Показать описания побеждённых врагов"){
+        showEnemiesDescriptions(player.getEnemies(), enemies, renderer);
+        break;
+    }
+    }
+}
+
 void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, Location* currentLocation, Renderer& renderer){
     Enemy* enemy = findById<Enemy>(enemyId, enemies);
     std::vector<Ability*> playerAbilities;
@@ -594,9 +634,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         options.push_back("Сменить локацию");
         options.push_back("Показать инвентарь");
         options.push_back("Выбрать способности");
-        options.push_back("Показать описания способностей");
-        options.push_back("Показать описания предметов");
-        options.push_back("Показать описания побеждённых врагов");
+        options.push_back("Показать описания");
         if (player.getChosenWeaponId() != 0){
         options.push_back("Показать оружие");
         }
@@ -661,14 +699,10 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         } else if (selectedOption == "Поговорить") {
             startDialog(dialogNodes, dialogChoices, dialogNodeId, currentLocation, renderer);
             saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
-        } else if (selectedOption == "Показать описания способностей") {
-            showAbilityDescriptions(playerAbilities, abilities, renderer);
-        } else if (selectedOption == "Показать описания предметов") {
-            showItemDescriptions(playerAbilities, items, renderer);
         } else if (selectedOption == "Показать оружие") {
             showChosenWeapon(player, items, renderer);
-        } else if (selectedOption == "Показать описания побеждённых врагов") {
-            showEnemiesDescriptions(player.getEnemies(), enemies, renderer);
+        } else if (selectedOption == "Показать описания") {
+            showDescriptions(player, items, abilities, enemies, renderer);
         }
     }
     game.setIsGameLoopEnded(1);
