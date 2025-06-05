@@ -55,6 +55,10 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
             }
         }
 
+        if (currentChoices.empty()) {
+            break;
+        }
+
         for (int i = 0; i < currentChoices.size(); ++i) {
             renderer.printText(i + 1);
             renderer.printText(": ");
@@ -685,11 +689,12 @@ int main(int argc, char* argv[]){
     Renderer renderer;
     Game game(scenes, dialogNodes, dialogChoices, renderer);
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes, game);
-    if (!game.getIsGameStarted())
-    {
+    if (!game.getIsGameStarted()){
         game.initNewGame(scenes, dialogNodes, dialogChoices, renderer);
+        saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
     }
-    if (!game.getIsGameLoopEnded()){
+    if (!game.getIsGameLoopEnded())
+    {
         showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, renderer, game, scenes);
     }
     if (!game.getIsGameEnded()){

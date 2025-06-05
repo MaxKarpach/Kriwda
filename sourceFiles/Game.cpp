@@ -28,11 +28,16 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
         renderer.printText(": ");
         renderer.printEndlineText(currentNode->getText());
 
+
         std::vector<DialogChoice*> currentChoices;
         for (auto& choice : dialogChoices) {
             if (choice.getNodeId() == currentNodeId) {
                 currentChoices.push_back(&choice);
             }
+        }
+
+        if (currentChoices.empty()) {
+            break;
         }
 
         for (int i = 0; i < currentChoices.size(); ++i) {
