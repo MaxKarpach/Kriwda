@@ -6,6 +6,7 @@ struct DialogChoiceDef{
     std::string text;
     int nextNodeId;
     int nodeId;
+    bool isUsed;
 };
 
 class DialogChoice {
@@ -22,13 +23,17 @@ class DialogChoice {
 
         int getNodeId() const { return nodeId; }
         void setNodeId(int value) { nodeId= value; }
+
+        bool getIsUsed() const { return isUsed; }
+        void setisUsed(bool value) { isUsed = value; }
+
     private:
     int id;
     std::string text;
     int nextNodeId;
     int nodeId;
+    bool isUsed;
 };
-
 
 class DialogChoiceRegistry{
     public:

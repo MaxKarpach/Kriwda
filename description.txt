@@ -43,7 +43,6 @@
     int dodgeCount;
     int abilitiesCount;
     std::array<int, 3> abilities;
-    int chosenWeaponId;
     int locationId;
     bool isShieldOn;
     bool isDodgeOn;
@@ -84,6 +83,7 @@
     std::string text;
     int nextNodeId;
     int nodeId;
+    bool isUsed;
 кол-во сцен
 сцены
 int id;

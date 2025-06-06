@@ -49,11 +49,14 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
         renderer.printEndlineText(currentNode->getText());
 
         std::vector<DialogChoice*> currentChoices;
-        for (auto& choice : dialogChoices) {
-            if (choice.getNodeId() == currentNodeId) {
+        for (int choiceId : currentNode->getChoices()) {
+            for (auto& choice : dialogChoices) {
+                if (choice.getId() == choiceId && !choice.getIsUsed()) {
                 currentChoices.push_back(&choice);
-            }
+                break;
         }
+    }
+}
 
         if (currentChoices.empty()) {
             break;
@@ -75,6 +78,7 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
         }
 
         currentNodeId = currentChoices[userChoice - 1]->getNextNodeId();
+        currentChoices[userChoice - 1]->setisUsed(1);
     }
 }
 
