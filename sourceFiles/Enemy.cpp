@@ -5,7 +5,7 @@ const int MAX_STRING_LEN = 255;
 
 Enemy::Enemy(const EnemyDef& def)
 : id(def.id), name(def.name), hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount),
-abilities(def.abilities), chosenWeaponId(def.chosenWeaponId),locationId(def.locationId), isShieldOn(def.isShieldOn), 
+abilities(def.abilities), locationId(def.locationId), isShieldOn(def.isShieldOn), 
 isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor),shieldFactor(def.shieldFactor),
 maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield),
 staminaRecoveryFactor(def.staminaRecoveryFactor), items(def.items), description(def.description), abilitiesCount(def.abilitiesCount) {}
@@ -31,7 +31,6 @@ void EnemyRegistry::load(std::istream& is){
         for (int i = 0; i < ed.abilitiesCount; i++){
               is >> ed.abilities[i];
         }
-        is >> ed.chosenWeaponId;
         is >> ed.locationId;
         is >> ed.isShieldOn;
         is >> ed.isDodgeOn;
@@ -68,7 +67,6 @@ void EnemyRegistry::save(std::ostream& os){
         for (int i = 0; i < ed.abilitiesCount; i++){
         os << ed.abilities[i] << std::endl;
         }
-        os << ed.chosenWeaponId << std::endl;
         os << ed.locationId << std::endl;
         os << ed.isShieldOn << std::endl;
         os << ed.isDodgeOn << std::endl;
@@ -99,7 +97,6 @@ std::vector<EnemyDef> EnemyRegistry::toEnemyDefs(const std::vector<Enemy>& enemi
         def.dodgeCount = enemy.getDodgeCount();
         def.abilitiesCount = enemy.getAbilitiesCount();
         def.abilities = enemy.getAbilities();
-        def.chosenWeaponId = enemy.getChosenWeaponId();
         def.locationId = enemy.getLocationId();
         def.isShieldOn = enemy.getIsShieldOn();
         def.isDodgeOn = enemy.getIsDodgeOn();

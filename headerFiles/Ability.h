@@ -50,12 +50,10 @@ public:
 
     void refreshMovesCount(){
         if (maxMovesCount != movesCount){
-            if (movesCount == -1)
-            {
+            if (movesCount == -1){
                 setMovesCount(maxMovesCount);
             }
-            else
-            {
+            else {
                 setMovesCount(movesCount - 1);
             }
         }

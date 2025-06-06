@@ -11,7 +11,6 @@ struct EnemyDef{
     int shield;
     int dodgeCount;
     std::array<int, 3> abilities;
-    int chosenWeaponId;
     int locationId;
     bool isShieldOn;
     bool isDodgeOn;
@@ -70,9 +69,6 @@ Enemy(const EnemyDef& def);
 
     int getStaminaRecoveryFactor() const { return staminaRecoveryFactor; }
     void setStaminaRecoveryFactor(int value) { staminaRecoveryFactor = value; }
-
-    int getChosenWeaponId() const { return chosenWeaponId; }
-    void setChosenWeaponId(int value) { chosenWeaponId = value; }
 
     int getLocationId() const { return locationId; }
     void setLocationId(int value) { locationId = value; }
@@ -173,7 +169,6 @@ private:
     int shield;
     int dodgeCount;
     std::array<int, 3> abilities;
-    int chosenWeaponId;
     int locationId;
     bool isShieldOn;
     bool isDodgeOn;

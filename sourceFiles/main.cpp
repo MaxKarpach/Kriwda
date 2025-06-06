@@ -331,8 +331,8 @@ void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer)
                 player.setHp(player.getHp() + item->getFactor());
                 renderer.printText("Вы выбрали еду: ");
                 renderer.printEndlineText(item->getName());
-                renderer.printText("Вы восстановили ");
-                renderer.printText(item->getFactor());
+                renderer.printText("У вас теперь ");
+                renderer.printText(player.getHp());
                 renderer.printEndlineText(" здоровья.");
                 break;
             case 'w':
@@ -612,7 +612,8 @@ int main(int argc, char* argv[]){
     Renderer renderer;
     Game game(scenes, dialogNodes, dialogChoices, renderer);
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes, game);
-    if (!game.getIsGameStarted()){
+    if (!game.getIsGameStarted())
+    {
         game.initNewGame(scenes, dialogNodes, dialogChoices, renderer);
         saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
     }
@@ -622,6 +623,7 @@ int main(int argc, char* argv[]){
     }
     if (!game.getIsGameEnded()){
         game.endGame(scenes, dialogNodes, dialogChoices, renderer);
+        saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
     }
     return 0;
 }
