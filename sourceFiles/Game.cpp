@@ -30,9 +30,12 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
 
 
         std::vector<DialogChoice*> currentChoices;
-        for (auto& choice : dialogChoices) {
-            if (choice.getNodeId() == currentNodeId) {
+        for (int choiceId : currentNode->getChoices()) {
+            for (auto& choice : dialogChoices) {
+                if (choice.getId() == choiceId && !choice.getIsUsed()) {
                 currentChoices.push_back(&choice);
+                break;
+                }
             }
         }
 
@@ -56,6 +59,10 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
         } while (userChoice <= 0 || userChoice > currentChoices.size());
 
         currentNodeId = currentChoices[userChoice - 1]->getNextNodeId();
+        currentChoices[userChoice - 1]->setisUsed(1);
+        if (currentChoices[userChoice - 1]->getNextNodeId() == 0){
+            break;
+        }
     }
 }
 
