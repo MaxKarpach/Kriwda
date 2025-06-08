@@ -44,9 +44,11 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
             currentLocation->setDialogNodeId(0);
         }
 
+        if (currentNode->getName() != ""){
         renderer.printText(currentNode->getName());
         renderer.printText(": ");
         renderer.printEndlineText(currentNode->getText());
+        }
 
         std::vector<DialogChoice*> currentChoices;
         for (int choiceId : currentNode->getChoices()) {

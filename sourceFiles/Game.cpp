@@ -24,9 +24,11 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
             renderer.printEndlineText(currentNode->getDescription());
         }
 
+        if (currentNode->getText() != ""){
         renderer.printText(currentNode->getName());
         renderer.printText(": ");
         renderer.printEndlineText(currentNode->getText());
+        }
 
 
         std::vector<DialogChoice*> currentChoices;
