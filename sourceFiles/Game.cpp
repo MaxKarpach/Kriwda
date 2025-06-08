@@ -32,7 +32,7 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
 
 
         std::vector<DialogChoice*> currentChoices;
-        for (int choiceId : currentNode->getChoices()) {
+        for (int choiceId : currentNode->getChoices()){
             for (auto& choice : dialogChoices) {
                 if (choice.getId() == choiceId && !choice.getIsUsed()) {
                 currentChoices.push_back(&choice);
@@ -40,6 +40,7 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
                 }
             }
         }
+
 
         if (currentChoices.empty()) {
             break;
@@ -109,8 +110,6 @@ void Game::endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogN
             renderer.printEndlineText(endings.size());
         }
     }
-    renderer.printEndlineText("Выбранная концовка:");
-    renderer.printEndlineText(endings[choice - 1].getText());
     sceneDialog(dialogNodes, dialogChoices, endings[choice - 1].getDialogNodeId(), renderer);
     renderer.printEndlineText("Конец игры");
     isGameEnded = 1;
