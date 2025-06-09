@@ -201,6 +201,16 @@ public:
         setIsShieldOn(0);
     }
 
+    void winRound(const int& enemyId, const int& playerHp){
+        addToEnemies(enemyId);
+        setHp(playerHp);
+        setStamina(maxStamina);
+        setShield(maxShield);
+        setDodgeCount(0);
+        setIsDodgeOn(0);
+        setIsShieldOn(0);
+    }
+
     void refreshStatsAfterRound(){
         if (shield < 0){
             setShield(0);

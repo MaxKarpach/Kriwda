@@ -39,8 +39,7 @@ bool BattleSystem::endBattle(){
         }
         if (enemy->getHp() <= 0 && player.getHp() > 0){
             renderer.printEndlineText("Вы победили");
-            player.addToEnemies(enemy->getId());
-            player.setHp(playerHp);
+            player.winRound(enemy->getId(), playerHp);
             currentLocation->setItems(enemy->getItems());
             currentLocation->setEnemyId(0);
             currentLocation->setDialogNodeId(0);
