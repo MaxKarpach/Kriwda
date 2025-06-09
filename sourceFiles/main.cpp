@@ -415,7 +415,7 @@ void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& ab
         renderer.printEndlineText("Введите номер выбранной способности, которую хотите заменить: ");
         std::cin >> replaceIndex;
 
-        if (replaceIndex < 1 || replaceIndex > playerAbilities.size()) {
+        if (replaceIndex < 1 || replaceIndex > playerChosenAbilities.size()) {
             renderer.printEndlineText("Некорректный выбор замены.");
             continue;
         }
