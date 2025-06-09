@@ -15,7 +15,8 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
                 break;
             }
         }
-        if (!currentNode) {
+        if (!currentNode)
+        {
             renderer.printEndlineText("Ошибка: узел диалога не найден.");
             break;
         }
