@@ -4,7 +4,6 @@
     int stamina;
     int shield;
     int dodgeCount;
-    int money;
     int locationId;
     int dialogNodeId;
     std::vector<int> inventory;

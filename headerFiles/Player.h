@@ -8,7 +8,6 @@ struct PlayerDef{
     int stamina;
     int shield;
     int dodgeCount;
-    int money;
     int locationId;
     int dialogNodeId;
     std::vector<int> inventory;
@@ -78,9 +77,6 @@ public:
      void setMaxDodgeCount(int value) {maxDodgeCount = value;}
 
      void setInventory(std::vector<int> value) { inventory = value; }
-
-     int getMoney() const { return money; }
-     void setMoney(int value) { money = value; }
 
      int getLocationId() const { return locationId; }
      void setLocationId(int value) { locationId = value; }
@@ -225,7 +221,6 @@ private:
     int stamina;
     int shield;
     int dodgeCount;
-    int money;
     int locationId;
     int dialogNodeId;
     std::vector<int> inventory;

@@ -2,7 +2,7 @@
 #include <iostream>
 
 Player::Player(const PlayerDef& def)
- : hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount), money(def.money), 
+ : hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount), 
    locationId(def.locationId), dialogNodeId(def.dialogNodeId), inventory(def.inventory), abilities(def.abilities), 
    chosenAbilities(def.chosenAbilities), chosenWeaponId(def.chosenWeaponId), isShieldOn(def.isShieldOn), 
    isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor), shieldFactor(def.shieldFactor),
@@ -11,7 +11,7 @@ Player::Player(const PlayerDef& def)
 
 Player::Player() 
     : hp(0), damage(0), stamina(0), shield(0), dodgeCount(0),
-      money(0), locationId(0), dialogNodeId(0), chosenWeaponId(0),
+     locationId(0), dialogNodeId(0), chosenWeaponId(0),
       isShieldOn(false), isDodgeOn(false), staminaFactor(0),
       shieldFactor(0), maxDodgeCount(0), maxStamina(0),
       maxShield(0), staminaRecoveryFactor(0), abilitiesCount(3) {}
@@ -27,7 +27,6 @@ void PlayerRegistry::load(std::istream& is){
     is >> pd.stamina;
     is >> pd.shield;
     is >> pd.dodgeCount;
-    is >> pd.money;
     is >> pd.locationId;
     is >> pd.dialogNodeId;
     int inventorySize = 0;
@@ -73,7 +72,6 @@ void PlayerRegistry::save(std::ostream& os) {
     os << player.stamina << std::endl;
     os << player.shield << std::endl;
     os << player.dodgeCount << std::endl;
-    os << player.money << std::endl;
     os << player.locationId << std::endl;
     os << player.dialogNodeId << std::endl;
 
@@ -115,7 +113,6 @@ PlayerDef PlayerRegistry::toPlayerDef(Player& player) {
     def.stamina = player.getStamina();
     def.shield = player.getShield();
     def.dodgeCount = player.getDodgeCount();
-    def.money = player.getMoney();
     def.locationId = player.getLocationId();
     def.dialogNodeId = player.getDialogNodeId();
     def.inventory = player.getInventory();
