@@ -64,6 +64,7 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
             break;
         }
 
+        renderer.printEndlineText("0: выход");
         for (int i = 0; i < currentChoices.size(); ++i) {
             renderer.printText(i + 1);
             renderer.printText(": ");
@@ -71,7 +72,6 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
         }
 
         int userChoice = 0;
-        renderer.printText("Выберите вариант (0 — выход): ");
         std::cin >> userChoice;
 
         if (userChoice <= 0 || userChoice > currentChoices.size()) {
@@ -225,7 +225,6 @@ template <typename T> void loot(std::vector<T>& dataPool, Player& player, Locati
         }
 
         int choice = -1;
-        renderer.printEndlineText("Выберите элемент: ");
         std::cin >> choice;
 
         if (choice == 0) break;
@@ -274,7 +273,7 @@ void move(Player& player, std::vector<Location>& locations, int& enemiesCount, R
             }
         }
         renderer.printText(currentLocation->getChoices().size() + 1);
-        renderer.printEndlineText(": Показать меню");
+        renderer.printEndlineText(": Остановиться на локации");
         int userChoice = 0;
         std::cin >> userChoice;
         if (userChoice == currentLocation->getChoices().size()+1){
@@ -307,6 +306,7 @@ void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer)
             renderer.printEndlineText("Инвентарь пуст.");
             return;
         }
+        renderer.printEndlineText("0: Выход");
 
         for (int i = 0; i < inventory.size(); i++) {
             Item* item = findById<Item>(inventory[i], items);
@@ -316,7 +316,6 @@ void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer)
                 renderer.printEndlineText(item->getName());
             }
         }
-        renderer.printText("Введите номер предмета, чтобы использовать (0 для выхода): ");
         int input;
         std::cin >> input;
 
@@ -350,12 +349,17 @@ void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer)
                 renderer.printText("Вы выбрали оружие: ");
                 renderer.printEndlineText(item->getName());
                 break;
+            case 'n':
+                renderer.printText("Вы выбрали прочитать: ");
+                renderer.printEndlineText(item->getName());
+                renderer.printEndlineText(item->getDescription());
+                break;
             default:
                 renderer.printEndlineText("Предмет не может быть использован.");
                 continue;
         }
 
-        if (type != 'w'){
+        if (type == 'f'){
             inventory.erase(inventory.begin() + (input - 1));
         }
     }
@@ -384,7 +388,7 @@ void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& ab
                 renderer.printEndlineText(ability->getName());
             }
         }
-        renderer.printEndlineText("Введите номер способности для замены (0 для выхода): ");
+        renderer.printEndlineText("0: Выход");
         std::cin >> inputAbilityIndex;
 
         if (inputAbilityIndex == 0) break;
@@ -408,10 +412,10 @@ void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& ab
             renderer.printEndlineText("Эта способность уже выбрана. Выберите другую.");
             continue;
         }
-        renderer.printEndlineText("Введите номер выбранной способности, которую хотите заменить (1-3): ");
+        renderer.printEndlineText("Введите номер выбранной способности, которую хотите заменить: ");
         std::cin >> replaceIndex;
 
-        if (replaceIndex < 1 || replaceIndex > 3) {
+        if (replaceIndex < 1 || replaceIndex > playerAbilities.size()) {
             renderer.printEndlineText("Некорректный выбор замены.");
             continue;
         }
@@ -540,7 +544,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
         if (enemyId != 0)
         {
             options.push_back("Вступить в бой");
-            renderer.printText("На локации присутсвтует враг ");
+            renderer.printText("На локации присутствует враг ");
             renderer.printEndlineText(findById<Enemy>(enemyId, enemies)->getName());
         }
         if (dialogNodeId != 0)

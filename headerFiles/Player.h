@@ -171,13 +171,12 @@ public:
     }
 
     void initDodgeCount(){
-            if (isDodgeOn == 1){
+        if (isDodgeOn == 1){
             if (dodgeCount == maxDodgeCount){
                 setIsDodgeOn(0);
                 setDodgeCount(0);
             }
-            else
-            {
+            else{
                 Renderer renderer;
                 renderer.printText("До уклонения осталось: ");
                 renderer.printText(maxDodgeCount - dodgeCount);
@@ -198,12 +197,12 @@ public:
     }
 
     void loseRound(int& playerHp){
-                setHp(playerHp);
-                setStamina(maxStamina);
-                setShield(maxShield);
-                setDodgeCount(0);
-                setIsDodgeOn(0);
-                setIsShieldOn(0);
+        setHp(playerHp);
+        setStamina(maxStamina);
+        setShield(maxShield);
+        setDodgeCount(0);
+        setIsDodgeOn(0);
+        setIsShieldOn(0);
     }
 
     void refreshStatsAfterRound(){
