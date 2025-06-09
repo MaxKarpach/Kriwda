@@ -161,7 +161,11 @@ void BattleSystem::clash(){
                         }
                          break;
                     case 'h':
-                        player.setHp(player.getHp() + playerAbilities[userChoice-4]->getFactor());
+                        if (player.getHp() + playerAbilities[userChoice-4]->getFactor() > playerHp){
+                            player.setHp(playerHp);
+                        } else {
+                            player.setHp(player.getHp() + playerAbilities[userChoice-4]->getFactor());
+                        }
                          break;
 
                     default:
@@ -199,7 +203,11 @@ void BattleSystem::clash(){
                     }
                     break;
                 case 'h':
-                    enemy->setHp(enemy->getHp() + enemyAbilities[enemyChoice-4]->getFactor());
+                    if (enemy->getHp() + enemyAbilities[enemyChoice-4]->getFactor() > enemyHp){
+                        enemy->setHp(enemyHp);
+                    } else{
+                        enemy->setHp(enemy->getHp() + enemyAbilities[enemyChoice-4]->getFactor());
+                    }
                     break;
                 default:
                     break;

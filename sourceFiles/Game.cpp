@@ -85,6 +85,7 @@ void Game::initNewGame(std::vector<Scene>& scenes, std::vector<DialogNode>& dial
 
 void Game::gameOver(Renderer& renderer){
     renderer.printEndlineText("Вы проиграли");
+    renderer.printEndlineText("Загрузка...");
 }
 
 void Game::endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer){

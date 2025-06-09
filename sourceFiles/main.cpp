@@ -354,6 +354,13 @@ void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer)
                 renderer.printEndlineText(item->getName());
                 renderer.printEndlineText(item->getDescription());
                 break;
+            case 's':
+                player.setShield(item->getFactor());
+                renderer.printText("Вы выбрали щит: ");
+                renderer.printEndlineText(item->getName());
+                renderer.printText("Ваш уровень защиты: ");
+                renderer.printEndlineText(player.getShield());
+                break;
             default:
                 renderer.printEndlineText("Предмет не может быть использован.");
                 continue;
