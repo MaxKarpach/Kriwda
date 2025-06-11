@@ -5,7 +5,6 @@
     int shield;
     int dodgeCount;
     int locationId;
-    int dialogNodeId;
     std::vector<int> inventory;
     std::vector<int> abilities;
     int abilitiesCount;
@@ -81,7 +80,6 @@
     int id;
     std::string text;
     int nextNodeId;
-    int nodeId;
     bool isUsed;
 кол-во сцен
 сцены
