@@ -348,6 +348,7 @@ void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer)
                 player.setChosenWeaponId(item->getId());
                 renderer.printText("Вы выбрали оружие: ");
                 renderer.printEndlineText(item->getName());
+                player.setDamage(item->getFactor());
                 break;
             case 'n':
                 renderer.printText("Вы выбрали прочитать: ");
