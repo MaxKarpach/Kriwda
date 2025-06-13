@@ -3,7 +3,7 @@
 
 Player::Player(const PlayerDef& def)
  : hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount), 
-   locationId(def.locationId), dialogNodeId(def.dialogNodeId), inventory(def.inventory), abilities(def.abilities), 
+   locationId(def.locationId), inventory(def.inventory), abilities(def.abilities), 
    chosenAbilities(def.chosenAbilities), chosenWeaponId(def.chosenWeaponId), isShieldOn(def.isShieldOn), 
    isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor), shieldFactor(def.shieldFactor),
    maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield), 
@@ -11,7 +11,7 @@ Player::Player(const PlayerDef& def)
 
 Player::Player() 
     : hp(0), damage(0), stamina(0), shield(0), dodgeCount(0),
-     locationId(0), dialogNodeId(0), chosenWeaponId(0),
+     locationId(0), chosenWeaponId(0),
       isShieldOn(false), isDodgeOn(false), staminaFactor(0),
       shieldFactor(0), maxDodgeCount(0), maxStamina(0),
       maxShield(0), staminaRecoveryFactor(0), abilitiesCount(3) {}
@@ -28,7 +28,6 @@ void PlayerRegistry::load(std::istream& is){
     is >> pd.shield;
     is >> pd.dodgeCount;
     is >> pd.locationId;
-    is >> pd.dialogNodeId;
     int inventorySize = 0;
     is >> inventorySize;
     for (int i = 0; i < inventorySize; i++){
@@ -73,7 +72,6 @@ void PlayerRegistry::save(std::ostream& os) {
     os << player.shield << std::endl;
     os << player.dodgeCount << std::endl;
     os << player.locationId << std::endl;
-    os << player.dialogNodeId << std::endl;
 
     os << player.inventory.size() << std::endl;
     for (int itemId : player.inventory) {
@@ -114,7 +112,6 @@ PlayerDef PlayerRegistry::toPlayerDef(Player& player) {
     def.shield = player.getShield();
     def.dodgeCount = player.getDodgeCount();
     def.locationId = player.getLocationId();
-    def.dialogNodeId = player.getDialogNodeId();
     def.inventory = player.getInventory();
     def.abilities = player.getAbilities();
     def.abilitiesCount = player.getAbilitiesCount();

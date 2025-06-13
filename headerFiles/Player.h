@@ -9,7 +9,6 @@ struct PlayerDef{
     int shield;
     int dodgeCount;
     int locationId;
-    int dialogNodeId;
     std::vector<int> inventory;
     std::vector<int> abilities;
     std::array<int, 3> chosenAbilities;
@@ -80,9 +79,6 @@ public:
 
      int getLocationId() const { return locationId; }
      void setLocationId(int value) { locationId = value; }
-
-     int getDialogNodeId() const { return dialogNodeId; }
-     void setDialogNodeId(int value) { dialogNodeId = value; }
 
      int getChosenWeaponId() const { return chosenWeaponId; }
      void setChosenWeaponId(int value) { chosenWeaponId = value; }
@@ -232,7 +228,6 @@ private:
     int shield;
     int dodgeCount;
     int locationId;
-    int dialogNodeId;
     std::vector<int> inventory;
     std::vector<int> abilities;
     std::array<int, 3> chosenAbilities;
