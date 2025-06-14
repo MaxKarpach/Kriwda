@@ -17,22 +17,22 @@ public:
     Game(std::vector<Scene> &scenes, std::vector<DialogNode> &dialogNodes, std::vector<DialogChoice> &dialogChoices, Renderer &renderer);
 
     bool getIsGameStarted() const {
-        return isGameStarted;
+        return isGameStarted_;
     }
     void setIsGameStarted(bool value){
-        isGameStarted = value;
+        isGameStarted_ = value;
     }
     bool getIsGameLoopEnded() const {
-        return isGameLoopEnded;
+        return isGameLoopEnded_;
     }
     void setIsGameLoopEnded(bool value){
-        isGameLoopEnded = value;
+        isGameLoopEnded_ = value;
     }
     bool getIsGameEnded() const {
-        return isGameEnded;
+        return isGameEnded_;
     }
     void setIsGameEnded(bool value){
-        isGameEnded = value;
+        isGameEnded_ = value;
     }
 
     void sceneDialog(std::vector<DialogNode> &dialogNodes, std::vector<DialogChoice> &dialogChoices, int currentNodeId, Renderer &renderer);
@@ -42,13 +42,13 @@ public:
     void endGame(std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer);
 
 private:
-    bool isGameStarted;
-    bool isGameLoopEnded;
-    bool isGameEnded;
-    std::vector<Scene> &scenes;
-    std::vector<DialogNode> &dialogNodes;
-    std::vector<DialogChoice> &dialogChoices;
-    Renderer &renderer;
+    bool isGameStarted_;
+    bool isGameLoopEnded_;
+    bool isGameEnded_;
+    std::vector<Scene> &scenes_;
+    std::vector<DialogNode> &dialogNodes_;
+    std::vector<DialogChoice> &dialogChoices_;
+    Renderer &renderer_;
 
 };
 

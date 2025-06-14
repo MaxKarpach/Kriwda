@@ -2,19 +2,19 @@
 #include <iostream>
 
 Player::Player(const PlayerDef& def)
- : hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount), 
-   locationId(def.locationId), inventory(def.inventory), abilities(def.abilities), 
-   chosenAbilities(def.chosenAbilities), chosenWeaponId(def.chosenWeaponId), isShieldOn(def.isShieldOn), 
-   isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor), shieldFactor(def.shieldFactor),
-   maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield), 
-   staminaRecoveryFactor(def.staminaRecoveryFactor), enemies(def.enemies), abilitiesCount(def.abilitiesCount) {}
+ : hp_(def.hp), damage_(def.damage), stamina_(def.stamina), shield_(def.shield), dodgeCount_(def.dodgeCount), 
+   locationId_(def.locationId), inventory_(def.inventory), abilities_(def.abilities), 
+   chosenAbilities_(def.chosenAbilities), chosenWeaponId_(def.chosenWeaponId), isShieldOn_(def.isShieldOn), 
+   isDodgeOn_(def.isDodgeOn), staminaFactor_(def.staminaFactor), shieldFactor_(def.shieldFactor),
+   maxDodgeCount_(def.maxDodgeCount), maxStamina_(def.maxStamina), maxShield_(def.maxShield), 
+   staminaRecoveryFactor_(def.staminaRecoveryFactor), enemies_(def.enemies), abilitiesCount_(def.abilitiesCount) {}
 
 Player::Player() 
-    : hp(0), damage(0), stamina(0), shield(0), dodgeCount(0),
-     locationId(0), chosenWeaponId(0),
-      isShieldOn(false), isDodgeOn(false), staminaFactor(0),
-      shieldFactor(0), maxDodgeCount(0), maxStamina(0),
-      maxShield(0), staminaRecoveryFactor(0), abilitiesCount(3) {}
+    : hp_(0), damage_(0), stamina_(0), shield_(0), dodgeCount_(0),
+     locationId_(0), chosenWeaponId_(0),
+      isShieldOn_(false), isDodgeOn_(false), staminaFactor_(0),
+      shieldFactor_(0), maxDodgeCount_(0), maxStamina_(0),
+      maxShield_(0), staminaRecoveryFactor_(0), abilitiesCount_(3) {}
 
 PlayerDef PlayerRegistry::getPlayer(){
     return player;

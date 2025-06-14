@@ -13,40 +13,40 @@ struct DialogNodeDef{
 class DialogNode {
     public:
         DialogNode(const DialogNodeDef& def);
-        int getId() const { return id; }
-        void setId(int value) { id = value; }
+        int getId() const { return id_; }
+        void setId(int value) { id_ = value; }
 
-        std::string getText() const { return text; }
-        void setText(std::string value) {text = value; }
+        std::string getText() const { return text_; }
+        void setText(std::string value) {text_ = value; }
 
-        std::string getDescription() const { return description; }
-        void setDescription(std::string value) {description = value; }
+        std::string getDescription() const { return description_; }
+        void setDescription(std::string value) {description_ = value; }
          
-        std::string getName() const { return name; }
-        void setName(std::string value) { name = value; }
+        std::string getName() const { return name_; }
+        void setName(std::string value) { name_ = value; }
 
         void addChoice(const int& choiceId) {
-            choices.push_back(choiceId);
+            choices_.push_back(choiceId);
         }
         void showChoices(){
-            for (int i = 0; i < choices.size(); i++){
+            for (int i = 0; i < choices_.size(); i++){
                 Renderer renderer;
-                renderer.printEndlineText(choices[i]);
+                renderer.printEndlineText(choices_[i]);
             }
         }
         void removeChoice(int choiceId) {
-            auto it = std::find(choices.begin(), choices.end(), choiceId);
-            if (it != choices.end()) {
-                choices.erase(it);
+            auto it = std::find(choices_.begin(), choices_.end(), choiceId);
+            if (it != choices_.end()) {
+                choices_.erase(it);
             } 
         }
-        std::vector<int> getChoices() const { return choices; }
+        std::vector<int> getChoices() const { return choices_; }
     private:
-    int id;
-    std::string name;
-    std::string text;
-    std::vector<int> choices;
-    std::string description;
+    int id_;
+    std::string name_;
+    std::string text_;
+    std::vector<int> choices_;
+    std::string description_;
 };
 
 

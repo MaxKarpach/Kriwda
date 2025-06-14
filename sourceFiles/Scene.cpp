@@ -5,7 +5,7 @@
 const int MAX_STRING_LEN = 255;
 
 Scene::Scene(const SceneDef& def)
-:id(def.id), dialogNodeId(def.dialogNodeId), type(def.type), text(def.text){}
+:id_(def.id),dialogNodeId_(def.dialogNodeId), type_(def.type), text_(def.text){}
 
 std::vector<SceneDef> SceneRegistry::getScenes(){
     return scenes;

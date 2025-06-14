@@ -16,57 +16,57 @@ class Ability {
 public:
     Ability(const AbilityDef& def);
 
-    std::string getDescription() const { return description; }
-    void setDescription(std::string value) { description = value; }
+    std::string getDescription() const { return description_; }
+    void setDescription(std::string value) { description_ = value; }
 
-    int getId() const { return id; }
-    void setId(int value) { id = value; }
+    int getId() const { return id_; }
+    void setId(int value) { id_ = value; }
 
-    std::string getName() const { return name; }
-    void setName(std::string value) { name = value; }
+    std::string getName() const { return name_; }
+    void setName(std::string value) { name_ = value; }
 
-    char getType() const { return type; }
-    void setType(char value) { type = value; }
+    char getType() const { return type_; }
+    void setType(char value) { type_ = value; }
 
-    int getFactor() const { return factor; }
-    void setFactor(int value) { factor = value; }
+    int getFactor() const { return factor_; }
+    void setFactor(int value) { factor_ = value; }
 
-    int getMovesCount() const { return movesCount; }
-    void setMovesCount(int value){movesCount = value;}
+    int getMovesCount() const { return movesCount_; }
+    void setMovesCount(int value){movesCount_ = value;}
 
-    int getMaxMovesCount() const { return maxMovesCount; }
-    void setMaxMovesCount(int value){maxMovesCount = value;}
+    int getMaxMovesCount() const { return maxMovesCount_; }
+    void setMaxMovesCount(int value){maxMovesCount_ = value;}
 
     void countMoves(){
-        if (maxMovesCount != movesCount){
+        if (maxMovesCount_ != movesCount_){
             Renderer renderer;
             renderer.printText("До возможности использовать способность ");
-            renderer.printText(name);
+            renderer.printText(name_);
             renderer.printText(" осталось ");
-            renderer.printText(movesCount + 2);
+            renderer.printText(movesCount_ + 2);
             renderer.printEndlineText(" хода(ов)");
         }
     }
 
     void refreshMovesCount(){
-        if (maxMovesCount != movesCount){
-            if (movesCount == -1){
-                setMovesCount(maxMovesCount);
+        if (maxMovesCount_ != movesCount_){
+            if (movesCount_ == -1){
+                movesCount_ = maxMovesCount_;
             }
             else {
-                setMovesCount(movesCount - 1);
+                movesCount_--;
             }
         }
     }
 
     private: 
-    int id;
-    std::string name;
-    char type;
-    int factor;
-    int movesCount;
-    int maxMovesCount;
-    std::string description;
+    int id_;
+    std::string name_;
+    char type_;
+    int factor_;
+    int movesCount_;
+    int maxMovesCount_;
+    std::string description_;
 };
 
 class AbilityRegistry{

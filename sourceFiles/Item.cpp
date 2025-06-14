@@ -5,7 +5,7 @@
 const int MAX_STRING_LEN = 255;
 
 Item::Item(const ItemDef& def)
-:id(def.id), name(def.name), type(def.type), factor(def.factor), description(def.description){}
+:id_(def.id), name_(def.name), type_(def.type), factor_(def.factor), description_(def.description){}
 
 std::vector<ItemDef> ItemRegistry::getItems(){
     return items;

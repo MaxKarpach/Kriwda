@@ -2,7 +2,7 @@
 #include <Game.h>
 Game::Game( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, 
     Renderer& renderer):
-scenes(scenes), dialogNodes(dialogNodes), dialogChoices(dialogChoices), renderer(renderer){}
+scenes_(scenes), dialogNodes_(dialogNodes), dialogChoices_(dialogChoices), renderer_(renderer){}
 
 void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Renderer& renderer){
     while (true)
@@ -81,7 +81,7 @@ void Game::initNewGame(std::vector<Scene>& scenes, std::vector<DialogNode>& dial
         }
     }
     sceneDialog(dialogNodes, dialogChoices, beginning->getDialogNodeId(), renderer);
-    isGameStarted = 1;
+    isGameStarted_ = 1;
 }
 
 void Game::gameOver(Renderer& renderer){
@@ -114,7 +114,7 @@ void Game::endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogN
     }
     sceneDialog(dialogNodes, dialogChoices, endings[choice - 1].getDialogNodeId(), renderer);
     renderer.printEndlineText("Конец игры");
-    isGameEnded = 1;
+    isGameEnded_ = 1;
 }
 
 void GameRegistry::load(std::istream& is) {
@@ -143,7 +143,7 @@ GameStatsDef GameRegistry::toGameStatsDef(const Game& game) {
     GameStatsDef def;
     def.isGameStarted = game.getIsGameStarted();
     def.isGameLoopEnded = game.getIsGameLoopEnded();
-    def.isGameEnded = game.getIsGameEnded();
+    def.isGameEnded= game.getIsGameEnded();
     return def;
 }
 

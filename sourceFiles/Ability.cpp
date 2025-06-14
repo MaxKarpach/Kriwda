@@ -4,8 +4,8 @@
 const int MAX_STRING_LEN = 255;
 
 Ability::Ability(const AbilityDef& def)
-:id(def.id), name(def.name), type(def.type), factor(def.factor),
-movesCount(def.movesCount),maxMovesCount(def.maxMovesCount), description(def.description)  {}
+:id_(def.id), name_(def.name), type_(def.type), factor_(def.factor),
+movesCount_(def.movesCount),maxMovesCount_(def.maxMovesCount), description_(def.description)  {}
 
 std::vector<AbilityDef> AbilityRegistry::getAbilities(){
     return abilities;
@@ -16,7 +16,6 @@ void AbilityRegistry::load(std::istream& is){
     is >> abilitiesCount;
     for (int i = 0; i < abilitiesCount; i++){
         AbilityDef ad;
-
         is >> ad.id;
         is.ignore(MAX_STRING_LEN, '\n');
         std::getline(is, ad.name);

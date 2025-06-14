@@ -3,8 +3,8 @@
 
 const int MAX_STRING_LEN = 255;
 
-DialogNode::DialogNode(const DialogNodeDef& def):id(def.id), name(def.name), text(def.text), choices(def.choices), 
-description(def.description){}
+DialogNode::DialogNode(const DialogNodeDef& def):id_(def.id), name_(def.name), text_(def.text), choices_(def.choices), 
+description_(def.description){}
 
 std::vector<DialogNodeDef> DialogNodeRegistry::getDialogNodes(){
     return dialogNodes;

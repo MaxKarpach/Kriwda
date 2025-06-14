@@ -18,62 +18,62 @@ class Location{
 public:
     Location(const LocationDef& def);
 
-    int getId() const { return id; }
-    void setId(int value) { id = value; }
+    int getId() const { return id_; }
+    void setId(int value) { id_ = value; }
 
-    int getDialogNodeId() const { return dialogNodeId; }
-    void setDialogNodeId(int value) { dialogNodeId= value; }
+    int getDialogNodeId() const { return dialogNodeId_; }
+    void setDialogNodeId(int value) { dialogNodeId_= value; }
 
-    std::vector<int> getItems() const{ return items; }
-    std::vector<int> getChoices() const { return choices; }
-    std::vector<int> getAbilities() const{ return abilities; }
+    std::vector<int> getItems() const{ return items_; }
+    std::vector<int> getChoices() const { return choices_; }
+    std::vector<int> getAbilities() const{ return abilities_; }
 
-    std::string getName() const { return name; }
-    void setName(std::string value) { name = value; }
+    std::string getName() const { return name_; }
+    void setName(std::string value) { name_ = value; }
 
-    int getEnemyId() const { return enemyId; }
-    void setEnemyId(int value) { enemyId = value; }
+    int getEnemyId() const { return enemyId_; }
+    void setEnemyId(int value) { enemyId_ = value; }
 
     void addChoice(const int& choiceId) {
-        choices.push_back(choiceId);
+        choices_.push_back(choiceId);
     }
     void showChoices(){
-        for (int i = 0; i < choices.size(); i++){
+        for (int i = 0; i < choices_.size(); i++){
             Renderer renderer;
-            renderer.printEndlineText(choices[i]);
+            renderer.printEndlineText(choices_[i]);
         }
     }
     void removeChoice(int choiceId) {
-        auto it = std::find(choices.begin(), choices.end(), choiceId);
-        if (it != choices.end()) {
-            choices.erase(it);
+        auto it = std::find(choices_.begin(), choices_.end(), choiceId);
+        if (it != choices_.end()) {
+            choices_.erase(it);
         } 
     }
 
     void setItems(std::vector<int> newItems){
         for (int item : newItems){
-            items.push_back(item);
+            items_.push_back(item);
         }
     }
 
-    std::vector<int>& getItems() { return items; }
-    std::vector<int>& getAbilities() { return abilities; }
+    std::vector<int>& getItems() { return items_; }
+    std::vector<int>& getAbilities() { return abilities_; }
 
-    std::string getDescription() const { return description; }
-    void setDescription(std::string value) { description = value; }
+    std::string getDescription() const { return description_; }
+    void setDescription(std::string value) { description_ = value; }
 
-    bool getIsFinalBossLocation() const { return isFinalBossLocation; }
+    bool getIsFinalBossLocation() const { return isFinalBossLocation_; }
 
 private:
-int id;
-std::string name;
-std::vector<int> choices;
-int dialogNodeId;
-int enemyId;
-std::vector<int>items;
-std::string description;
-bool isFinalBossLocation;
-std::vector<int> abilities;
+    int id_;
+    std::string name_;
+    std::vector<int> choices_;
+    int enemyId_;
+    int dialogNodeId_;
+    std::vector<int> items_;
+    std::string description_;
+    bool isFinalBossLocation_;
+    std::vector<int> abilities_;
 };
 
 class LocationRegistry{

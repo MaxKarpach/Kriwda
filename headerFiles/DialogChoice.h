@@ -11,23 +11,23 @@ struct DialogChoiceDef{
 class DialogChoice {
     public:
         DialogChoice(const DialogChoiceDef& def);
-        int getId() const { return id; }
-        void setId(int value) { id = value; }
+        int getId() const { return id_; }
+        void setId(int value) { id_ = value; }
 
-        std::string getText() const { return text; }
-        void setText(std::string value) {text = value; }
+        std::string getText() const { return text_; }
+        void setText(std::string value) {text_ = value; }
 
-        int getNextNodeId() const { return nextNodeId; }
-        void setNextNodeId(int value) { nextNodeId= value; }
+        int getNextNodeId() const { return nextNodeId_; }
+        void setNextNodeId(int value) { nextNodeId_= value; }
 
-        bool getIsUsed() const { return isUsed; }
-        void setisUsed(bool value) { isUsed = value; }
+        bool getIsUsed() const { return isUsed_; }
+        void setisUsed(bool value) { isUsed_ = value; }
 
     private:
-    int id;
-    std::string text;
-    int nextNodeId;
-    bool isUsed;
+    int id_;
+    std::string text_;
+    int nextNodeId_;
+    bool isUsed_;
 };
 
 class DialogChoiceRegistry{

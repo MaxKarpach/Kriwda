@@ -31,149 +31,149 @@ public:
 
     Player();
 
-    int getHp() const { return hp; }
-    void setHp(int value) { hp = value; }
+    int getHp() const { return hp_; }
+    void setHp(int value) { hp_ = value; }
 
-    int getDamage() const { return damage; }
-    void setDamage(int value) { damage = value; }
+    int getDamage() const { return damage_ ; }
+    void setDamage(int value) { damage_  = value; }
 
-    int getStamina() const { return stamina; }
-    void setStamina(int value) { stamina = value; }
+    int getStamina() const { return stamina_ ; }
+    void setStamina(int value) { stamina_  = value; }
 
-    int getMaxStamina() const { return maxStamina; }
-    void setMaxStamina(int value) { maxStamina = value; }
+    int getMaxStamina() const { return maxStamina_ ; }
+    void setMaxStamina(int value) { maxStamina_  = value; }
 
-    int getMaxShield() const { return maxShield; }
-    void setMaxShield(int value) { maxShield = value; }
+    int getMaxShield() const { return maxShield_ ; }
+    void setMaxShield(int value) { maxShield_  = value; }
 
-    int getStaminaFactor() const { return staminaFactor; }
-    void setStaminaFactor(int value) { staminaFactor = value; }
+    int getStaminaFactor() const { return staminaFactor_ ; }
+    void setStaminaFactor(int value) { staminaFactor_  = value; }
 
-    int getStaminaRecoveryFactor() const { return staminaRecoveryFactor; }
-    void setStaminaRecoveryFactor(int value) { staminaRecoveryFactor = value; }
+    int getStaminaRecoveryFactor() const { return staminaRecoveryFactor_ ; }
+    void setStaminaRecoveryFactor(int value) { staminaRecoveryFactor_  = value; }
 
-    std::vector<int>& getInventory() { return inventory; }
+    std::vector<int>& getInventory() { return inventory_ ; }
 
-    int getShield() const { return shield; }
-    void setShield(int value) { shield = value; }
+    int getShield() const { return shield_ ; }
+    void setShield(int value) { shield_  = value; }
 
-    int getAbilitiesCount() const { return abilitiesCount; }
-    void setAbilitiesCount(int value) { abilitiesCount = value; }
+    int getAbilitiesCount() const { return abilitiesCount_ ; }
+    void setAbilitiesCount(int value) { abilitiesCount_  = value; }
 
-    int getShieldFactor() const { return shieldFactor; }
-    void setShieldFactor(int value) { shieldFactor = value; }
+    int getShieldFactor() const { return shieldFactor_ ; }
+    void setShieldFactor(int value) { shieldFactor_  = value; }
 
-    bool getIsShieldOn() const { return isShieldOn; }
-    void setIsShieldOn(bool value) { isShieldOn = value; }
+    bool getIsShieldOn() const { return isShieldOn_ ; }
+    void setIsShieldOn(bool value) { isShieldOn_  = value; }
 
-    bool getIsDodgeOn() const { return isDodgeOn; }
-    void setIsDodgeOn(bool value) { isDodgeOn = value; }
+    bool getIsDodgeOn() const { return isDodgeOn_ ; }
+    void setIsDodgeOn(bool value) { isDodgeOn_  = value; }
 
-    int getDodgeCount() const { return dodgeCount; }
-    void setDodgeCount(int value) { dodgeCount = value;}
+    int getDodgeCount() const { return dodgeCount_ ; }
+    void setDodgeCount(int value) { dodgeCount_  = value;}
 
-     int getMaxDodgeCount() const { return maxDodgeCount; }
-     void setMaxDodgeCount(int value) {maxDodgeCount = value;}
+     int getMaxDodgeCount() const { return maxDodgeCount_ ; }
+     void setMaxDodgeCount(int value) {maxDodgeCount_  = value;}
 
-     void setInventory(std::vector<int> value) { inventory = value; }
+     void setInventory(std::vector<int> value) { inventory_  = value; }
 
-     int getLocationId() const { return locationId; }
-     void setLocationId(int value) { locationId = value; }
+     int getLocationId() const { return locationId_ ; }
+     void setLocationId(int value) { locationId_  = value; }
 
-     int getChosenWeaponId() const { return chosenWeaponId; }
-     void setChosenWeaponId(int value) { chosenWeaponId = value; }
+     int getChosenWeaponId() const { return chosenWeaponId_ ; }
+     void setChosenWeaponId(int value) { chosenWeaponId_  = value; }
 
      void showInventory()
      {
-         for (int i = 0; i < inventory.size(); i++)
+         for (int i = 0; i < inventory_ .size(); i++)
          {
              Renderer renderer;
-             renderer.printEndlineText(inventory[i]);
+             renderer.printEndlineText(inventory_ [i]);
          }
     }
     void addItemToInventory(int itemId){
-        inventory.push_back(itemId);
+        inventory_ .push_back(itemId);
     }
     void removeItemFromInventory(int itemId) {
-        auto it = std::find(inventory.begin(), inventory.end(), itemId);
-        if (it != inventory.end()) {
-            inventory.erase(it);
+        auto it = std::find(inventory_ .begin(), inventory_ .end(), itemId);
+        if (it != inventory_ .end()) {
+            inventory_ .erase(it);
         } 
     }
 
     void showAbilities(){
-        for (int i = 0; i < abilities.size(); i++){
+        for (int i = 0; i < abilities_ .size(); i++){
             Renderer renderer;
-            renderer.printEndlineText(abilities[i]);
+            renderer.printEndlineText(abilities_ [i]);
         }
     }
     void addAbility(int abilityId){
-        abilities.push_back(abilityId);
+        abilities_ .push_back(abilityId);
     }
     void removeAbility(int abilityId) {
-        auto it = std::find(abilities.begin(), abilities.end(), abilityId);
-        if (it != abilities.end()) {
-            abilities.erase(it);
+        auto it = std::find(abilities_ .begin(), abilities_ .end(), abilityId);
+        if (it != abilities_ .end()) {
+            abilities_ .erase(it);
         } 
     }
     void showChosenAbilities(){
-        for (int i = 0; i < chosenAbilities.size(); i++){
+        for (int i = 0; i < chosenAbilities_ .size(); i++){
             Renderer renderer;
-            renderer.printEndlineText(chosenAbilities[i]);
+            renderer.printEndlineText(chosenAbilities_ [i]);
         }
     }
     void addChosenAbility(int abilityId, int chosenAbilityIndex){
-        if ((chosenAbilities.size()-1) >= chosenAbilityIndex){
-            chosenAbilities[chosenAbilityIndex] = abilityId;
+        if ((chosenAbilities_ .size()-1) >= chosenAbilityIndex){
+            chosenAbilities_ [chosenAbilityIndex] = abilityId;
         }
     }
     void removeChosenAbility(int chosenAbilityIndex) {
-        chosenAbilities[chosenAbilityIndex] = 0;
+        chosenAbilities_ [chosenAbilityIndex] = 0;
     }
 
     std::vector<int>& getAbilities() {
-    return abilities;
+    return abilities_ ;
     }
 
     std::vector<int>& getEnemies() {
-    return enemies;
+    return enemies_ ;
     }
 
     void addToEnemies(int enemyId){
-        enemies.push_back(enemyId);
+        enemies_ .push_back(enemyId);
     }
 
     std::array<int, 3>& getChosenAbilities() {
-    return chosenAbilities;
+    return chosenAbilities_ ;
     }
 
     int getEnemiesCount(){
-        return enemies.size();
+        return enemies_ .size();
     }
 
     void updateDodgeState() {
-        if (isDodgeOn) {
-            if (dodgeCount >= maxDodgeCount) {
-                isDodgeOn = false;
-                dodgeCount = 0;
+        if (isDodgeOn_ ) {
+            if (dodgeCount_  >= maxDodgeCount_ ) {
+                isDodgeOn_  = false;
+                dodgeCount_  = 0;
             } else {
-                dodgeCount++;
+                dodgeCount_ ++;
             }
         }
     }
 
     void initDodgeCount(){
-        if (isDodgeOn == 1){
-            if (dodgeCount == maxDodgeCount){
-                setIsDodgeOn(0);
-                setDodgeCount(0);
+        if (isDodgeOn_ ){
+            if (dodgeCount_  == maxDodgeCount_ ){
+                isDodgeOn_  = false;
+                dodgeCount_  = 0;
             }
             else{
                 Renderer renderer;
                 renderer.printText("До уклонения осталось: ");
-                renderer.printText(maxDodgeCount - dodgeCount);
+                renderer.printText(maxDodgeCount_ - dodgeCount_);
                 renderer.printEndlineText(" хода(/ов)");
-                setDodgeCount(dodgeCount + 1);
+                dodgeCount_++;
             }
         }
     }
@@ -181,67 +181,67 @@ public:
     void afterRoundInfo(){
         Renderer renderer;
         renderer.printText("Здоровье игрока: ");
-        renderer.printEndlineText(hp);
+        renderer.printEndlineText(hp_);
         renderer.printText("Щит игрока: ");
-        renderer.printEndlineText(shield);
+        renderer.printEndlineText(shield_);
         renderer.printText("Выносливость игрока: ");
-        renderer.printEndlineText(stamina);
+        renderer.printEndlineText(stamina_);
     }
 
     void loseRound(int& playerHp){
-        setHp(playerHp);
-        setStamina(maxStamina);
-        setShield(maxShield);
-        setDodgeCount(0);
-        setIsDodgeOn(0);
-        setIsShieldOn(0);
+        hp_ = playerHp;
+        stamina_ = maxStamina_;
+        shield_ = maxShield_;
+        dodgeCount_ = 0;
+        isDodgeOn_ = 0;
+        isShieldOn_ = 0;
     }
 
     void winRound(const int& enemyId, const int& playerHp){
         addToEnemies(enemyId);
-        setHp(playerHp);
-        setStamina(maxStamina);
-        setShield(maxShield);
-        setDodgeCount(0);
-        setIsDodgeOn(0);
-        setIsShieldOn(0);
+        hp_ = playerHp;
+        stamina_ = maxStamina_;
+        shield_ = maxShield_;
+        dodgeCount_ = 0;
+        isDodgeOn_ = 0;
+        isShieldOn_ = 0;
     }
 
     void refreshStatsAfterRound(){
-        if (shield < 0){
-            setShield(0);
+        if (shield_ < 0){
+            shield_ = 0;
         }
-        setIsShieldOn(0);
-        if (stamina + staminaFactor < maxStamina){
-            setStamina(stamina + staminaRecoveryFactor);
+        isShieldOn_ = 0;
+        if (stamina_ + staminaFactor_ < maxStamina_){
+            stamina_ = stamina_ + staminaRecoveryFactor_;
         }
-        if (shield + shieldFactor < maxShield){
-            setShield(shield + shieldFactor);
+        if (shield_ + shieldFactor_ < maxShield_){
+            shield_ = shield_ + shieldFactor_;
         }
         
     }
 
 private:
-    int hp;
-    int damage;
-    int stamina;
-    int shield;
-    int dodgeCount;
-    int locationId;
-    std::vector<int> inventory;
-    std::vector<int> abilities;
-    std::array<int, 3> chosenAbilities;
-    int chosenWeaponId;
-    bool isShieldOn;
-    bool isDodgeOn;
-    int staminaFactor;
-    int shieldFactor;
-    int maxDodgeCount;
-    int maxStamina;
-    int maxShield;
-    int staminaRecoveryFactor;
-    std::vector<int> enemies;
-    int abilitiesCount;
+    int hp_;
+    int damage_;
+    int stamina_;
+    int shield_;
+    int dodgeCount_;
+    int locationId_;
+    std::vector<int> inventory_;
+    std::vector<int> abilities_;
+    std::array<int, 3> chosenAbilities_;
+    int chosenWeaponId_;
+    bool isShieldOn_;
+    bool isDodgeOn_;
+    int staminaFactor_;
+    int shieldFactor_;
+    int maxDodgeCount_;
+    int maxStamina_;
+    int maxShield_;
+    int staminaRecoveryFactor_;
+    std::vector<int> enemies_;
+    int abilitiesCount_;
 };
 
 class PlayerRegistry{

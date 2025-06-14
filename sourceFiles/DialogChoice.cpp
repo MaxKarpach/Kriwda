@@ -3,8 +3,8 @@
 
 const int MAX_STRING_LEN = 255;
 
-DialogChoice::DialogChoice(const DialogChoiceDef& def):id(def.id), text(def.text), nextNodeId(def.nextNodeId), 
-isUsed(def.isUsed){}
+DialogChoice::DialogChoice(const DialogChoiceDef& def):id_(def.id), text_(def.text), nextNodeId_(def.nextNodeId), 
+isUsed_(def.isUsed){}
 
 std::vector<DialogChoiceDef> DialogChoiceRegistry::getDialogChoices(){
     return dialogChoices;

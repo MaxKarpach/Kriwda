@@ -4,8 +4,9 @@
 const int MAX_STRING_LEN = 255;
 
 Location::Location(const LocationDef& def)
-:id(def.id), name(def.name), choices(def.choices), enemyId(def.enemyId), items(def.items), dialogNodeId(def.dialogNodeId),
-description(def.description), isFinalBossLocation(def.isFinalBossLocation), abilities(def.abilities){}
+:id_(def.id), name_(def.name), choices_(def.choices), enemyId_(def.enemyId), items_(def.items), 
+dialogNodeId_(def.dialogNodeId), description_(def.description), isFinalBossLocation_(def.isFinalBossLocation), 
+abilities_(def.abilities){}
 
 std::vector<LocationDef> LocationRegistry::getLocations(){
     return locations;
@@ -61,7 +62,7 @@ void LocationRegistry::save(std::ostream& os) {
         }
 
         os << ld.dialogNodeId << std::endl;
-        os << ld.enemyId << std::endl;
+        os << ld.enemyId<< std::endl;
 
         os << ld.items.size() << std::endl;
         for (int itemId : ld.items) {

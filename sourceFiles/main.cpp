@@ -20,7 +20,8 @@ template<typename T> T* findById(int id, std::vector<T>& vec) {
     return nullptr;
 }
 
-void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Location* currentLocation, Renderer& renderer) {
+void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, 
+  Location* currentLocation, Renderer& renderer) {
     while (true)
     {
 
@@ -88,7 +89,8 @@ void startDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>&
     }
 }
 
-void downloadData(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, std::vector<Scene>& scenes, Game& game){
+void downloadData(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, 
+  std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, std::vector<Scene>& scenes, Game& game){
    std::ifstream input("data.txt");
 
     PlayerRegistry playerRegistry;
@@ -159,7 +161,8 @@ void downloadData(Player& player, std::vector<Location>& locations, std::vector<
     game.setIsGameEnded(gameRegistry.getGameStats().isGameEnded);
 }
 
-void saveGame(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, Game& game, std::vector<Scene>& scenes) {
+void saveGame(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, 
+  std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, Game& game, std::vector<Scene>& scenes) {
         std::ofstream output("data.txt");
         PlayerRegistry playerRegistry;
         PlayerDef playerDef = playerRegistry.toPlayerDef(player);
@@ -207,7 +210,9 @@ void saveGame(Player& player, std::vector<Location>& locations, std::vector<Enem
         gameRegistry.save(output);
 }
 
-template <typename T> void loot(std::vector<T>& dataPool, Player& player, Location* currentLocation, Renderer& renderer, std::vector<int>& (Location::*getLocationData)(), std::vector<int>& (Player::*getPlayerData)(),const std::string& title, const std::string& successMessage, const std::string& emptyMessage) {
+template <typename T> void loot(std::vector<T>& dataPool, Player& player, Location* currentLocation, 
+  Renderer& renderer, std::vector<int>& (Location::*getLocationData)(), std::vector<int>& (Player::*getPlayerData)(),
+  const std::string& title, const std::string& successMessage, const std::string& emptyMessage) {
     std::vector<int>& locationData = (currentLocation->*getLocationData)();
     std::vector<int>& playerData = (player.*getPlayerData)();
 
@@ -373,7 +378,8 @@ void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer)
     }
 }
 
-void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abilities, std::array<int, 3>& playerChosenAbilities, Renderer& renderer) {
+void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abilities, 
+  std::array<int, 3>& playerChosenAbilities, Renderer& renderer) {
     int inputAbilityIndex = -1;
     int replaceIndex = -1;
 
@@ -433,7 +439,8 @@ void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& ab
     }
 }
 
-template <typename T> void showDataDescription(const std::vector<int>& playerData, std::vector<T>& data, Renderer& renderer, const std::string& description){
+template <typename T> void showDataDescription(const std::vector<int>& playerData, std::vector<T>& data, 
+  Renderer& renderer, const std::string& description){
     while (true) {
         renderer.printText(description);
         renderer.printEndlineText(" Введите номер предмета для просмотра описания (0 для выхода):");
@@ -466,7 +473,8 @@ template <typename T> void showDataDescription(const std::vector<int>& playerDat
     }
 }
 
-void showDescriptions(Player& player, std::vector<Item>& items, std::vector<Ability>& abilities, std::vector<Enemy>& enemies, Renderer& renderer){
+void showDescriptions(Player& player, std::vector<Item>& items, std::vector<Ability>& abilities, 
+  std::vector<Enemy>& enemies, Renderer& renderer){
     int userChoice = 0;
     while (true){
     std::vector<std::string> options;
@@ -506,7 +514,8 @@ void showDescriptions(Player& player, std::vector<Item>& items, std::vector<Abil
     }
 }
 
-void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, Location* currentLocation, Renderer& renderer){
+void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, 
+  Location* currentLocation, Renderer& renderer){
     Enemy* enemy = findById<Enemy>(enemyId, enemies);
     std::vector<Ability*> playerAbilities;
     std::vector<Ability*> enemyAbilities;
@@ -528,7 +537,9 @@ void showChosenWeapon(Player& player, std::vector<Item>& items, Renderer& render
     } 
 }
 
-void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices, Renderer& renderer, Game& game, std::vector<Scene>& scenes) {
+void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies, 
+  std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes, 
+  std::vector<DialogChoice>& dialogChoices, Renderer& renderer, Game& game, std::vector<Scene>& scenes) {
     int userChoice = 0;
 
     while (player.getEnemiesCount() != enemies.size()) {
@@ -634,7 +645,8 @@ int main(int argc, char* argv[]){
     Renderer renderer;
     Game game(scenes, dialogNodes, dialogChoices, renderer);
     downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes, game);
-    if (!game.getIsGameStarted()){
+    if (!game.getIsGameStarted())
+    {
         game.initNewGame(scenes, dialogNodes, dialogChoices, renderer);
         saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
     }

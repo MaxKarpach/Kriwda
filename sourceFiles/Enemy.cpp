@@ -4,11 +4,12 @@
 const int MAX_STRING_LEN = 255;
 
 Enemy::Enemy(const EnemyDef& def)
-: id(def.id), name(def.name), hp(def.hp), damage(def.damage), stamina(def.stamina), shield(def.shield), dodgeCount(def.dodgeCount),
-abilities(def.abilities), locationId(def.locationId), isShieldOn(def.isShieldOn), 
-isDodgeOn(def.isDodgeOn), staminaFactor(def.staminaFactor),shieldFactor(def.shieldFactor),
-maxDodgeCount(def.maxDodgeCount), maxStamina(def.maxStamina), maxShield(def.maxShield),
-staminaRecoveryFactor(def.staminaRecoveryFactor), items(def.items), description(def.description), abilitiesCount(def.abilitiesCount) {}
+: id_(def.id), name_(def.name), hp_(def.hp), damage_(def.damage), stamina_(def.stamina), shield_(def.shield), 
+dodgeCount_(def.dodgeCount), abilities_(def.abilities), locationId_(def.locationId), isShieldOn_(def.isShieldOn), 
+isDodgeOn_(def.isDodgeOn), staminaFactor_(def.staminaFactor),shieldFactor_(def.shieldFactor),
+maxDodgeCount_(def.maxDodgeCount), maxStamina_(def.maxStamina), maxShield_(def.maxShield),
+staminaRecoveryFactor_(def.staminaRecoveryFactor), items_(def.items), description_(def.description),
+ abilitiesCount_(def.abilitiesCount) {}
 
 std::vector<EnemyDef> EnemyRegistry::getEnemies(){
     return enemies;
