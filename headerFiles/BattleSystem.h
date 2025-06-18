@@ -19,8 +19,16 @@ class BattleSystem {
   void clash();
   void battle();
   int enemyMove();
+  void playerAttack();
+  void playerDefence();
+  void playerDodge();
+  void playerAbility();
+  void enemyAttack();
+  void enemyDefence();
+  void enemyDodge();
+  void enemyAbility();
 
- private:
+private:
   Player& player_;
   Enemy* enemy_;
   Renderer& renderer_;

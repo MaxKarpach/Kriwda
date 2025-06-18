@@ -13,6 +13,175 @@ BattleSystem::BattleSystem(Player& player, Enemy* enemy, Renderer& renderer,
       playerAbilities_(playerAbilities),
       enemyAbilities_(enemyAbilities) {}
 
+void BattleSystem::playerAttack() {
+  if (player_.getStamina() > 0) {
+    if (enemyChoice_ == 2) {
+      enemy_->setIsShieldOn(1);
+      enemy_->setShield(enemy_->getShield() - player_.getDamage());
+      player_.setStamina(player_.getStamina() - player_.getStaminaFactor());
+
+      if (enemy_->getShield() > 0) {
+        renderer_.printEndlineText("Вы ударили в блок");
+      } else {
+        renderer_.printEndlineText("Вы пробили щит");
+        enemy_->setHp(enemy_->getHp() + enemy_->getShield());
+      }
+    } else if (enemyChoice_ == 3) {
+      enemy_->setIsDodgeOn(1);
+      player_.setStamina(player_.getStamina() - player_.getStaminaFactor());
+      renderer_.printEndlineText("Вы промахнулись");
+    } else {
+      player_.setStamina(player_.getStamina() - player_.getStaminaFactor());
+      renderer_.printEndlineText("Вы попали");
+      enemy_->setHp(enemy_->getHp() - player_.getDamage());
+    }
+  } else {
+    renderer_.printEndlineText("Не хватает выносливости");
+  }
+}
+
+void BattleSystem::playerDefence() {
+  if (player_.getShield() > 0) {
+    player_.setIsShieldOn(1);
+    renderer_.printEndlineText("Вы поставили блок");
+
+    if (enemyChoice_ == 1) {
+      player_.setShield(player_.getShield() - enemy_->getDamage());
+      enemy_->setStamina(enemy_->getStamina() - enemy_->getStaminaFactor());
+
+      if (player_.getShield() > 0) {
+        renderer_.printEndlineText("Враг ударил в блок");
+      } else {
+        renderer_.printEndlineText("Враг пробил щит");
+        player_.setHp(player_.getHp() + player_.getShield());
+      }
+    } else if (enemyChoice_ > 3 &&
+               enemyAbilities_[enemyChoice_ - 4]->getType() == 'd') {
+      player_.setShield(player_.getShield() -
+                        enemyAbilities_[enemyChoice_ - 4]->getFactor());
+      enemyAbilities_[enemyChoice_ - 4]->setMovesCount(
+          enemyAbilities_[enemyChoice_ - 4]->getMovesCount() - 1);
+
+      if (player_.getShield() > 0) {
+        renderer_.printEndlineText("Враг ударил в блок");
+      } else {
+        renderer_.printEndlineText("Враг пробил щит");
+        player_.setHp(player_.getHp() + player_.getShield());
+      }
+    }
+  } else {
+    renderer_.printEndlineText("Щита нет");
+  }
+}
+
+void BattleSystem::playerDodge() {
+  if (player_.getIsDodgeOn() == 0) {
+    renderer_.printEndlineText("Вы уклонились");
+    player_.setIsDodgeOn(1);
+
+    if (enemyChoice_ == 1) {
+      enemy_->setStamina(enemy_->getStamina() - enemy_->getStaminaFactor());
+      renderer_.printEndlineText("Враг промахнулся");
+    } else if (enemyChoice_ > 3 &&
+               enemyAbilities_[enemyChoice_ - 4]->getType() == 'd') {
+      renderer_.printEndlineText("Враг промахнулся");
+      enemyAbilities_[enemyChoice_ - 4]->setMovesCount(
+          enemyAbilities_[enemyChoice_ - 4]->getMovesCount() - 1);
+    }
+  } else {
+    renderer_.printEndlineText("Вы не можете уклониться");
+  }
+}
+
+void BattleSystem::playerAbility() {
+  int idx = userChoice_ - 4;
+  if (playerAbilities_[idx]->getMovesCount() ==
+      playerAbilities_[idx]->getMaxMovesCount()) {
+    playerAbilities_[idx]->setMovesCount(
+        playerAbilities_[idx]->getMovesCount() - 1);
+    renderer_.printText("Вы использовали способность ");
+    renderer_.printEndlineText(playerAbilities_[idx]->getName());
+
+    switch (playerAbilities_[idx]->getType()) {
+      case 'd':
+        if (enemyChoice_ == 2) {
+          enemy_->setIsShieldOn(1);
+          enemy_->setShield(enemy_->getShield() -
+                            playerAbilities_[idx]->getFactor());
+
+          if (enemy_->getShield() > 0) {
+            renderer_.printEndlineText("Вы ударили в блок");
+          } else {
+            renderer_.printEndlineText("Вы пробили щит");
+            enemy_->setHp(enemy_->getHp() + enemy_->getShield());
+          }
+        } else if (enemyChoice_ == 3) {
+          enemy_->setIsDodgeOn(1);
+          renderer_.printEndlineText("Вы промахнулись");
+        } else {
+          enemy_->setHp(enemy_->getHp() -
+                        playerAbilities_[idx]->getFactor());
+          renderer_.printEndlineText("Вы попали");
+        }
+        break;
+      case 'h':
+        if (player_.getHp() + playerAbilities_[idx]->getFactor() > playerHp_) {
+          player_.setHp(playerHp_);
+        } else {
+          player_.setHp(player_.getHp() + playerAbilities_[idx]->getFactor());
+        }
+        break;
+      default:
+        break;
+    }
+  } else {
+    renderer_.printEndlineText("Вы не можете использовать эту способность");
+  }
+}
+
+void BattleSystem::enemyAttack() {
+  if (userChoice_ != 2 && userChoice_ != 3) {
+    player_.setHp(player_.getHp() - enemy_->getDamage());
+    renderer_.printEndlineText("Враг попал");
+  }
+}
+
+void BattleSystem::enemyDefence() {
+  enemy_->setIsShieldOn(1);
+  renderer_.printEndlineText("Враг поставил блок");
+}
+
+void BattleSystem::enemyDodge() {
+  enemy_->setIsDodgeOn(1);
+  renderer_.printEndlineText("Враг уклонился");
+}
+
+void BattleSystem::enemyAbility() {
+  int idx = enemyChoice_ - 4;
+  enemyAbilities_[idx]->setMovesCount(
+      enemyAbilities_[idx]->getMovesCount() - 1);
+  renderer_.printText("Враг использовал способность ");
+  renderer_.printEndlineText(enemyAbilities_[idx]->getName());
+
+  switch (enemyAbilities_[idx]->getType()) {
+    case 'd':
+      if (userChoice_ != 2 && userChoice_ != 3) {
+        player_.setHp(player_.getHp() - enemyAbilities_[idx]->getFactor());
+        renderer_.printEndlineText("Враг попал");
+      }
+      break;
+    case 'h':
+      if (enemy_->getHp() + enemyAbilities_[idx]->getFactor() > enemyHp_) {
+        enemy_->setHp(enemyHp_);
+      } else {
+        enemy_->setHp(enemy_->getHp() + enemyAbilities_[idx]->getFactor());
+      }
+      break;
+    default:
+      break;
+  }
+}
+
 void BattleSystem::prepareBattle() {
   playerHp_ = player_.getHp();
   enemyHp_ = enemy_->getHp();
@@ -27,11 +196,13 @@ void BattleSystem::startBattle() {
   renderer_.printEndlineText("1: Атака");
   renderer_.printEndlineText("2: Защита");
   renderer_.printEndlineText("3: Уклонение");
+
   for (int i = 0; i < player_.getAbilitiesCount(); i++) {
     renderer_.printText(i + player_.getAbilitiesCount() + 1);
     renderer_.printText(": ");
     renderer_.printEndlineText(playerAbilities_[i]->getName());
   }
+
   userChoice_ = 0;
   enemyChoice_ = enemyMove();
   std::cin >> userChoice_;
@@ -59,7 +230,6 @@ bool BattleSystem::endBattle() {
     }
 
     return true;
-
   } else if (player_.getHp() <= 0) {
     renderer_.printEndlineText("Вы проиграли");
     player_.loseRound(playerHp_);
@@ -71,7 +241,6 @@ bool BattleSystem::endBattle() {
     }
 
     return true;
-
   } else {
     player_.afterRoundInfo();
     enemy_->afterRoundInfo();
@@ -86,186 +255,27 @@ bool BattleSystem::endBattle() {
 
 void BattleSystem::clash() {
   if (userChoice_ == 1) {
-    if (player_.getStamina() > 0) {
-      if (enemyChoice_ == 2) {
-        enemy_->setIsShieldOn(1);
-        enemy_->setShield(enemy_->getShield() - player_.getDamage());
-        player_.setStamina(player_.getStamina() - player_.getStaminaFactor());
-
-        if (enemy_->getShield() > 0) {
-          renderer_.printEndlineText("Вы ударили в блок");
-        } else {
-          renderer_.printEndlineText("Вы пробили щит");
-          enemy_->setHp(enemy_->getHp() + enemy_->getShield());
-        }
-
-      } else if (enemyChoice_ == 3) {
-        enemy_->setIsDodgeOn(1);
-        player_.setStamina(player_.getStamina() - player_.getStaminaFactor());
-        renderer_.printEndlineText("Вы промахнулись");
-
-      } else {
-        player_.setStamina(player_.getStamina() - player_.getStaminaFactor());
-        renderer_.printEndlineText("Вы попали");
-        enemy_->setHp(enemy_->getHp() - player_.getDamage());
-      }
-
-    } else {
-      renderer_.printEndlineText("Не хватает выносливости");
-    }
-
+    playerAttack();
   } else if (userChoice_ == 2) {
-    if (player_.getShield() > 0) {
-      player_.setIsShieldOn(1);
-      renderer_.printEndlineText("Вы поставили блок");
-
-      if (enemyChoice_ == 1) {
-        player_.setShield(player_.getShield() - enemy_->getDamage());
-        enemy_->setStamina(enemy_->getStamina() - enemy_->getStaminaFactor());
-
-        if (player_.getShield() > 0) {
-          renderer_.printEndlineText("Враг ударил в блок");
-        } else {
-          renderer_.printEndlineText("Враг пробил щит");
-          player_.setHp(player_.getHp() + player_.getShield());
-        }
-
-      } else if (enemyChoice_ > 3 &&
-                 enemyAbilities_[enemyChoice_ - 4]->getType() == 'd') {
-        player_.setShield(
-            player_.getShield() -
-            enemyAbilities_[enemyChoice_ - 4]->getFactor());
-        enemyAbilities_[enemyChoice_ - 4]->setMovesCount(
-            enemyAbilities_[enemyChoice_ - 4]->getMovesCount() - 1);
-
-        if (player_.getShield() > 0) {
-          renderer_.printEndlineText("Враг ударил в блок");
-        } else {
-          renderer_.printEndlineText("Враг пробил щит");
-          player_.setHp(player_.getHp() + player_.getShield());
-        }
-      }
-
-    } else {
-      renderer_.printEndlineText("Щита нет");
-    }
-
+    playerDefence();
   } else if (userChoice_ == 3) {
-    if (player_.getIsDodgeOn() == 0) {
-      renderer_.printEndlineText("Вы уклонились");
-      player_.setIsDodgeOn(1);
-
-      if (enemyChoice_ == 1) {
-        enemy_->setStamina(enemy_->getStamina() - enemy_->getStaminaFactor());
-        renderer_.printEndlineText("Враг промахнулся");
-
-      } else if (enemyChoice_ > 3 &&
-                 enemyAbilities_[enemyChoice_ - 4]->getType() == 'd') {
-        renderer_.printEndlineText("Враг промахнулся");
-        enemyAbilities_[enemyChoice_ - 4]->setMovesCount(
-            enemyAbilities_[enemyChoice_ - 4]->getMovesCount() - 1);
-      }
-
-    } else {
-      renderer_.printEndlineText("Вы не можете уклониться");
-    }
-
+    playerDodge();
   } else if (userChoice_ >= 4 &&
              userChoice_ <= (3 + player_.getAbilitiesCount())) {
-    int idx = userChoice_ - 4;
-    if (playerAbilities_[idx]->getMovesCount() ==
-        playerAbilities_[idx]->getMaxMovesCount()) {
-      playerAbilities_[idx]->setMovesCount(
-          playerAbilities_[idx]->getMovesCount() - 1);
-      renderer_.printText("Вы использовали способность ");
-      renderer_.printEndlineText(playerAbilities_[idx]->getName());
-
-      switch (playerAbilities_[idx]->getType()) {
-        case 'd':
-          if (enemyChoice_ == 2) {
-            enemy_->setIsShieldOn(1);
-            enemy_->setShield(enemy_->getShield() -
-                              playerAbilities_[idx]->getFactor());
-
-            if (enemy_->getShield() > 0) {
-              renderer_.printEndlineText("Вы ударили в блок");
-            } else {
-              renderer_.printEndlineText("Вы пробили щит");
-              enemy_->setHp(enemy_->getHp() + enemy_->getShield());
-            }
-
-          } else if (enemyChoice_ == 3) {
-            enemy_->setIsDodgeOn(1);
-            renderer_.printEndlineText("Вы промахнулись");
-
-          } else {
-            enemy_->setHp(enemy_->getHp() -
-                          playerAbilities_[idx]->getFactor());
-            renderer_.printEndlineText("Вы попали");
-          }
-          break;
-
-        case 'h':
-          if (player_.getHp() + playerAbilities_[idx]->getFactor() > playerHp_) {
-            player_.setHp(playerHp_);
-          } else {
-            player_.setHp(player_.getHp() + playerAbilities_[idx]->getFactor());
-          }
-          break;
-
-        default:
-          break;
-      }
-
-    } else {
-      renderer_.printEndlineText("Вы не можете использовать эту способность");
-    }
-
+    playerAbility();
   } else {
     renderer_.printEndlineText("Неверный ввод");
   }
 
   if (enemyChoice_ == 1) {
-    if (userChoice_ != 2 && userChoice_ != 3) {
-      player_.setHp(player_.getHp() - enemy_->getDamage());
-      renderer_.printEndlineText("Враг попал");
-    }
-
+    enemyAttack();
   } else if (enemyChoice_ == 2) {
-    enemy_->setIsShieldOn(1);
-    renderer_.printEndlineText("Враг поставил блок");
-
+    enemyDefence();
   } else if (enemyChoice_ == 3) {
-    enemy_->setIsDodgeOn(1);
-    renderer_.printEndlineText("Враг уклонился");
-
+    enemyDodge();
   } else if (enemyChoice_ >= 4 &&
              enemyChoice_ <= (3 + enemy_->getAbilitiesCount())) {
-    int idx = enemyChoice_ - 4;
-    enemyAbilities_[idx]->setMovesCount(
-        enemyAbilities_[idx]->getMovesCount() - 1);
-    renderer_.printText("Враг использовал способность ");
-    renderer_.printEndlineText(enemyAbilities_[idx]->getName());
-
-    switch (enemyAbilities_[idx]->getType()) {
-      case 'd':
-        if (userChoice_ != 2 && userChoice_ != 3) {
-          player_.setHp(player_.getHp() - enemyAbilities_[idx]->getFactor());
-          renderer_.printEndlineText("Враг попал");
-        }
-        break;
-
-      case 'h':
-        if (enemy_->getHp() + enemyAbilities_[idx]->getFactor() > enemyHp_) {
-          enemy_->setHp(enemyHp_);
-        } else {
-          enemy_->setHp(enemy_->getHp() + enemyAbilities_[idx]->getFactor());
-        }
-        break;
-
-      default:
-        break;
-    }
+    enemyAbility();
   }
 }
 
