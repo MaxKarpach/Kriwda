@@ -13,6 +13,7 @@
 #include "../headerFiles/Game.h"
 #include "../headerFiles/ResourceSystem.h"
 #include "../headerFiles/InventorySystem.h"
+#include "../headerFiles/LocationSystem.h"
 
 template<typename T> T* findById(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
@@ -126,49 +127,6 @@ template <typename T> void loot(std::vector<T>& dataPool, Player& player, Locati
 
   if (locationData.empty()) {
     renderer.printEndlineText("На локации больше нет " + emptyMessage);
-  }
-}
-
-void move(Player& player, std::vector<Location>& locations, int& enemiesCount, Renderer& renderer) {
-  while (true) {
-    Location *currentLocation = findById<Location>(player.getLocationId(), locations);
-    renderer.printText("Ваше текущее местоположение: ");
-    renderer.printEndlineText(currentLocation->getName());
-    renderer.printEndlineText("Вы можете пойти в следующие места: ");
-    std::vector<Location*> nearlyLocations;
-    int finalBossLocationNum = 0;
-    for (int i = 0; i < currentLocation->getChoices().size(); i++) {
-      Location* nearlyLocation = findById<Location>(currentLocation->getChoices()[i], locations);
-      if (nearlyLocation) {
-        nearlyLocations.push_back(nearlyLocation);
-        if (nearlyLocation->getIsFinalBossLocation() && player.getEnemiesCount() != (enemiesCount - 1)) {
-          renderer.printText(i + 1);
-          renderer.printText(": ");
-          renderer.printText(nearlyLocation->getName());
-          renderer.printEndlineText("(вы еще не готовы)");
-          finalBossLocationNum = i + 1;
-        } else {
-          renderer.printText(i + 1);
-          renderer.printText(": ");
-          renderer.printEndlineText(nearlyLocation->getName());
-        }
-      }
-    }
-    renderer.printText(currentLocation->getChoices().size() + 1);
-    renderer.printEndlineText(": Остановиться на локации");
-    int userChoice = 0;
-    std::cin >> userChoice;
-    if (userChoice == currentLocation->getChoices().size()+1) {
-      return;
-    } else if (userChoice <= currentLocation->getChoices().size() && userChoice > 0) {
-      if (finalBossLocationNum == userChoice && player.getEnemiesCount() != (enemiesCount - 1)) {
-        return;
-      } else {
-        player.setLocationId(nearlyLocations[userChoice - 1]->getId());
-      }
-    } else {
-      renderer.printEndlineText("Такого варианта нет");
-    }
   }
 }
 
@@ -373,7 +331,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
     std::string selectedOption = options[userChoice - 1];
     int enemiesCount = enemies.size();
     if (selectedOption == "Сменить локацию") {
-      move(player, locations, enemiesCount, renderer);
+      LocationSystem locationSystem(player, locations, enemiesCount, renderer);
+      locationSystem.move();
       resourceSystem.saveGame();
     } else if (selectedOption == "Показать инвентарь") {
       InventorySystem inventorySystem(player, items, renderer);
