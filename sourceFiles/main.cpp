@@ -14,6 +14,7 @@
 #include "../headerFiles/ResourceSystem.h"
 #include "../headerFiles/InventorySystem.h"
 #include "../headerFiles/LocationSystem.h"
+#include "../headerFiles/AbilitiesSystem.h"
 
 template<typename T> T* findById(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
@@ -127,67 +128,6 @@ template <typename T> void loot(std::vector<T>& dataPool, Player& player, Locati
 
   if (locationData.empty()) {
     renderer.printEndlineText("На локации больше нет " + emptyMessage);
-  }
-}
-
-void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abilities,
-    std::array<int, 3>& playerChosenAbilities, Renderer& renderer) {
-  int inputAbilityIndex = -1;
-  int replaceIndex = -1;
-
-  while (true) {
-    renderer.printEndlineText("Все способности:");
-    for (int i = 0; i < playerAbilities.size(); i++) {
-      Ability* ability = findById<Ability>(playerAbilities[i], abilities);
-      if (ability != nullptr) {
-        renderer.printText(i + 1);
-        renderer.printText(": ");
-        renderer.printEndlineText(ability->getName());
-      }
-    }
-    renderer.printEndlineText("Выбранные способности:");
-    for (int i = 0; i < playerChosenAbilities.size(); i++) {
-      Ability* ability = findById<Ability>(playerChosenAbilities[i], abilities);
-      if (ability != nullptr) {
-        renderer.printText(i + 1);
-        renderer.printText(": ");
-        renderer.printEndlineText(ability->getName());
-      }
-    }
-    renderer.printEndlineText("0: Выход");
-    std::cin >> inputAbilityIndex;
-
-    if (inputAbilityIndex == 0) break;
-
-    if (inputAbilityIndex < 1 || inputAbilityIndex > playerAbilities.size()) {
-      renderer.printEndlineText("Некорректный ввод. Попробуйте снова.");
-      continue;
-    }
-
-    int selectedAbilityId = playerAbilities[inputAbilityIndex - 1];
-
-    bool alreadyChosen = false;
-    for (int i = 0; i < playerChosenAbilities.size(); i++) {
-      if (playerChosenAbilities[i] == selectedAbilityId) {
-        alreadyChosen = true;
-        break;
-      }
-    }
-
-    if (alreadyChosen) {
-      renderer.printEndlineText("Эта способность уже выбрана. Выберите другую.");
-      continue;
-    }
-    renderer.printEndlineText("Введите номер выбранной способности, которую хотите заменить: ");
-    std::cin >> replaceIndex;
-
-    if (replaceIndex < 1 || replaceIndex > playerChosenAbilities.size()) {
-      renderer.printEndlineText("Некорректный выбор замены.");
-      continue;
-    }
-
-    playerChosenAbilities[replaceIndex - 1] = selectedAbilityId;
-    renderer.printEndlineText("Способность заменена!");
   }
 }
 
@@ -339,7 +279,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
       inventorySystem.showInventory();
       resourceSystem.saveGame();
     } else if (selectedOption == "Выбрать способности") {
-      changeAbilities(playerAbilities, abilities, playerChosenAbilities, renderer);
+      AbilitiesSystem abilitiesSystem(player, abilities, renderer);
+      abilitiesSystem.changeAbilities();
       resourceSystem.saveGame();
     } else if (selectedOption == "Вступить в бой") {
       fight(player, enemyId, enemies, abilities, currentLocation, renderer);
