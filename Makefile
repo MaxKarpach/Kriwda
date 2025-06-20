@@ -2,9 +2,9 @@ SRC_DIR = sourceFiles
 INC_DIR = headerFiles
 OBJ_DIR = oFiles
 
-SRC = $(SRC_DIR)/main.cpp $(SRC_DIR)/Player.cpp $(SRC_DIR)/Enemy.cpp $(SRC_DIR)/Ability.cpp $(SRC_DIR)/Item.cpp $(SRC_DIR)/Renderer.cpp $(SRC_DIR)/Location.cpp $(SRC_DIR)/DialogNode.cpp $(SRC_DIR)/DialogChoice.cpp $(SRC_DIR)/Scene.cpp $(SRC_DIR)/BattleSystem.cpp $(SRC_DIR)/Game.cpp $(SRC_DIR)/ResourceSystem.cpp
+SRC = $(SRC_DIR)/main.cpp $(SRC_DIR)/Player.cpp $(SRC_DIR)/Enemy.cpp $(SRC_DIR)/Ability.cpp $(SRC_DIR)/Item.cpp $(SRC_DIR)/Renderer.cpp $(SRC_DIR)/Location.cpp $(SRC_DIR)/DialogNode.cpp $(SRC_DIR)/DialogChoice.cpp $(SRC_DIR)/Scene.cpp $(SRC_DIR)/BattleSystem.cpp $(SRC_DIR)/Game.cpp $(SRC_DIR)/ResourceSystem.cpp $(SRC_DIR)/InventorySystem.cpp
 
-OBJ = $(addprefix $(OBJ_DIR)/, main.o Player.o Enemy.o Ability.o Item.o Renderer.o Location.o DialogNode.o DialogChoice.o Scene.o BattleSystem.o Game.o ResourceSystem.o)
+OBJ = $(addprefix $(OBJ_DIR)/, main.o Player.o Enemy.o Ability.o Item.o Renderer.o Location.o DialogNode.o DialogChoice.o Scene.o BattleSystem.o Game.o ResourceSystem.o InventorySystem.o)
 EXEC = main
 
 CC = g++
@@ -56,6 +56,9 @@ $(OBJ_DIR)/Game.o: $(SRC_DIR)/Game.cpp
 
 $(OBJ_DIR)/ResourceSystem.o: $(SRC_DIR)/ResourceSystem.cpp
 	$(CC) -c $(SRC_DIR)/ResourceSystem.cpp $(CFLAGS) -o $@
+
+$(OBJ_DIR)/InventorySystem.o: $(SRC_DIR)/InventorySystem.cpp
+	$(CC) -c $(SRC_DIR)/InventorySystem.cpp $(CFLAGS) -o $@
 
 clean:
 	rm -rf $(OBJ_DIR) $(EXEC)

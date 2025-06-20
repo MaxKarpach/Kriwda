@@ -12,6 +12,7 @@
 #include "../headerFiles/BattleSystem.h"
 #include "../headerFiles/Game.h"
 #include "../headerFiles/ResourceSystem.h"
+#include "../headerFiles/InventorySystem.h"
 
 template<typename T> T* findById(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
@@ -171,82 +172,6 @@ void move(Player& player, std::vector<Location>& locations, int& enemiesCount, R
   }
 }
 
-void showInventory(std::vector<Item>& items, Player& player, Renderer& renderer) {
-  std::vector<int> &inventory = player.getInventory();
-  while (true) {
-    renderer.printEndlineText("Ваш инвентарь:");
-
-    if (inventory.empty()) {
-      renderer.printEndlineText("Инвентарь пуст.");
-      return;
-    }
-    renderer.printEndlineText("0: Выход");
-
-    for (int i = 0; i < inventory.size(); i++) {
-      Item* item = findById<Item>(inventory[i], items);
-      if (item != nullptr) {
-        renderer.printText(i + 1);
-        renderer.printText(": ");
-        renderer.printEndlineText(item->getName());
-      }
-    }
-    int input;
-    std::cin >> input;
-
-    if (input == 0) break;
-
-    if (input < 1 || input > inventory.size()) {
-      renderer.printEndlineText("Неверный выбор. Попробуйте снова.");
-      continue;
-    }
-
-    int itemId = inventory[input - 1];
-    Item* item = findById<Item>(itemId, items);
-
-    if (!item) {
-      renderer.printEndlineText("Ошибка: предмет не найден.");
-      continue;
-    }
-
-    char type = item->getType();
-    switch (type) {
-      case 'f':
-        player.setHp(player.getHp() + item->getFactor());
-        renderer.printText("Вы выбрали еду: ");
-        renderer.printEndlineText(item->getName());
-        renderer.printText("У вас теперь ");
-        renderer.printText(player.getHp());
-        renderer.printEndlineText(" здоровья.");
-        break;
-      case 'w':
-        player.setChosenWeaponId(item->getId());
-        renderer.printText("Вы выбрали оружие: ");
-        renderer.printEndlineText(item->getName());
-        player.setDamage(item->getFactor());
-        break;
-      case 'n':
-        renderer.printText("Вы выбрали прочитать: ");
-        renderer.printEndlineText(item->getName());
-        renderer.printEndlineText(item->getDescription());
-        break;
-      case 's':
-        player.setShield(item->getFactor());
-        renderer.printText("Вы выбрали щит: ");
-        renderer.printEndlineText(item->getName());
-        renderer.printText("Ваш уровень защиты: ");
-        renderer.printEndlineText(player.getShield());
-        break;
-      default:
-        renderer.printEndlineText("Предмет не может быть использован.");
-        continue;
-    }
-
-    if (type == 'f') {
-      inventory.erase(inventory.begin() + (input - 1));
-    }
-  }
-}
-
 void changeAbilities(std::vector<int>& playerAbilities, std::vector<Ability>& abilities,
     std::array<int, 3>& playerChosenAbilities, Renderer& renderer) {
   int inputAbilityIndex = -1;
@@ -395,15 +320,6 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector
   battleSystem.battle();
 }
 
-void showChosenWeapon(Player& player, std::vector<Item>& items, Renderer& renderer) {
-  Item* item = findById<Item>(player.getChosenWeaponId(), items);
-  if (item != nullptr) {
-    renderer.printText("Вы используете оружие: ");
-    renderer.printEndlineText(item->getName());
-    renderer.printEndlineText(item->getDescription());
-  }
-}
-
 void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies,
     std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes,
     std::vector<DialogChoice>& dialogChoices, Renderer& renderer, Game& game, std::vector<Scene>& scenes, ResourceSystem& resourceSystem) {
@@ -460,7 +376,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
       move(player, locations, enemiesCount, renderer);
       resourceSystem.saveGame();
     } else if (selectedOption == "Показать инвентарь") {
-      showInventory(items, player, renderer);
+      InventorySystem inventorySystem(player, items, renderer);
+      inventorySystem.showInventory();
       resourceSystem.saveGame();
     } else if (selectedOption == "Выбрать способности") {
       changeAbilities(playerAbilities, abilities, playerChosenAbilities, renderer);
@@ -482,8 +399,10 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
       startDialog(dialogNodes, dialogChoices, dialogNodeId, currentLocation, renderer);
       resourceSystem.saveGame();
     } else if (selectedOption == "Показать оружие") {
-      showChosenWeapon(player, items, renderer);
-    } else if (selectedOption == "Показать описания") {
+      InventorySystem inventorySystem(player, items, renderer);
+      inventorySystem.showChosenWeapon();
+    } else if (selectedOption == "Показать описания")
+    {
       showDescriptions(player, items, abilities, enemies, renderer);
     }
   }
