@@ -1,5 +1,4 @@
-#include "../headerFiles/Item.h"
-#include <climits>
+#include "Item.h"
 
 const int MAX_STRING_LEN = 255;
 

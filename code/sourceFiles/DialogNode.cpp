@@ -1,5 +1,4 @@
-#include "../headerFiles/DialogNode.h"
-#include <iostream>
+#include "DialogNode.h"
 
 const int MAX_STRING_LEN = 255;
 

@@ -1,5 +1,4 @@
 #include "Player.h"
-#include <iostream>
 
 Player::Player(const PlayerDef& def)
     : hp_(def.hp),

@@ -1,5 +1,4 @@
 #include "AbilitiesSystem.h"
-#include <iostream>
 
 AbilitiesSystem::AbilitiesSystem(Player& player,
                                  std::vector<Ability>& abilities,
@@ -46,7 +45,9 @@ void AbilitiesSystem::change_abilities() {
     renderer_.print_endline_text("0: Выход");
     std::cin >> input_ability_index;
 
-    if (input_ability_index == 0) break;
+    if (input_ability_index == 0) {
+      break;
+    }
 
     if (input_ability_index < 1 ||
         input_ability_index > player_.get_abilities().size()) {

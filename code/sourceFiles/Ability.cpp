@@ -1,5 +1,4 @@
-#include "../headerFiles/Ability.h"
-#include <iostream>
+#include "Ability.h"
 
 const int MAX_STRING_LEN = 255;
 

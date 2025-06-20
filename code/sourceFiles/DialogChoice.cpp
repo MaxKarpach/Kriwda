@@ -1,5 +1,4 @@
-#include "../headerFiles/DialogChoice.h"
-#include <iostream>
+#include "DialogChoice.h"
 
 const int MAX_STRING_LEN = 255;
 

@@ -1,6 +1,4 @@
-#include "../headerFiles/Scene.h"
-#include <iostream>
-#include <climits>
+#include "Scene.h"
 
 const int max_string_len = 255;
 

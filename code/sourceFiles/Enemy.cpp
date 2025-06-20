@@ -1,5 +1,4 @@
-#include "../headerFiles/Enemy.h"
-#include <iostream>
+#include "Enemy.h"
 
 const int MAX_STRING_LEN = 255;
 
