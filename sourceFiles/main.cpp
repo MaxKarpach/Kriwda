@@ -15,6 +15,7 @@
 #include "../headerFiles/InventorySystem.h"
 #include "../headerFiles/LocationSystem.h"
 #include "../headerFiles/AbilitiesSystem.h"
+#include "../headerFiles/DialogSystem.h"
 
 template<typename T> T* findById(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
@@ -23,73 +24,6 @@ template<typename T> T* findById(int id, std::vector<T>& vec) {
     }
   }
   return nullptr;
-}
-
-void startDialog(std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices,
-    int currentNodeId, Location* currentLocation, Renderer& renderer) {
-  while (true) {
-    DialogNode* currentNode = nullptr;
-    for (auto& node : dialogNodes) {
-      if (node.getId() == currentNodeId) {
-        currentNode = &node;
-        break;
-      }
-    }
-    if (!currentNode) {
-      renderer.printEndlineText("Ошибка: узел диалога не найден.");
-      break;
-    }
-
-    if (currentNode->getDescription() != "") {
-      renderer.printEndlineText(currentNode->getDescription());
-    }
-
-    if (currentNode->getChoices().size() == 0) {
-      currentLocation->setDialogNodeId(0);
-    }
-
-    if (currentNode->getName() != "") {
-      renderer.printText(currentNode->getName());
-      renderer.printText(": ");
-      renderer.printEndlineText(currentNode->getText());
-    }
-
-    std::vector<DialogChoice*> currentChoices;
-    for (int choiceId : currentNode->getChoices()) {
-      for (auto& choice : dialogChoices) {
-        if (choice.getId() == choiceId && !choice.getIsUsed()) {
-          currentChoices.push_back(&choice);
-          break;
-        }
-      }
-    }
-
-    if (currentChoices.empty()) {
-      break;
-    }
-
-    renderer.printEndlineText("0: выход");
-    for (int i = 0; i < currentChoices.size(); ++i) {
-      renderer.printText(i + 1);
-      renderer.printText(": ");
-      renderer.printEndlineText(currentChoices[i]->getText());
-    }
-
-    int userChoice = 0;
-    std::cin >> userChoice;
-
-    if (userChoice <= 0 || userChoice > currentChoices.size()) {
-      renderer.printEndlineText("Диалог прерван.");
-      break;
-    }
-
-    currentNodeId = currentChoices[userChoice - 1]->getNextNodeId();
-    currentChoices[userChoice - 1]->setisUsed(1);
-    if (currentChoices[userChoice - 1]->getNextNodeId() == 0) {
-      currentLocation->setDialogNodeId(0);
-      break;
-    }
-  }
 }
 
 template <typename T> void loot(std::vector<T>& dataPool, Player& player, Location* currentLocation,
@@ -229,8 +163,6 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
     int dialogNodeId = currentLocation->getDialogNodeId();
     std::vector<int>& locationItems = currentLocation->getItems();
     std::vector<int>& locationAbilities = currentLocation->getAbilities();
-    std::vector<int>& playerAbilities = player.getAbilities();
-    std::array<int, 3>& playerChosenAbilities = player.getChosenAbilities();
     renderer.printEndlineText(currentLocation->getDescription());
 
     std::vector<std::string> options;
@@ -296,7 +228,8 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
           "Способности", "Появилась новая способность!", "способностей.");
       resourceSystem.saveGame();
     } else if (selectedOption == "Поговорить") {
-      startDialog(dialogNodes, dialogChoices, dialogNodeId, currentLocation, renderer);
+      DialogSystem dialogSystem(dialogNodes, dialogChoices, dialogNodeId, currentLocation, renderer);
+      dialogSystem.startDialog();
       resourceSystem.saveGame();
     } else if (selectedOption == "Показать оружие") {
       InventorySystem inventorySystem(player, items, renderer);
