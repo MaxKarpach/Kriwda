@@ -1,5 +1,5 @@
-#ifndef INFOSYSTEM_H
-#define INFOSYSTEM_H
+#ifndef INFO_SYSTEM_H
+#define INFO_SYSTEM_H
 
 #include <iostream>
 #include <vector>
@@ -20,9 +20,9 @@ class InfoSystem {
              Renderer& renderer);
 
   template <typename T>
-  T* findById(int id, std::vector<T>& vec);
+  T* find_by_id(int id, std::vector<T>& vec);
 
-  void showDescriptions();
+  void show_descriptions();
 
  private:
   Player& player_;
@@ -32,10 +32,10 @@ class InfoSystem {
   Renderer& renderer_;
 
   template <typename T>
-  void showDataDescription(std::vector<int>& playerData,
-                           std::vector<T>& data,
-                           Renderer& renderer,
-                           const std::string& description);
+  void show_data_description(std::vector<int>& player_data,
+                             std::vector<T>& data,
+                             Renderer& renderer,
+                             const std::string& description);
 };
 
 #endif

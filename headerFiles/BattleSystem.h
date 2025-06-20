@@ -1,3 +1,6 @@
+#ifndef BATTLE_SYSTEM_H
+#define BATTLE_SYSTEM_H
+
 #include <iostream>
 #include <Player.h>
 #include <Enemy.h>
@@ -5,40 +8,37 @@
 #include <Location.h>
 #include <Ability.h>
 
-#ifndef BATTLESYSTEM_H
-#define BATTLESYSTEM_H
-
 class BattleSystem {
  public:
   BattleSystem(Player& player, Enemy* enemy, Renderer& renderer, Location* location,
-               std::vector<Ability*>& playerAbilities, std::vector<Ability*>& enemyAbilities);
+               std::vector<Ability*>& player_abilities, std::vector<Ability*>& enemy_abilities);
 
-  void prepareBattle();
-  void startBattle();
-  bool endBattle();
+  void prepare_battle();
+  void start_battle();
+  bool end_battle();
   void clash();
   void battle();
-  int enemyMove();
-  void playerAttack();
-  void playerDefence();
-  void playerDodge();
-  void playerAbility();
-  void enemyAttack();
-  void enemyDefence();
-  void enemyDodge();
-  void enemyAbility();
+  int enemy_move();
+  void player_attack();
+  void player_defence();
+  void player_dodge();
+  void player_ability();
+  void enemy_attack();
+  void enemy_defence();
+  void enemy_dodge();
+  void enemy_ability();
 
-private:
+ private:
   Player& player_;
   Enemy* enemy_;
   Renderer& renderer_;
-  Location* currentLocation_;
-  std::vector<Ability*> playerAbilities_;
-  std::vector<Ability*> enemyAbilities_;
-  int playerHp_;
-  int enemyHp_;
-  int userChoice_;
-  int enemyChoice_;
+  Location* current_location_;
+  std::vector<Ability*> player_abilities_;
+  std::vector<Ability*> enemy_abilities_;
+  int player_hp_;
+  int enemy_hp_;
+  int user_choice_;
+  int enemy_choice_;
 };
 
-#endif  
+#endif

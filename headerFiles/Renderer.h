@@ -5,10 +5,10 @@
 
 class Renderer {
  public:
-  void printEndlineText(const std::string& text);
-  void printEndlineText(const int& text);
-  void printText(const std::string& text);
-  void printText(const int& text);
+  void print_endline_text(const std::string& text);
+  void print_endline_text(const int& text);
+  void print_text(const std::string& text);
+  void print_text(const int& text);
 };
 
-#endif  
+#endif

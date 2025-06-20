@@ -1,7 +1,9 @@
-#include <iostream>
-
 #ifndef ITEM_H
 #define ITEM_H
+
+#include <iostream>
+#include <vector>
+#include <string>
 
 struct ItemDef {
   int id;
@@ -15,20 +17,20 @@ class Item {
  public:
   Item(const ItemDef& def);
 
-  int getId() const { return id_; }
-  void setId(int value) { id_ = value; }
+  int get_id() const { return id_; }
+  void set_id(int value) { id_ = value; }
 
-  std::string getName() const { return name_; }
-  void setName(std::string value) { name_ = value; }
+  std::string get_name() const { return name_; }
+  void set_name(const std::string& value) { name_ = value; }
 
-  char getType() const { return type_; }
-  void setType(char value) { type_ = value; }
+  char get_type() const { return type_; }
+  void set_type(char value) { type_ = value; }
 
-  int getFactor() const { return factor_; }
-  void setFactor(int value) { factor_ = value; }
+  int get_factor() const { return factor_; }
+  void set_factor(int value) { factor_ = value; }
 
-  std::string getDescription() const { return description_; }
-  void setDescription(std::string value) { description_ = value; }
+  std::string get_description() const { return description_; }
+  void set_description(const std::string& value) { description_ = value; }
 
  private:
   int id_;
@@ -41,13 +43,13 @@ class Item {
 class ItemRegistry {
  public:
   void load(std::istream& is);
-  std::vector<ItemDef> getItems();
+  std::vector<ItemDef> get_items();
   void save(std::ostream& os);
-  std::vector<ItemDef> toItemDefs(const std::vector<Item>& items);
-  void setItems(const std::vector<ItemDef>& defs);
+  std::vector<ItemDef> to_item_defs(const std::vector<Item>& items);
+  void set_items(const std::vector<ItemDef>& defs);
 
  private:
-  std::vector<ItemDef> items;
+  std::vector<ItemDef> items_;
 };
 
-#endif 
+#endif

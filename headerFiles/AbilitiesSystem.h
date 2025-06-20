@@ -12,7 +12,7 @@ class AbilitiesSystem {
  public:
   AbilitiesSystem(Player& player, std::vector<Ability>& abilities, Renderer& renderer);
 
-  void changeAbilities();
+  void change_abilities();
 
  private:
   Player& player_;
@@ -20,7 +20,7 @@ class AbilitiesSystem {
   Renderer& renderer_;
 
   template <typename T>
-  T* findById(int id, std::vector<T>& vec);
+  T* find_by_id(int id, std::vector<T>& vec);
 };
 
 #endif

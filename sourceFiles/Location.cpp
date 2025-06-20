@@ -7,114 +7,114 @@ Location::Location(const LocationDef& def)
     : id_(def.id),
       name_(def.name),
       choices_(def.choices),
-      enemyId_(def.enemyId),
+      enemy_id_(def.enemy_id),
       items_(def.items),
-      dialogNodeId_(def.dialogNodeId),
+      dialog_node_id_(def.dialog_node_id),
       description_(def.description),
-      isFinalBossLocation_(def.isFinalBossLocation),
+      is_final_boss_location_(def.is_final_boss_location),
       abilities_(def.abilities) {}
 
-std::vector<LocationDef> LocationRegistry::getLocations() {
-    return locations;
+std::vector<LocationDef> LocationRegistry::get_locations() {
+    return locations_;
 }
 
 void LocationRegistry::load(std::istream& is) {
-    int locationsCount = 0;
-    is >> locationsCount;
+    int locations_count = 0;
+    is >> locations_count;
 
-    for (int i = 0; i < locationsCount; i++) {
-        LocationDef ld;
+    for (int i = 0; i < locations_count; ++i) {
+        LocationDef def;
 
-        is >> ld.id;
+        is >> def.id;
         is.ignore(MAX_STRING_LEN, '\n');
-        std::getline(is, ld.name);
+        std::getline(is, def.name);
 
-        int choicesCount = 0;
-        is >> choicesCount;
-        for (int j = 0; j < choicesCount; j++) {
-            int locationId = 0;
-            is >> locationId;
-            ld.choices.push_back(locationId);
+        int choices_count = 0;
+        is >> choices_count;
+        for (int j = 0; j < choices_count; ++j) {
+            int choice_id = 0;
+            is >> choice_id;
+            def.choices.push_back(choice_id);
         }
 
-        is >> ld.dialogNodeId;
-        is >> ld.enemyId;
+        is >> def.dialog_node_id;
+        is >> def.enemy_id;
 
-        int itemsCount = 0;
-        is >> itemsCount;
-        for (int j = 0; j < itemsCount; j++) {
-            int itemId = 0;
-            is >> itemId;
-            ld.items.push_back(itemId);
+        int items_count = 0;
+        is >> items_count;
+        for (int j = 0; j < items_count; ++j) {
+            int item_id = 0;
+            is >> item_id;
+            def.items.push_back(item_id);
         }
 
         is.ignore(MAX_STRING_LEN, '\n');
-        std::getline(is, ld.description);
+        std::getline(is, def.description);
 
-        is >> ld.isFinalBossLocation;
+        is >> def.is_final_boss_location;
 
-        int abilitiesCount = 0;
-        is >> abilitiesCount;
-        for (int j = 0; j < abilitiesCount; j++) {
-            int abilityId = 0;
-            is >> abilityId;
-            ld.abilities.push_back(abilityId);
+        int abilities_count = 0;
+        is >> abilities_count;
+        for (int j = 0; j < abilities_count; ++j) {
+            int ability_id = 0;
+            is >> ability_id;
+            def.abilities.push_back(ability_id);
         }
 
-        locations.push_back(ld);
+        locations_.push_back(def);
     }
 }
 
 void LocationRegistry::save(std::ostream& os) {
-    os << locations.size() << std::endl;
+    os << locations_.size() << std::endl;
 
-    for (const LocationDef& ld : locations) {
-        os << ld.id << std::endl;
-        os << ld.name << std::endl;
+    for (const LocationDef& def : locations_) {
+        os << def.id << std::endl;
+        os << def.name << std::endl;
 
-        os << ld.choices.size() << std::endl;
-        for (int choiceId : ld.choices) {
-            os << choiceId << std::endl;
+        os << def.choices.size() << std::endl;
+        for (int choice_id : def.choices) {
+            os << choice_id << std::endl;
         }
 
-        os << ld.dialogNodeId << std::endl;
-        os << ld.enemyId << std::endl;
+        os << def.dialog_node_id << std::endl;
+        os << def.enemy_id << std::endl;
 
-        os << ld.items.size() << std::endl;
-        for (int itemId : ld.items) {
-            os << itemId << std::endl;
+        os << def.items.size() << std::endl;
+        for (int item_id : def.items) {
+            os << item_id << std::endl;
         }
 
-        os << ld.description << std::endl;
-        os << ld.isFinalBossLocation << std::endl;
+        os << def.description << std::endl;
+        os << def.is_final_boss_location << std::endl;
 
-        os << ld.abilities.size() << std::endl;
-        for (int abilityId : ld.abilities) {
-            os << abilityId << std::endl;
+        os << def.abilities.size() << std::endl;
+        for (int ability_id : def.abilities) {
+            os << ability_id << std::endl;
         }
     }
 }
 
-std::vector<LocationDef> LocationRegistry::toLocationDefs(const std::vector<Location>& locations) {
-    std::vector<LocationDef> locationDefs;
+std::vector<LocationDef> LocationRegistry::to_location_defs(const std::vector<Location>& locations) {
+    std::vector<LocationDef> defs;
 
     for (const auto& location : locations) {
         LocationDef def;
-        def.id = location.getId();
-        def.name = location.getName();
-        def.choices = location.getChoices();
-        def.dialogNodeId = location.getDialogNodeId();
-        def.enemyId = location.getEnemyId();
-        def.items = location.getItems();
-        def.description = location.getDescription();
-        def.isFinalBossLocation = location.getIsFinalBossLocation();
-        def.abilities = location.getAbilities();
-        locationDefs.push_back(def);
+        def.id = location.get_id();
+        def.name = location.get_name();
+        def.choices = location.get_choices();
+        def.dialog_node_id = location.get_dialog_node_id();
+        def.enemy_id = location.get_enemy_id();
+        def.items = location.get_items();
+        def.description = location.get_description();
+        def.is_final_boss_location = location.is_final_boss_location();
+        def.abilities = location.get_abilities();
+        defs.push_back(def);
     }
 
-    return locationDefs;
+    return defs;
 }
 
-void LocationRegistry::setLocations(const std::vector<LocationDef>& defs) {
-    locations = defs;
+void LocationRegistry::set_locations(const std::vector<LocationDef>& defs) {
+    locations_ = defs;
 }

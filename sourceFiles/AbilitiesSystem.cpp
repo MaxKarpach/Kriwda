@@ -1,4 +1,5 @@
-#include <AbilitiesSystem.h>
+#include "AbilitiesSystem.h"
+#include <iostream>
 
 AbilitiesSystem::AbilitiesSystem(Player& player,
                                  std::vector<Ability>& abilities,
@@ -6,79 +7,79 @@ AbilitiesSystem::AbilitiesSystem(Player& player,
     : player_(player), abilities_(abilities), renderer_(renderer) {}
 
 template <typename T>
-T* AbilitiesSystem::findById(int id, std::vector<T>& vec) {
+T* AbilitiesSystem::find_by_id(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
-    if (obj.getId() == id) {
+    if (obj.get_id() == id) {
       return &obj;
     }
   }
   return nullptr;
 }
 
-void AbilitiesSystem::changeAbilities() {
-  int inputAbilityIndex = -1;
-  int replaceIndex = -1;
+void AbilitiesSystem::change_abilities() {
+  int input_ability_index = -1;
+  int replace_index = -1;
 
   while (true) {
-    renderer_.printEndlineText("Все способности:");
-    for (int i = 0; i < player_.getAbilities().size(); ++i) {
+    renderer_.print_endline_text("Все способности:");
+    for (int i = 0; i < player_.get_abilities().size(); ++i) {
       Ability* ability =
-          findById<Ability>(player_.getAbilities()[i], abilities_);
+          find_by_id<Ability>(player_.get_abilities()[i], abilities_);
       if (ability != nullptr) {
-        renderer_.printText(i + 1);
-        renderer_.printText(": ");
-        renderer_.printEndlineText(ability->getName());
+        renderer_.print_text(i + 1);
+        renderer_.print_text(": ");
+        renderer_.print_endline_text(ability->get_name());
       }
     }
 
-    renderer_.printEndlineText("Выбранные способности:");
-    for (int i = 0; i < player_.getAbilitiesCount(); ++i) {
+    renderer_.print_endline_text("Выбранные способности:");
+    for (int i = 0; i < player_.get_abilities_count(); ++i) {
       Ability* ability =
-          findById<Ability>(player_.getChosenAbilities()[i], abilities_);
+          find_by_id<Ability>(player_.get_chosen_abilities()[i], abilities_);
       if (ability != nullptr) {
-        renderer_.printText(i + 1);
-        renderer_.printText(": ");
-        renderer_.printEndlineText(ability->getName());
+        renderer_.print_text(i + 1);
+        renderer_.print_text(": ");
+        renderer_.print_endline_text(ability->get_name());
       }
     }
 
-    renderer_.printEndlineText("0: Выход");
-    std::cin >> inputAbilityIndex;
+    renderer_.print_endline_text("0: Выход");
+    std::cin >> input_ability_index;
 
-    if (inputAbilityIndex == 0) break;
+    if (input_ability_index == 0) break;
 
-    if (inputAbilityIndex < 1 ||
-        inputAbilityIndex > player_.getAbilities().size()) {
-      renderer_.printEndlineText("Некорректный ввод. Попробуйте снова.");
+    if (input_ability_index < 1 ||
+        input_ability_index > player_.get_abilities().size()) {
+      renderer_.print_endline_text("Некорректный ввод. Попробуйте снова.");
       continue;
     }
 
-    int selectedAbilityId = player_.getAbilities()[inputAbilityIndex - 1];
+    int selected_ability_id = player_.get_abilities()[input_ability_index - 1];
 
-    bool alreadyChosen = false;
-    for (int i = 0; i < player_.getAbilitiesCount(); ++i) {
-      if (player_.getChosenAbilities()[i] == selectedAbilityId) {
-        alreadyChosen = true;
+    bool already_chosen = false;
+    for (int i = 0; i < player_.get_abilities_count(); ++i) {
+      if (player_.get_chosen_abilities()[i] == selected_ability_id) {
+        already_chosen = true;
         break;
       }
     }
 
-    if (alreadyChosen) {
-      renderer_.printEndlineText(
+    if (already_chosen) {
+      renderer_.print_endline_text(
           "Эта способность уже выбрана. Выберите другую.");
       continue;
     }
 
-    renderer_.printEndlineText(
+    renderer_.print_endline_text(
         "Введите номер выбранной способности, которую хотите заменить: ");
-    std::cin >> replaceIndex;
+    std::cin >> replace_index;
 
-    if (replaceIndex < 1 || replaceIndex > player_.getAbilitiesCount()) {
-      renderer_.printEndlineText("Некорректный выбор замены.");
+    if (replace_index < 1 || replace_index > player_.get_abilities_count()) {
+      renderer_.print_endline_text("Некорректный выбор замены.");
       continue;
     }
 
-    player_.getChosenAbilities()[replaceIndex - 1] = selectedAbilityId;
-    renderer_.printEndlineText("Способность заменена!");
+    player_.get_chosen_abilities()[replace_index - 1] = selected_ability_id;
+    renderer_.print_endline_text("Способность заменена!");
   }
 }

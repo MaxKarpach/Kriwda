@@ -2,23 +2,23 @@
 
 LocationSystem::LocationSystem(Player& player,
                                std::vector<Location>& locations,
-                               int& enemiesCount,
+                               int& enemies_count,
                                Renderer& renderer,
                                std::vector<Ability>& abilities,
                                std::vector<Item>& items,
-                               Location* currentLocation)
+                               Location* current_location)
     : player_(player),
       locations_(locations),
-      enemiesCount_(enemiesCount),
+      enemies_count_(enemies_count),
       renderer_(renderer),
       abilities_(abilities),
       items_(items),
-      currentLocation_(currentLocation) {}
+      current_location_(current_location) {}
 
 template <typename T>
-T* LocationSystem::findById(int id, std::vector<T>& vec) {
+T* LocationSystem::find_by_id(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
-    if (obj.getId() == id) {
+    if (obj.get_id() == id) {
       return &obj;
     }
   }
@@ -27,124 +27,124 @@ T* LocationSystem::findById(int id, std::vector<T>& vec) {
 
 void LocationSystem::move() {
   while (true) {
-    Location* currentLocation = findById<Location>(player_.getLocationId(), locations_);
-    renderer_.printText("Ваше текущее местоположение: ");
-    renderer_.printEndlineText(currentLocation->getName());
+    Location* current_location = find_by_id<Location>(player_.get_location_id(), locations_);
+    renderer_.print_text("Ваше текущее местоположение: ");
+    renderer_.print_endline_text(current_location->get_name());
 
-    renderer_.printEndlineText("Вы можете пойти в следующие места: ");
-    std::vector<Location*> nearlyLocations;
-    int finalBossLocationNum = 0;
+    renderer_.print_endline_text("Вы можете пойти в следующие места: ");
+    std::vector<Location*> nearly_locations;
+    int final_boss_location_num = 0;
 
-    for (int i = 0; i < currentLocation->getChoices().size(); ++i) {
-      Location* nearlyLocation = findById<Location>(currentLocation->getChoices()[i], locations_);
-      if (nearlyLocation) {
-        nearlyLocations.push_back(nearlyLocation);
-        renderer_.printText(i + 1);
-        renderer_.printText(": ");
-        if (nearlyLocation->getIsFinalBossLocation() &&
-            player_.getEnemiesCount() != (enemiesCount_ - 1)) {
-          renderer_.printText(nearlyLocation->getName());
-          renderer_.printEndlineText(" (вы еще не готовы)");
-          finalBossLocationNum = i + 1;
+    for (int i = 0; i < current_location->get_choices().size(); ++i) {
+      Location* nearly_location = find_by_id<Location>(current_location->get_choices()[i], locations_);
+      if (nearly_location) {
+        nearly_locations.push_back(nearly_location);
+        renderer_.print_text(i + 1);
+        renderer_.print_text(": ");
+        if (nearly_location->is_final_boss_location() &&
+            player_.get_enemies_count() != (enemies_count_ - 1)) {
+          renderer_.print_text(nearly_location->get_name());
+          renderer_.print_endline_text(" (вы еще не готовы)");
+          final_boss_location_num = i + 1;
         } else {
-          renderer_.printEndlineText(nearlyLocation->getName());
+          renderer_.print_endline_text(nearly_location->get_name());
         }
       }
     }
 
-    renderer_.printText(currentLocation->getChoices().size() + 1);
-    renderer_.printEndlineText(": Остановиться на локации");
+    renderer_.print_text(current_location->get_choices().size() + 1);
+    renderer_.print_endline_text(": Остановиться на локации");
 
-    int userChoice = 0;
-    std::cin >> userChoice;
+    int user_choice = 0;
+    std::cin >> user_choice;
 
-    if (userChoice == currentLocation->getChoices().size() + 1) {
+    if (user_choice == current_location->get_choices().size() + 1) {
       return;
-    } else if (userChoice > 0 && userChoice <= currentLocation->getChoices().size()) {
-      if (finalBossLocationNum == userChoice &&
-          player_.getEnemiesCount() != (enemiesCount_ - 1)) {
+    } else if (user_choice > 0 && user_choice <= current_location->get_choices().size()) {
+      if (final_boss_location_num == user_choice &&
+          player_.get_enemies_count() != (enemies_count_ - 1)) {
         return;
       } else {
-        player_.setLocationId(nearlyLocations[userChoice - 1]->getId());
+        player_.set_location_id(nearly_locations[user_choice - 1]->get_id());
       }
     } else {
-      renderer_.printEndlineText("Такого варианта нет");
+      renderer_.print_endline_text("Такого варианта нет");
     }
   }
 }
 
-void LocationSystem::lootAbilities() {
-  std::vector<int>& locationAbilities = currentLocation_->getAbilities();
-  std::vector<int>& playerAbilities = player_.getAbilities();
+void LocationSystem::loot_abilities() {
+  std::vector<int>& location_abilities = current_location_->get_abilities_ref();
+  std::vector<int>& player_abilities = player_.get_abilities();
 
-  while (!locationAbilities.empty()) {
-    renderer_.printEndlineText("Способности на локации:");
-    renderer_.printEndlineText("0: Выйти");
+  while (!location_abilities.empty()) {
+    renderer_.print_endline_text("Способности на локации:");
+    renderer_.print_endline_text("0: Выйти");
 
-    for (int i = 0; i < locationAbilities.size(); ++i) {
-      Ability* ability = findById<Ability>(locationAbilities[i], abilities_);
+    for (int i = 0; i < location_abilities.size(); ++i) {
+      Ability* ability = find_by_id<Ability>(location_abilities[i], abilities_);
       if (ability) {
-        renderer_.printText(i + 1);
-        renderer_.printText(": ");
-        renderer_.printEndlineText(ability->getName());
+        renderer_.print_text(i + 1);
+        renderer_.print_text(": ");
+        renderer_.print_endline_text(ability->get_name());
       }
     }
 
     int choice = -1;
-    renderer_.printEndlineText("Выберите предмет для подбора: ");
+    renderer_.print_endline_text("Выберите предмет для подбора: ");
     std::cin >> choice;
 
     if (choice == 0) {
       break;
-    } else if (choice > 0 && choice <= locationAbilities.size()) {
-      int itemId = locationAbilities[choice - 1];
-      playerAbilities.push_back(itemId);
-      locationAbilities.erase(locationAbilities.begin() + (choice - 1));
-      renderer_.printEndlineText("Предмет подобран!");
+    } else if (choice > 0 && choice <= location_abilities.size()) {
+      int ability_id = location_abilities[choice - 1];
+      player_abilities.push_back(ability_id);
+      location_abilities.erase(location_abilities.begin() + (choice - 1));
+      renderer_.print_endline_text("Способность подобрана!");
     } else {
-      renderer_.printEndlineText("Неверный выбор, попробуйте снова.");
+      renderer_.print_endline_text("Неверный выбор, попробуйте снова.");
     }
   }
 
-  if (locationAbilities.empty()) {
-    renderer_.printEndlineText("На локации больше нет предметов.");
+  if (location_abilities.empty()) {
+    renderer_.print_endline_text("На локации больше нет способностей.");
   }
 }
 
-void LocationSystem::lootItems() {
-  std::vector<int>& locationItems = currentLocation_->getItems();
-  std::vector<int>& playerInventory = player_.getInventory();
+void LocationSystem::loot_items() {
+  std::vector<int>& location_items = current_location_->get_items_ref();
+  std::vector<int>& player_inventory = player_.get_inventory();
 
-  while (!locationItems.empty()) {
-    renderer_.printEndlineText("Предметы на локации:");
-    renderer_.printEndlineText("0: Выйти");
+  while (!location_items.empty()) {
+    renderer_.print_endline_text("Предметы на локации:");
+    renderer_.print_endline_text("0: Выйти");
 
-    for (int i = 0; i < locationItems.size(); ++i) {
-      Item* item = findById<Item>(locationItems[i], items_);
+    for (int i = 0; i < location_items.size(); ++i) {
+      Item* item = find_by_id<Item>(location_items[i], items_);
       if (item) {
-        renderer_.printText(i + 1);
-        renderer_.printText(": ");
-        renderer_.printEndlineText(item->getName());
+        renderer_.print_text(i + 1);
+        renderer_.print_text(": ");
+        renderer_.print_endline_text(item->get_name());
       }
     }
 
     int choice = -1;
-    renderer_.printEndlineText("Выберите предмет для подбора: ");
+    renderer_.print_endline_text("Выберите предмет для подбора: ");
     std::cin >> choice;
 
     if (choice == 0) {
       break;
-    } else if (choice > 0 && choice <= locationItems.size()) {
-      int itemId = locationItems[choice - 1];
-      playerInventory.push_back(itemId);
-      locationItems.erase(locationItems.begin() + (choice - 1));
-      renderer_.printEndlineText("Предмет подобран!");
+    } else if (choice > 0 && choice <= location_items.size()) {
+      int item_id = location_items[choice - 1];
+      player_inventory.push_back(item_id);
+      location_items.erase(location_items.begin() + (choice - 1));
+      renderer_.print_endline_text("Предмет подобран!");
     } else {
-      renderer_.printEndlineText("Неверный выбор, попробуйте снова.");
+      renderer_.print_endline_text("Неверный выбор, попробуйте снова.");
     }
   }
 
-  if (locationItems.empty()) {
-    renderer_.printEndlineText("На локации больше нет предметов.");
+  if (location_items.empty()) {
+    renderer_.print_endline_text("На локации больше нет предметов.");
   }
 }

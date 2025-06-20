@@ -6,34 +6,34 @@ InventorySystem::InventorySystem(Player& player,
     : player_(player), items_(items), renderer_(renderer) {}
 
 template <typename T>
-T* InventorySystem::findById(int id, std::vector<T>& vec) {
+T* InventorySystem::find_by_id(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
-    if (obj.getId() == id) {
+    if (obj.get_id() == id) {
       return &obj;
     }
   }
   return nullptr;
 }
 
-void InventorySystem::showInventory() {
-  std::vector<int>& inventory = player_.getInventory();
+void InventorySystem::show_inventory() {
+  std::vector<int>& inventory = player_.get_inventory();
 
   while (true) {
-    renderer_.printEndlineText("Ваш инвентарь:");
+    renderer_.print_endline_text("Ваш инвентарь:");
 
     if (inventory.empty()) {
-      renderer_.printEndlineText("Инвентарь пуст.");
+      renderer_.print_endline_text("Инвентарь пуст.");
       return;
     }
 
-    renderer_.printEndlineText("0: Выход");
+    renderer_.print_endline_text("0: Выход");
 
     for (int i = 0; i < inventory.size(); ++i) {
-      Item* item = findById<Item>(inventory[i], items_);
+      Item* item = find_by_id<Item>(inventory[i], items_);
       if (item != nullptr) {
-        renderer_.printText(i + 1);
-        renderer_.printText(": ");
-        renderer_.printEndlineText(item->getName());
+        renderer_.print_text(i + 1);
+        renderer_.print_text(": ");
+        renderer_.print_endline_text(item->get_name());
       }
     }
 
@@ -43,53 +43,53 @@ void InventorySystem::showInventory() {
     if (input == 0) break;
 
     if (input < 1 || input > inventory.size()) {
-      renderer_.printEndlineText("Неверный выбор. Попробуйте снова.");
+      renderer_.print_endline_text("Неверный выбор. Попробуйте снова.");
       continue;
     }
 
-    int itemId = inventory[input - 1];
-    Item* item = findById<Item>(itemId, items_);
+    int item_id = inventory[input - 1];
+    Item* item = find_by_id<Item>(item_id, items_);
 
     if (!item) {
-      renderer_.printEndlineText("Ошибка: предмет не найден.");
+      renderer_.print_endline_text("Ошибка: предмет не найден.");
       continue;
     }
 
-    char type = item->getType();
+    char type = item->get_type();
 
     switch (type) {
       case 'f':
-        player_.setHp(player_.getHp() + item->getFactor());
-        renderer_.printText("Вы выбрали еду: ");
-        renderer_.printEndlineText(item->getName());
-        renderer_.printText("У вас теперь ");
-        renderer_.printText(player_.getHp());
-        renderer_.printEndlineText(" здоровья.");
+        player_.set_hp(player_.get_hp() + item->get_factor());
+        renderer_.print_text("Вы выбрали еду: ");
+        renderer_.print_endline_text(item->get_name());
+        renderer_.print_text("У вас теперь ");
+        renderer_.print_text(player_.get_hp());
+        renderer_.print_endline_text(" здоровья.");
         break;
 
       case 'w':
-        player_.setChosenWeaponId(item->getId());
-        renderer_.printText("Вы выбрали оружие: ");
-        renderer_.printEndlineText(item->getName());
-        player_.setDamage(item->getFactor());
+        player_.set_chosen_weapon_id(item->get_id());
+        renderer_.print_text("Вы выбрали оружие: ");
+        renderer_.print_endline_text(item->get_name());
+        player_.set_damage(item->get_factor());
         break;
 
       case 'n':
-        renderer_.printText("Вы выбрали прочитать: ");
-        renderer_.printEndlineText(item->getName());
-        renderer_.printEndlineText(item->getDescription());
+        renderer_.print_text("Вы выбрали прочитать: ");
+        renderer_.print_endline_text(item->get_name());
+        renderer_.print_endline_text(item->get_description());
         break;
 
       case 's':
-        player_.setShield(item->getFactor());
-        renderer_.printText("Вы выбрали щит: ");
-        renderer_.printEndlineText(item->getName());
-        renderer_.printText("Ваш уровень защиты: ");
-        renderer_.printEndlineText(player_.getShield());
+        player_.set_shield(item->get_factor());
+        renderer_.print_text("Вы выбрали щит: ");
+        renderer_.print_endline_text(item->get_name());
+        renderer_.print_text("Ваш уровень защиты: ");
+        renderer_.print_endline_text(player_.get_shield());
         break;
 
       default:
-        renderer_.printEndlineText("Предмет не может быть использован.");
+        renderer_.print_endline_text("Предмет не может быть использован.");
         continue;
     }
 
@@ -99,11 +99,12 @@ void InventorySystem::showInventory() {
   }
 }
 
-void InventorySystem::showChosenWeapon() {
-  Item* item = findById<Item>(player_.getChosenWeaponId(), items_);
+void InventorySystem::show_chosen_weapon() {
+  Item* item = find_by_id<Item>(player_.get_chosen_weapon_id(), items_);
   if (item != nullptr) {
-    renderer_.printText("Вы используете оружие: ");
-    renderer_.printEndlineText(item->getName());
-    renderer_.printEndlineText(item->getDescription());
+    renderer_.print_text("Вы используете оружие: ");
+    renderer_.print_endline_text(item->get_name());
+    renderer_.print_endline_text(item->get_description());
   }
 }
+

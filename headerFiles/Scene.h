@@ -5,7 +5,7 @@
 
 struct SceneDef {
   int id;
-  int dialogNodeId;
+  int dialog_node_id;
   char type;
   std::string text;
 };
@@ -14,21 +14,21 @@ class Scene {
  public:
   Scene(const SceneDef& def);
 
-  int getId() const { return id_; }
-  void setId(int value) { id_ = value; }
+  int get_id() const { return id_; }
+  void set_id(int value) { id_ = value; }
 
-  int getDialogNodeId() const { return dialogNodeId_; }
-  void setDialogNodeId(int value) { dialogNodeId_ = value; }
+  int get_dialog_node_id() const { return dialog_node_id_; }
+  void set_dialog_node_id(int value) { dialog_node_id_ = value; }
 
-  char getType() const { return type_; }
-  void setType(char value) { type_ = value; }
+  char get_type() const { return type_; }
+  void set_type(char value) { type_ = value; }
 
-  std::string getText() const { return text_; }
-  void setText(std::string value) { text_ = value; }
+  std::string get_text() const { return text_; }
+  void set_text(std::string value) { text_ = value; }
 
  private:
   int id_;
-  int dialogNodeId_;
+  int dialog_node_id_;
   char type_;
   std::string text_;
 };
@@ -36,13 +36,13 @@ class Scene {
 class SceneRegistry {
  public:
   void load(std::istream& is);
-  std::vector<SceneDef> getScenes();
+  std::vector<SceneDef> get_scenes();
   void save(std::ostream& os);
-  std::vector<SceneDef> toSceneDefs(const std::vector<Scene>& scenes);
-  void setScenes(const std::vector<SceneDef>& defs);
+  std::vector<SceneDef> to_scene_defs(const std::vector<Scene>& scenes);
+  void set_scenes(const std::vector<SceneDef>& defs);
 
  private:
-  std::vector<SceneDef> scenes;
+  std::vector<SceneDef> scenes_;
 };
 
-#endif  
+#endif

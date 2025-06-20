@@ -6,140 +6,140 @@ ResourceSystem::ResourceSystem(Player& player,
                                std::vector<Enemy>& enemies,
                                std::vector<Ability>& abilities,
                                std::vector<Item>& items,
-                               std::vector<DialogNode>& dialogNodes,
-                               std::vector<DialogChoice>& dialogChoices,
+                               std::vector<DialogNode>& dialog_nodes,
+                               std::vector<DialogChoice>& dialog_choices,
                                std::vector<Scene>& scenes,
                                Game& game,
-                               std::string& fileName)
+                               std::string& file_name)
     : player_(player),
       locations_(locations),
       enemies_(enemies),
       abilities_(abilities),
       items_(items),
-      dialogNodes_(dialogNodes),
-      dialogChoices_(dialogChoices),
+      dialog_nodes_(dialog_nodes),
+      dialog_choices_(dialog_choices),
       scenes_(scenes),
       game_(game),
-      fileName_(fileName) {}
+      file_name_(file_name) {}
 
-void ResourceSystem::downloadData() {
-  std::ifstream input(fileName_);
+void ResourceSystem::download_data() {
+  std::ifstream input(file_name_);
 
-  PlayerRegistry playerRegistry;
-  playerRegistry.load(input);
-  player_ = playerRegistry.getPlayer();
+  PlayerRegistry player_registry;
+  player_registry.load(input);
+  player_ = player_registry.get_player();
 
   locations_.clear();
   enemies_.clear();
   abilities_.clear();
   items_.clear();
-  dialogNodes_.clear();
-  dialogChoices_.clear();
+  dialog_nodes_.clear();
+  dialog_choices_.clear();
   scenes_.clear();
 
-  LocationRegistry locationRegistry;
-  locationRegistry.load(input);
-  std::vector<LocationDef> locationDefs = locationRegistry.getLocations();
-  for (const LocationDef& def : locationDefs) {
+  LocationRegistry location_registry;
+  location_registry.load(input);
+  std::vector<LocationDef> location_defs = location_registry.get_locations();
+  for (const LocationDef& def : location_defs) {
     locations_.push_back(Location(def));
   }
 
-  EnemyRegistry enemyRegistry;
-  enemyRegistry.load(input);
-  std::vector<EnemyDef> enemyDefs = enemyRegistry.getEnemies();
-  for (const EnemyDef& def : enemyDefs) {
+  EnemyRegistry enemy_registry;
+  enemy_registry.load(input);
+  std::vector<EnemyDef> enemy_defs = enemy_registry.get_enemies();
+  for (const EnemyDef& def : enemy_defs) {
     enemies_.push_back(Enemy(def));
   }
 
-  AbilityRegistry abilityRegistry;
-  abilityRegistry.load(input);
-  std::vector<AbilityDef> abilityDefs = abilityRegistry.getAbilities();
-  for (const AbilityDef& def : abilityDefs) {
+  AbilityRegistry ability_registry;
+  ability_registry.load(input);
+  std::vector<AbilityDef> ability_defs = ability_registry.get_abilities();
+  for (const AbilityDef& def : ability_defs) {
     abilities_.push_back(Ability(def));
   }
 
-  ItemRegistry itemRegistry;
-  itemRegistry.load(input);
-  std::vector<ItemDef> itemDefs = itemRegistry.getItems();
-  for (const ItemDef& def : itemDefs) {
+  ItemRegistry item_registry;
+  item_registry.load(input);
+  std::vector<ItemDef> item_defs = item_registry.get_items();
+  for (const ItemDef& def : item_defs) {
     items_.push_back(Item(def));
   }
 
-  DialogNodeRegistry dialogNodeRegistry;
-  dialogNodeRegistry.load(input);
-  std::vector<DialogNodeDef> dialogNodeDefs = dialogNodeRegistry.getDialogNodes();
-  for (const DialogNodeDef& def : dialogNodeDefs) {
-    dialogNodes_.push_back(DialogNode(def));
+  DialogNodeRegistry dialog_node_registry;
+  dialog_node_registry.load(input);
+  std::vector<DialogNodeDef> dialog_node_defs = dialog_node_registry.get_dialog_nodes();
+  for (const DialogNodeDef& def : dialog_node_defs) {
+    dialog_nodes_.push_back(DialogNode(def));
   }
 
-  DialogChoiceRegistry dialogChoiceRegistry;
-  dialogChoiceRegistry.load(input);
-  std::vector<DialogChoiceDef> dialogChoiceDefs = dialogChoiceRegistry.getDialogChoices();
-  for (const DialogChoiceDef& def : dialogChoiceDefs) {
-    dialogChoices_.push_back(DialogChoice(def));
+  DialogChoiceRegistry dialog_choice_registry;
+  dialog_choice_registry.load(input);
+  std::vector<DialogChoiceDef> dialog_choice_defs = dialog_choice_registry.get_dialog_choices();
+  for (const DialogChoiceDef& def : dialog_choice_defs) {
+    dialog_choices_.push_back(DialogChoice(def));
   }
 
-  SceneRegistry sceneRegistry;
-  sceneRegistry.load(input);
-  std::vector<SceneDef> sceneDefs = sceneRegistry.getScenes();
-  for (const SceneDef& def : sceneDefs) {
+  SceneRegistry scene_registry;
+  scene_registry.load(input);
+  std::vector<SceneDef> scene_defs = scene_registry.get_scenes();
+  for (const SceneDef& def : scene_defs) {
     scenes_.push_back(Scene(def));
   }
 
-  GameRegistry gameRegistry;
-  gameRegistry.load(input);
-  const GameStatsDef& stats = gameRegistry.getGameStats();
-  game_.setIsGameStarted(stats.isGameStarted);
-  game_.setIsGameLoopEnded(stats.isGameLoopEnded);
-  game_.setIsGameEnded(stats.isGameEnded);
+  GameRegistry game_registry;
+  game_registry.load(input);
+  const GameStatsDef& stats = game_registry.get_game_stats();
+  game_.set_is_game_started(stats.is_game_started);
+  game_.set_is_game_loop_ended(stats.is_game_loop_ended);
+  game_.set_is_game_ended(stats.is_game_ended);
 }
 
-void ResourceSystem::saveGame() {
-  std::ofstream output(fileName_);
+void ResourceSystem::save_game() {
+  std::ofstream output(file_name_);
 
-  PlayerRegistry playerRegistry;
-  PlayerDef playerDef = playerRegistry.toPlayerDef(player_);
-  playerRegistry.setPlayer(playerDef);
-  playerRegistry.save(output);
+  PlayerRegistry player_registry;
+  PlayerDef player_def = player_registry.to_player_def(player_);
+  player_registry.set_player(player_def);
+  player_registry.save(output);
 
-  LocationRegistry locationRegistry;
-  std::vector<LocationDef> locationDefs = locationRegistry.toLocationDefs(locations_);
-  locationRegistry.setLocations(locationDefs);
-  locationRegistry.save(output);
+  LocationRegistry location_registry;
+  std::vector<LocationDef> location_defs = location_registry.to_location_defs(locations_);
+  location_registry.set_locations(location_defs);
+  location_registry.save(output);
 
-  EnemyRegistry enemyRegistry;
-  std::vector<EnemyDef> enemyDefs = enemyRegistry.toEnemyDefs(enemies_);
-  enemyRegistry.setEnemies(enemyDefs);
-  enemyRegistry.save(output);
+  EnemyRegistry enemy_registry;
+  std::vector<EnemyDef> enemy_defs = enemy_registry.to_enemy_defs(enemies_);
+  enemy_registry.set_enemies(enemy_defs);
+  enemy_registry.save(output);
 
-  AbilityRegistry abilityRegistry;
-  std::vector<AbilityDef> abilityDefs = abilityRegistry.toAbilityDefs(abilities_);
-  abilityRegistry.setAbilities(abilityDefs);
-  abilityRegistry.save(output);
+  AbilityRegistry ability_registry;
+  std::vector<AbilityDef> ability_defs = ability_registry.to_ability_defs(abilities_);
+  ability_registry.set_abilities(ability_defs);
+  ability_registry.save(output);
 
-  ItemRegistry itemRegistry;
-  std::vector<ItemDef> itemDefs = itemRegistry.toItemDefs(items_);
-  itemRegistry.setItems(itemDefs);
-  itemRegistry.save(output);
+  ItemRegistry item_registry;
+  std::vector<ItemDef> item_defs = item_registry.to_item_defs(items_);
+  item_registry.set_items(item_defs);
+  item_registry.save(output);
 
-  DialogNodeRegistry dialogNodeRegistry;
-  std::vector<DialogNodeDef> dialogNodeDefs = dialogNodeRegistry.toDialogNodeDefs(dialogNodes_);
-  dialogNodeRegistry.setDialogNodes(dialogNodeDefs);
-  dialogNodeRegistry.save(output);
+  DialogNodeRegistry dialog_node_registry;
+  std::vector<DialogNodeDef> dialog_node_defs = dialog_node_registry.to_dialog_node_defs(dialog_nodes_);
+  dialog_node_registry.set_dialog_nodes(dialog_node_defs);
+  dialog_node_registry.save(output);
 
-  DialogChoiceRegistry dialogChoiceRegistry;
-  std::vector<DialogChoiceDef> dialogChoiceDefs =
-      dialogChoiceRegistry.toDialogChoiceDefs(dialogChoices_);
-  dialogChoiceRegistry.setDialogChoices(dialogChoiceDefs);
-  dialogChoiceRegistry.save(output);
+  DialogChoiceRegistry dialog_choice_registry;
+  std::vector<DialogChoiceDef> dialog_choice_defs =
+      dialog_choice_registry.to_dialog_choice_defs(dialog_choices_);
+  dialog_choice_registry.set_dialog_choices(dialog_choice_defs);
+  dialog_choice_registry.save(output);
 
-  SceneRegistry sceneRegistry;
-  std::vector<SceneDef> sceneDefs = sceneRegistry.toSceneDefs(scenes_);
-  sceneRegistry.setScenes(sceneDefs);
-  sceneRegistry.save(output);
+  SceneRegistry scene_registry;
+  std::vector<SceneDef> scene_defs = scene_registry.to_scene_defs(scenes_);
+  scene_registry.set_scenes(scene_defs);
+  scene_registry.save(output);
 
-  GameRegistry gameRegistry;
-  GameStatsDef gameDef = gameRegistry.toGameStatsDef(game_);
-  gameRegistry.setGameStats(gameDef);
-  gameRegistry.save(output);
+  GameRegistry game_registry;
+  GameStatsDef game_def = game_registry.to_game_stats_def(game_);
+  game_registry.set_game_stats(game_def);
+  game_registry.save(output);
 }

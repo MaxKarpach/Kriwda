@@ -1,5 +1,4 @@
 #include "../headerFiles/Item.h"
-#include <iostream>
 #include <climits>
 
 const int MAX_STRING_LEN = 255;
@@ -7,51 +6,51 @@ const int MAX_STRING_LEN = 255;
 Item::Item(const ItemDef& def)
     : id_(def.id), name_(def.name), type_(def.type), factor_(def.factor), description_(def.description) {}
 
-std::vector<ItemDef> ItemRegistry::getItems() {
-    return items;
+std::vector<ItemDef> ItemRegistry::get_items() {
+    return items_;
 }
 
 void ItemRegistry::load(std::istream& is) {
-    int itemsCount = 0;
-    is >> itemsCount;
-    for (int i = 0; i < itemsCount; i++) {
-        ItemDef id;
-        is >> id.id;
+    int items_count = 0;
+    is >> items_count;
+    for (int i = 0; i < items_count; ++i) {
+        ItemDef def;
+        is >> def.id;
         is.ignore(MAX_STRING_LEN, '\n');
-        std::getline(is, id.name);
-        is >> id.type;
-        is >> id.factor;
+        std::getline(is, def.name);
+        is >> def.type;
+        is >> def.factor;
         is.ignore(MAX_STRING_LEN, '\n');
-        std::getline(is, id.description);
-        items.push_back(id);
+        std::getline(is, def.description);
+        items_.push_back(def);
     }
 }
 
 void ItemRegistry::save(std::ostream& os) {
-    os << items.size() << std::endl;
-    for (const ItemDef& id : items) {
-        os << id.id << std::endl;
-        os << id.name << std::endl;
-        os << id.type << std::endl;
-        os << id.factor << std::endl;
-        os << id.description << std::endl;
+    os << items_.size() << std::endl;
+    for (const ItemDef& def : items_) {
+        os << def.id << std::endl;
+        os << def.name << std::endl;
+        os << def.type << std::endl;
+        os << def.factor << std::endl;
+        os << def.description << std::endl;
     }
 }
 
-std::vector<ItemDef> ItemRegistry::toItemDefs(const std::vector<Item>& items) {
-    std::vector<ItemDef> itemDefs;
+std::vector<ItemDef> ItemRegistry::to_item_defs(const std::vector<Item>& items) {
+    std::vector<ItemDef> item_defs;
     for (const auto& item : items) {
         ItemDef def;
-        def.id = item.getId();
-        def.name = item.getName();
-        def.type = item.getType();
-        def.factor = item.getFactor();
-        def.description = item.getDescription();
-        itemDefs.push_back(def);
+        def.id = item.get_id();
+        def.name = item.get_name();
+        def.type = item.get_type();
+        def.factor = item.get_factor();
+        def.description = item.get_description();
+        item_defs.push_back(def);
     }
-    return itemDefs;
+    return item_defs;
 }
 
-void ItemRegistry::setItems(const std::vector<ItemDef>& defs) {
-    items = defs;
+void ItemRegistry::set_items(const std::vector<ItemDef>& defs) {
+    items_ = defs;
 }

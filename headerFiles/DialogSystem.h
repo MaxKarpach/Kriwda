@@ -1,5 +1,5 @@
-#ifndef DIALOGSYSTEM_H
-#define DIALOGSYSTEM_H
+#ifndef DIALOG_SYSTEM_H
+#define DIALOG_SYSTEM_H
 
 #include <iostream>
 #include <vector>
@@ -11,20 +11,20 @@
 
 class DialogSystem {
  public:
-  DialogSystem(std::vector<DialogNode>& dialogNodes,
-               std::vector<DialogChoice>& dialogChoices,
-               int& currentNodeId,
-               Location* currentLocation,
+  DialogSystem(std::vector<DialogNode>& dialog_nodes,
+               std::vector<DialogChoice>& dialog_choices,
+               int& current_node_id,
+               Location* current_location,
                Renderer& renderer);
 
-  void startDialog();
+  void start_dialog();
 
  private:
-  std::vector<DialogNode>& dialogNodes_;
-  std::vector<DialogChoice>& dialogChoices_;
-  int& currentNodeId_;
-  Location* currentLocation_;
+  std::vector<DialogNode>& dialog_nodes_;
+  std::vector<DialogChoice>& dialog_choices_;
+  int& current_node_id_;
+  Location* current_location_;
   Renderer& renderer_;
 };
 
-#endif  
+#endif

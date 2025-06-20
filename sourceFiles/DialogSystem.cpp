@@ -1,80 +1,80 @@
 #include <DialogSystem.h>
 
-DialogSystem::DialogSystem(std::vector<DialogNode>& dialogNodes,
-                           std::vector<DialogChoice>& dialogChoices,
-                           int& currentNodeId,
-                           Location* currentLocation,
+DialogSystem::DialogSystem(std::vector<DialogNode>& dialog_nodes,
+                           std::vector<DialogChoice>& dialog_choices,
+                           int& current_node_id,
+                           Location* current_location,
                            Renderer& renderer)
-    : dialogNodes_(dialogNodes),
-      dialogChoices_(dialogChoices),
-      currentNodeId_(currentNodeId),
-      currentLocation_(currentLocation),
+    : dialog_nodes_(dialog_nodes),
+      dialog_choices_(dialog_choices),
+      current_node_id_(current_node_id),
+      current_location_(current_location),
       renderer_(renderer) {}
 
-void DialogSystem::startDialog() {
+void DialogSystem::start_dialog() {
   while (true) {
-    DialogNode* currentNode = nullptr;
+    DialogNode* current_node = nullptr;
 
-    for (auto& node : dialogNodes_) {
-      if (node.getId() == currentNodeId_) {
-        currentNode = &node;
+    for (auto& node : dialog_nodes_) {
+      if (node.get_id() == current_node_id_) {
+        current_node = &node;
         break;
       }
     }
 
-    if (!currentNode) {
-      renderer_.printEndlineText("Ошибка: узел диалога не найден.");
+    if (!current_node) {
+      renderer_.print_endline_text("Ошибка: узел диалога не найден.");
       break;
     }
 
-    if (!currentNode->getDescription().empty()) {
-      renderer_.printEndlineText(currentNode->getDescription());
+    if (!current_node->get_description().empty()) {
+      renderer_.print_endline_text(current_node->get_description());
     }
 
-    if (currentNode->getChoices().empty()) {
-      currentLocation_->setDialogNodeId(0);
+    if (current_node->get_choices().empty()) {
+      current_location_->set_dialog_node_id(0);
     }
 
-    if (!currentNode->getName().empty()) {
-      renderer_.printText(currentNode->getName());
-      renderer_.printText(": ");
-      renderer_.printEndlineText(currentNode->getText());
+    if (!current_node->get_name().empty()) {
+      renderer_.print_text(current_node->get_name());
+      renderer_.print_text(": ");
+      renderer_.print_endline_text(current_node->get_text());
     }
 
-    std::vector<DialogChoice*> currentChoices;
-    for (int choiceId : currentNode->getChoices()) {
-      for (auto& choice : dialogChoices_) {
-        if (choice.getId() == choiceId && !choice.getIsUsed()) {
-          currentChoices.push_back(&choice);
+    std::vector<DialogChoice*> current_choices;
+    for (int choice_id : current_node->get_choices()) {
+      for (auto& choice : dialog_choices_) {
+        if (choice.get_id() == choice_id && !choice.get_is_used()) {
+          current_choices.push_back(&choice);
           break;
         }
       }
     }
 
-    if (currentChoices.empty()) {
+    if (current_choices.empty()) {
       break;
     }
 
-    renderer_.printEndlineText("0: выход");
-    for (int i = 0; i < currentChoices.size(); ++i) {
-      renderer_.printText(i + 1);
-      renderer_.printText(": ");
-      renderer_.printEndlineText(currentChoices[i]->getText());
+    renderer_.print_endline_text("0: выход");
+    for (int i = 0; i < current_choices.size(); ++i) {
+      renderer_.print_text(i + 1);
+      renderer_.print_text(": ");
+      renderer_.print_endline_text(current_choices[i]->get_text());
     }
 
-    int userChoice = 0;
-    std::cin >> userChoice;
+    int user_choice = 0;
+    std::cin >> user_choice;
 
-    if (userChoice <= 0 || userChoice > currentChoices.size()) {
-      renderer_.printEndlineText("Диалог прерван.");
+    if (user_choice <= 0 || user_choice > current_choices.size()) {
+      renderer_.print_endline_text("Диалог прерван.");
       break;
     }
 
-    currentNodeId_ = currentChoices[userChoice - 1]->getNextNodeId();
-    currentChoices[userChoice - 1]->setisUsed(true);
+    current_node_id_ = current_choices[user_choice - 1]->get_next_node_id();
+    current_choices[user_choice - 1]->set_is_used(true);
 
-    if (currentNodeId_ == 0) {
-      currentLocation_->setDialogNodeId(0);
+    if (current_node_id_ == 0) {
+      current_location_->set_dialog_node_id(0);
       break;
     }
   }
