@@ -1,5 +1,4 @@
 #include "AbilitiesSystem.h"
-#include <iostream>
 
 AbilitiesSystem::AbilitiesSystem(Player& player,
                                  std::vector<Ability>& abilities,

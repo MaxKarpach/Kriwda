@@ -1,5 +1,4 @@
-#include "../headerFiles/Location.h"
-#include <iostream>
+#include "Location.h"
 
 const int MAX_STRING_LEN = 255;
 

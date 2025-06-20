@@ -1,5 +1,4 @@
 #include "BattleSystem.h"
-#include <iostream>
 
 BattleSystem::BattleSystem(Player& player, Enemy* enemy, Renderer& renderer,
                            Location* location,
