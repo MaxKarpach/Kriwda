@@ -1,15 +1,29 @@
 #include "ResourceSystem.h"
 #include <fstream>
 
-ResourceSystem::ResourceSystem(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies,
-    std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes,
-    std::vector<DialogChoice>& dialogChoices, std::vector<Scene>& scenes, Game& game, std::string& fileName):
-    player_(player), locations_(locations), enemies_(enemies),  abilities_(abilities),
-    items_(items), dialogNodes_(dialogNodes), dialogChoices_(dialogChoices), scenes_(scenes),
-    game_(game), fileName_(fileName){}
+ResourceSystem::ResourceSystem(Player& player,
+                               std::vector<Location>& locations,
+                               std::vector<Enemy>& enemies,
+                               std::vector<Ability>& abilities,
+                               std::vector<Item>& items,
+                               std::vector<DialogNode>& dialogNodes,
+                               std::vector<DialogChoice>& dialogChoices,
+                               std::vector<Scene>& scenes,
+                               Game& game,
+                               std::string& fileName)
+    : player_(player),
+      locations_(locations),
+      enemies_(enemies),
+      abilities_(abilities),
+      items_(items),
+      dialogNodes_(dialogNodes),
+      dialogChoices_(dialogChoices),
+      scenes_(scenes),
+      game_(game),
+      fileName_(fileName) {}
 
-void ResourceSystem::downloadData(){
-   std::ifstream input(fileName_);
+void ResourceSystem::downloadData() {
+  std::ifstream input(fileName_);
 
   PlayerRegistry playerRegistry;
   playerRegistry.load(input);
@@ -74,14 +88,15 @@ void ResourceSystem::downloadData(){
 
   GameRegistry gameRegistry;
   gameRegistry.load(input);
-  game_.setIsGameStarted(gameRegistry.getGameStats().isGameStarted);
-  game_.setIsGameLoopEnded(gameRegistry.getGameStats().isGameLoopEnded);
-  game_.setIsGameEnded(gameRegistry.getGameStats().isGameEnded);
+  const GameStatsDef& stats = gameRegistry.getGameStats();
+  game_.setIsGameStarted(stats.isGameStarted);
+  game_.setIsGameLoopEnded(stats.isGameLoopEnded);
+  game_.setIsGameEnded(stats.isGameEnded);
 }
 
-void ResourceSystem::saveGame(){
-
+void ResourceSystem::saveGame() {
   std::ofstream output(fileName_);
+
   PlayerRegistry playerRegistry;
   PlayerDef playerDef = playerRegistry.toPlayerDef(player_);
   playerRegistry.setPlayer(playerDef);
@@ -113,7 +128,8 @@ void ResourceSystem::saveGame(){
   dialogNodeRegistry.save(output);
 
   DialogChoiceRegistry dialogChoiceRegistry;
-  std::vector<DialogChoiceDef> dialogChoiceDefs = dialogChoiceRegistry.toDialogChoiceDefs(dialogChoices_);
+  std::vector<DialogChoiceDef> dialogChoiceDefs =
+      dialogChoiceRegistry.toDialogChoiceDefs(dialogChoices_);
   dialogChoiceRegistry.setDialogChoices(dialogChoiceDefs);
   dialogChoiceRegistry.save(output);
 

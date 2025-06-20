@@ -1,33 +1,41 @@
 #include <DialogSystem.h>
 
-DialogSystem::DialogSystem(std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices,
-     int& currentNodeId, Location* currentLocation, Renderer& renderer):
-    dialogNodes_(dialogNodes), dialogChoices_(dialogChoices), currentNodeId_(currentNodeId),
-    currentLocation_(currentLocation), renderer_(renderer){}
+DialogSystem::DialogSystem(std::vector<DialogNode>& dialogNodes,
+                           std::vector<DialogChoice>& dialogChoices,
+                           int& currentNodeId,
+                           Location* currentLocation,
+                           Renderer& renderer)
+    : dialogNodes_(dialogNodes),
+      dialogChoices_(dialogChoices),
+      currentNodeId_(currentNodeId),
+      currentLocation_(currentLocation),
+      renderer_(renderer) {}
 
 void DialogSystem::startDialog() {
   while (true) {
     DialogNode* currentNode = nullptr;
+
     for (auto& node : dialogNodes_) {
       if (node.getId() == currentNodeId_) {
         currentNode = &node;
         break;
       }
     }
+
     if (!currentNode) {
       renderer_.printEndlineText("Ошибка: узел диалога не найден.");
       break;
     }
 
-    if (currentNode->getDescription() != "") {
+    if (!currentNode->getDescription().empty()) {
       renderer_.printEndlineText(currentNode->getDescription());
     }
 
-    if (currentNode->getChoices().size() == 0) {
+    if (currentNode->getChoices().empty()) {
       currentLocation_->setDialogNodeId(0);
     }
 
-    if (currentNode->getName() != "") {
+    if (!currentNode->getName().empty()) {
       renderer_.printText(currentNode->getName());
       renderer_.printText(": ");
       renderer_.printEndlineText(currentNode->getText());
@@ -63,8 +71,9 @@ void DialogSystem::startDialog() {
     }
 
     currentNodeId_ = currentChoices[userChoice - 1]->getNextNodeId();
-    currentChoices[userChoice - 1]->setisUsed(1);
-    if (currentChoices[userChoice - 1]->getNextNodeId() == 0) {
+    currentChoices[userChoice - 1]->setisUsed(true);
+
+    if (currentNodeId_ == 0) {
       currentLocation_->setDialogNodeId(0);
       break;
     }
