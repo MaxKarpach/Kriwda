@@ -27,45 +27,6 @@ template<typename T> T* findById(int id, std::vector<T>& vec) {
   return nullptr;
 }
 
-template <typename T> void loot(std::vector<T>& dataPool, Player& player, Location* currentLocation,
-    Renderer& renderer, std::vector<int>& (Location::*getLocationData)(), std::vector<int>& (Player::*getPlayerData)(),
-    const std::string& title, const std::string& successMessage, const std::string& emptyMessage) {
-  std::vector<int>& locationData = (currentLocation->*getLocationData)();
-  std::vector<int>& playerData = (player.*getPlayerData)();
-
-  while (!locationData.empty()) {
-    renderer.printEndlineText(title + " на локации" + ":");
-    renderer.printEndlineText("0: Выйти");
-
-    for (int i = 0; i < locationData.size(); ++i) {
-      T* item = findById<T>(locationData[i], dataPool);
-      if (item) {
-        renderer.printText(i + 1);
-        renderer.printText(": ");
-        renderer.printEndlineText(item->getName());
-      }
-    }
-
-    int choice = -1;
-    std::cin >> choice;
-
-    if (choice == 0) break;
-
-    if (choice > 0 && choice <= locationData.size()) {
-      int id = locationData[choice - 1];
-      playerData.push_back(id);
-      locationData.erase(locationData.begin() + (choice - 1));
-      renderer.printEndlineText(successMessage);
-    } else {
-      renderer.printEndlineText("Неверный выбор, попробуйте снова.");
-    }
-  }
-
-  if (locationData.empty()) {
-    renderer.printEndlineText("На локации больше нет " + emptyMessage);
-  }
-}
-
 void fight(Player& player, int enemyId, std::vector<Enemy>& enemies, std::vector<Ability>& abilities,
     Location* currentLocation, Renderer& renderer) {
   Enemy* enemy = findById<Enemy>(enemyId, enemies);
@@ -131,7 +92,7 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
     std::string selectedOption = options[userChoice - 1];
     int enemiesCount = enemies.size();
     if (selectedOption == "Сменить локацию") {
-      LocationSystem locationSystem(player, locations, enemiesCount, renderer);
+      LocationSystem locationSystem(player, locations, enemiesCount, renderer, abilities, items, currentLocation);
       locationSystem.move();
       resourceSystem.saveGame();
     } else if (selectedOption == "Показать инвентарь") {
@@ -146,14 +107,12 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
       fight(player, enemyId, enemies, abilities, currentLocation, renderer);
       resourceSystem.saveGame();
     } else if (selectedOption == "Осмотреть предметы на локации") {
-      loot<Item>(items, player, currentLocation, renderer,
-          &Location::getItems, &Player::getInventory,
-          "Предметы", "Предмет подобран!", "предметов.");
+      LocationSystem locationSystem(player, locations, enemiesCount, renderer, abilities, items, currentLocation);
+      locationSystem.lootItems();
       resourceSystem.saveGame();
     } else if (selectedOption == "Осмотреть способности на локации") {
-      loot<Ability>(abilities, player, currentLocation, renderer,
-          &Location::getAbilities, &Player::getAbilities,
-          "Способности", "Появилась новая способность!", "способностей.");
+      LocationSystem locationSystem(player, locations, enemiesCount, renderer, abilities, items, currentLocation);
+      locationSystem.lootAbilities();
       resourceSystem.saveGame();
     } else if (selectedOption == "Поговорить") {
       DialogSystem dialogSystem(dialogNodes, dialogChoices, dialogNodeId, currentLocation, renderer);
