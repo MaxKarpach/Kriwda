@@ -16,6 +16,7 @@
 #include "../headerFiles/LocationSystem.h"
 #include "../headerFiles/AbilitiesSystem.h"
 #include "../headerFiles/DialogSystem.h"
+#include "../headerFiles/InfoSystem.h"
 
 template<typename T> T* findById(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
@@ -62,79 +63,6 @@ template <typename T> void loot(std::vector<T>& dataPool, Player& player, Locati
 
   if (locationData.empty()) {
     renderer.printEndlineText("На локации больше нет " + emptyMessage);
-  }
-}
-
-template <typename T> void showDataDescription(const std::vector<int>& playerData, std::vector<T>& data,
-    Renderer& renderer, const std::string& description) {
-  while (true) {
-    renderer.printText(description);
-    renderer.printEndlineText(" Введите номер предмета для просмотра описания (0 для выхода):");
-    for (int i = 0; i < playerData.size(); ++i) {
-      const T* subject = findById<T>(playerData[i], data);
-      if (subject != nullptr) {
-        renderer.printText(i + 1);
-        renderer.printText(": ");
-        renderer.printEndlineText(subject->getName());
-      }
-    }
-
-    int choice;
-    std::cin >> choice;
-
-    if (choice == 0) break;
-
-    if (choice < 1 || choice > playerData.size()) {
-      renderer.printEndlineText("Некорректный выбор. Попробуйте снова.");
-      continue;
-    }
-
-    const T* selected = findById<T>(playerData[choice - 1], data);
-    if (selected) {
-      renderer.printText("Описание ");
-      renderer.printText(selected->getName());
-      renderer.printEndlineText(":");
-      renderer.printEndlineText(selected->getDescription());
-    }
-  }
-}
-
-void showDescriptions(Player& player, std::vector<Item>& items, std::vector<Ability>& abilities,
-    std::vector<Enemy>& enemies, Renderer& renderer) {
-  int userChoice = 0;
-  while (true) {
-    std::vector<std::string> options;
-    options.push_back("Показать описания способностей");
-    options.push_back("Показать описания предметов");
-    options.push_back("Показать описания побеждённых врагов");
-    renderer.printEndlineText("Введите 0 для выхода");
-    for (int i = 0; i < options.size(); i++) {
-      renderer.printText(i + 1);
-      renderer.printText(": ");
-      renderer.printEndlineText(options[i]);
-    }
-    std::cin >> userChoice;
-
-    if (userChoice < 0 || userChoice > options.size()) {
-      renderer.printEndlineText("Неверный ввод. Попробуйте снова.");
-      continue;
-    }
-
-    if (userChoice == 0) {
-      break;
-    }
-
-    std::string selectedOption = options[userChoice - 1];
-    if (selectedOption == "Показать описания способностей") {
-      showDataDescription<Ability>(player.getAbilities(), abilities, renderer, "Ваши способности");
-      break;
-    } else if (selectedOption == "Показать описания предметов") {
-      showDataDescription<Item>(player.getInventory(), items, renderer, "Ваши инвентарь");
-      break;
-    } else if (selectedOption == "Показать описания побеждённых врагов") {
-      showDataDescription<Enemy>(player.getEnemies(), enemies, renderer, "Ваши враги");
-      break;
-    }
   }
 }
 
@@ -234,9 +162,9 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
     } else if (selectedOption == "Показать оружие") {
       InventorySystem inventorySystem(player, items, renderer);
       inventorySystem.showChosenWeapon();
-    } else if (selectedOption == "Показать описания")
-    {
-      showDescriptions(player, items, abilities, enemies, renderer);
+    } else if (selectedOption == "Показать описания") {
+      InfoSystem infoSystem(player, enemies, abilities, items, renderer);
+      infoSystem.showDescriptions();
     }
   }
   game.setIsGameLoopEnded(1);
