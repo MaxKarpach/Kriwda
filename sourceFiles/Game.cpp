@@ -1,13 +1,13 @@
 #include <iostream>
 #include <Game.h>
-Game::Game( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, 
-    Renderer& renderer):
-scenes(scenes), dialogNodes(dialogNodes), dialogChoices(dialogChoices), renderer(renderer){}
 
-void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, int currentNodeId, Renderer& renderer){
-    while (true)
-    {
+Game::Game(std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,
+           std::vector<DialogChoice>& dialogChoices, Renderer& renderer)
+    : scenes_(scenes), dialogNodes_(dialogNodes), dialogChoices_(dialogChoices), renderer_(renderer) {}
 
+void Game::sceneDialog(std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>& dialogChoices,
+                       int currentNodeId, Renderer& renderer) {
+    while (true) {
         DialogNode* currentNode = nullptr;
         for (auto& node : dialogNodes) {
             if (node.getId() == currentNodeId) {
@@ -15,33 +15,31 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
                 break;
             }
         }
-        if (!currentNode)
-        {
+
+        if (!currentNode) {
             renderer.printEndlineText("Ошибка: узел диалога не найден.");
             break;
         }
 
-        if (currentNode->getDescription() != ""){
+        if (!currentNode->getDescription().empty()) {
             renderer.printEndlineText(currentNode->getDescription());
         }
 
-        if (currentNode->getText() != ""){
-        renderer.printText(currentNode->getName());
-        renderer.printText(": ");
-        renderer.printEndlineText(currentNode->getText());
+        if (!currentNode->getText().empty()) {
+            renderer.printText(currentNode->getName());
+            renderer.printText(": ");
+            renderer.printEndlineText(currentNode->getText());
         }
 
-
         std::vector<DialogChoice*> currentChoices;
-        for (int choiceId : currentNode->getChoices()){
+        for (int choiceId : currentNode->getChoices()) {
             for (auto& choice : dialogChoices) {
                 if (choice.getId() == choiceId && !choice.getIsUsed()) {
-                currentChoices.push_back(&choice);
-                break;
+                    currentChoices.push_back(&choice);
+                    break;
                 }
             }
         }
-
 
         if (currentChoices.empty()) {
             break;
@@ -54,57 +52,63 @@ void Game::sceneDialog(std::vector<DialogNode>& dialogNodes,std::vector<DialogCh
         }
 
         int userChoice = 0;
-
         do {
             std::cin >> userChoice;
-            if (userChoice <= 0 || userChoice > currentChoices.size()){
+            if (userChoice <= 0 || userChoice > currentChoices.size()) {
                 renderer.printEndlineText("Неверный ввод");
             }
         } while (userChoice <= 0 || userChoice > currentChoices.size());
 
         currentNodeId = currentChoices[userChoice - 1]->getNextNodeId();
         currentChoices[userChoice - 1]->setisUsed(1);
-        if (currentChoices[userChoice - 1]->getNextNodeId() == 0){
+
+        if (currentNodeId == 0) {
             break;
         }
     }
 }
 
-void Game::initNewGame(std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer){
-    std::vector<Scene> endings;
-    Scene* beginning;
-    for (Scene scene : scenes)
-    {
-        if (scene.getType() == 'b'){
+void Game::initNewGame(std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,
+                       std::vector<DialogChoice>& dialogChoices, Renderer& renderer) {
+    Scene* beginning = nullptr;
+    for (Scene& scene : scenes) {
+        if (scene.getType() == 'b') {
             beginning = &scene;
             break;
         }
     }
-    sceneDialog(dialogNodes, dialogChoices, beginning->getDialogNodeId(), renderer);
-    isGameStarted = 1;
+
+    if (beginning) {
+        sceneDialog(dialogNodes, dialogChoices, beginning->getDialogNodeId(), renderer);
+        isGameStarted_ = true;
+    } else {
+        renderer.printEndlineText("Начальная сцена не найдена.");
+    }
 }
 
-void Game::gameOver(Renderer& renderer){
+void Game::gameOver(Renderer& renderer) {
     renderer.printEndlineText("Вы проиграли");
     renderer.printEndlineText("Загрузка...");
 }
 
-void Game::endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,std::vector<DialogChoice>& dialogChoices, Renderer& renderer){
+void Game::endGame(std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,
+                   std::vector<DialogChoice>& dialogChoices, Renderer& renderer) {
     std::vector<Scene> endings;
-    for (Scene scene : scenes){
-        if (scene.getType() == 'e'){
+    for (const Scene& scene : scenes) {
+        if (scene.getType() == 'e') {
             endings.push_back(scene);
         }
     }
-    for (int i = 0; i < endings.size(); i++){
+
+    for (int i = 0; i < endings.size(); i++) {
         renderer.printText(i + 1);
         renderer.printText(": ");
         renderer.printEndlineText(endings[i].getText());
     }
-        int choice = 0;
+
+    int choice = 0;
     while (true) {
         std::cin >> choice;
-
         if (choice >= 1 && choice <= endings.size()) {
             break;
         } else {
@@ -112,9 +116,10 @@ void Game::endGame( std::vector<Scene>& scenes, std::vector<DialogNode>& dialogN
             renderer.printEndlineText(endings.size());
         }
     }
+
     sceneDialog(dialogNodes, dialogChoices, endings[choice - 1].getDialogNodeId(), renderer);
     renderer.printEndlineText("Конец игры");
-    isGameEnded = 1;
+    isGameEnded_ = true;
 }
 
 void GameRegistry::load(std::istream& is) {

@@ -1,56 +1,73 @@
-#include "../headerFiles/Location.h" 
+#include "../headerFiles/Location.h"
 #include <iostream>
 
 const int MAX_STRING_LEN = 255;
 
 Location::Location(const LocationDef& def)
-:id(def.id), name(def.name), choices(def.choices), enemyId(def.enemyId), items(def.items), dialogNodeId(def.dialogNodeId),
-description(def.description), isFinalBossLocation(def.isFinalBossLocation), abilities(def.abilities){}
+    : id_(def.id),
+      name_(def.name),
+      choices_(def.choices),
+      enemyId_(def.enemyId),
+      items_(def.items),
+      dialogNodeId_(def.dialogNodeId),
+      description_(def.description),
+      isFinalBossLocation_(def.isFinalBossLocation),
+      abilities_(def.abilities) {}
 
-std::vector<LocationDef> LocationRegistry::getLocations(){
+std::vector<LocationDef> LocationRegistry::getLocations() {
     return locations;
 }
 
-void  LocationRegistry::load(std::istream& is){
+void LocationRegistry::load(std::istream& is) {
     int locationsCount = 0;
     is >> locationsCount;
-    for (int i = 0; i < locationsCount; i++){
+
+    for (int i = 0; i < locationsCount; i++) {
         LocationDef ld;
-    is >> ld.id;
-    is.ignore(MAX_STRING_LEN, '\n');
-    std::getline(is, ld.name);
-    int choicesCount = 0;
-    is >> choicesCount;
-    for (int i = 0; i < choicesCount;i++){
-        int locationId = 0;
-        is >> locationId;
-        ld.choices.push_back(locationId);
-    }
-    is >> ld.dialogNodeId;
-    is >> ld.enemyId;
-    int itemsCount = 0;
-    is >> itemsCount;
-    for (int i = 0; i < itemsCount; i++){
-        int itemId = 0;
-        is >> itemId;
-        ld.items.push_back(itemId);
-    }
-    is.ignore(MAX_STRING_LEN, '\n');
-    std::getline(is, ld.description);
-    is >> ld.isFinalBossLocation;
-    int abilitiesCount = 0;
-    is >> abilitiesCount;
-    for (int i = 0; i < abilitiesCount; i++){
-        int abilityId = 0;
-        is >> abilityId;
-        ld.abilities.push_back(abilityId);
-    }
-    locations.push_back(ld);
+
+        is >> ld.id;
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, ld.name);
+
+        int choicesCount = 0;
+        is >> choicesCount;
+        for (int j = 0; j < choicesCount; j++) {
+            int locationId = 0;
+            is >> locationId;
+            ld.choices.push_back(locationId);
+        }
+
+        is >> ld.dialogNodeId;
+        is >> ld.enemyId;
+
+        int itemsCount = 0;
+        is >> itemsCount;
+        for (int j = 0; j < itemsCount; j++) {
+            int itemId = 0;
+            is >> itemId;
+            ld.items.push_back(itemId);
+        }
+
+        is.ignore(MAX_STRING_LEN, '\n');
+        std::getline(is, ld.description);
+
+        is >> ld.isFinalBossLocation;
+
+        int abilitiesCount = 0;
+        is >> abilitiesCount;
+        for (int j = 0; j < abilitiesCount; j++) {
+            int abilityId = 0;
+            is >> abilityId;
+            ld.abilities.push_back(abilityId);
+        }
+
+        locations.push_back(ld);
     }
 }
 
 void LocationRegistry::save(std::ostream& os) {
     os << locations.size() << std::endl;
+
     for (const LocationDef& ld : locations) {
         os << ld.id << std::endl;
         os << ld.name << std::endl;
@@ -70,14 +87,17 @@ void LocationRegistry::save(std::ostream& os) {
 
         os << ld.description << std::endl;
         os << ld.isFinalBossLocation << std::endl;
+
         os << ld.abilities.size() << std::endl;
-        for (int abilityId : ld.abilities){
+        for (int abilityId : ld.abilities) {
             os << abilityId << std::endl;
         }
     }
 }
+
 std::vector<LocationDef> LocationRegistry::toLocationDefs(const std::vector<Location>& locations) {
     std::vector<LocationDef> locationDefs;
+
     for (const auto& location : locations) {
         LocationDef def;
         def.id = location.getId();
@@ -91,8 +111,10 @@ std::vector<LocationDef> LocationRegistry::toLocationDefs(const std::vector<Loca
         def.abilities = location.getAbilities();
         locationDefs.push_back(def);
     }
+
     return locationDefs;
 }
+
 void LocationRegistry::setLocations(const std::vector<LocationDef>& defs) {
     locations = defs;
 }

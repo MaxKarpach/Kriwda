@@ -1,197 +1,198 @@
 #include <iostream>
+
 #ifndef ENEMY_H
 #define ENEMY_H
+
 #include <Renderer.h>
-struct EnemyDef{
-    int id;
-    std::string name;
-    int hp;
-    int damage;
-    int stamina;
-    int shield;
-    int dodgeCount;
-    std::array<int, 3> abilities;
-    int locationId;
-    bool isShieldOn;
-    bool isDodgeOn;
-    int staminaFactor;
-    int shieldFactor;
-    int maxDodgeCount;
-    int maxStamina;
-    int maxShield;
-    int staminaRecoveryFactor;
-    std::vector<int> items;
-    std::string description;
-    int abilitiesCount;
+
+struct EnemyDef {
+  int id;
+  std::string name;
+  int hp;
+  int damage;
+  int stamina;
+  int shield;
+  int dodgeCount;
+  std::array<int, 3> abilities;
+  int locationId;
+  bool isShieldOn;
+  bool isDodgeOn;
+  int staminaFactor;
+  int shieldFactor;
+  int maxDodgeCount;
+  int maxStamina;
+  int maxShield;
+  int staminaRecoveryFactor;
+  std::vector<int> items;
+  std::string description;
+  int abilitiesCount;
 };
 
-class Enemy{
-public:
-Enemy(const EnemyDef& def);
+class Enemy {
+ public:
+  Enemy(const EnemyDef& def);
 
-    int getId() const { return id; }
-    void setId(int value) { id = value; }
+  int getId() const { return id_; }
+  void setId(int value) { id_ = value; }
 
-    std::array<int, 3> getAbilities() const {return abilities; }
+  std::array<int, 3> getAbilities() const { return abilities_; }
 
-    std::string getName() const { return name; }
-    void setName(std::string value) { name = value; }
+  std::string getName() const { return name_; }
+  void setName(std::string value) { name_ = value; }
 
-    std::string getDescription() const { return description; }
-    void setDescription(std::string value) { description = value; }
+  std::string getDescription() const { return description_; }
+  void setDescription(std::string value) { description_ = value; }
 
-    int getHp() const { return hp; }
-    void setHp(int value) { hp = value; }
+  int getHp() const { return hp_; }
+  void setHp(int value) { hp_ = value; }
 
-    int getDamage() const { return damage; }
-    void setDamage(int value) { damage = value; }
+  int getDamage() const { return damage_; }
+  void setDamage(int value) { damage_ = value; }
 
-    bool getIsShieldOn() const { return isShieldOn; }
-    void setIsShieldOn(bool value) { isShieldOn = value; }
+  bool getIsShieldOn() const { return isShieldOn_; }
+  void setIsShieldOn(bool value) { isShieldOn_ = value; }
 
-    bool getIsDodgeOn() const { return isDodgeOn; }
-    void setIsDodgeOn(bool value) { isDodgeOn = value; }
+  bool getIsDodgeOn() const { return isDodgeOn_; }
+  void setIsDodgeOn(bool value) { isDodgeOn_ = value; }
 
-    int getStamina() const { return stamina; }
-    void setStamina(int value) { stamina = value; }
+  int getStamina() const { return stamina_; }
+  void setStamina(int value) { stamina_ = value; }
 
-    int getStaminaFactor() const { return staminaFactor; }
-    void setStaminaFactor(int value) { staminaFactor = value; }
+  int getStaminaFactor() const { return staminaFactor_; }
+  void setStaminaFactor(int value) { staminaFactor_ = value; }
 
-    int getShieldFactor() const { return shieldFactor; }
-    void setShieldFactor(int value) { shieldFactor = value; }
+  int getShieldFactor() const { return shieldFactor_; }
+  void setShieldFactor(int value) { shieldFactor_ = value; }
 
-    int getShield() const { return shield; }
-    void setShield(int value) { shield = value; }
+  int getShield() const { return shield_; }
+  void setShield(int value) { shield_ = value; }
 
-    int getDodgeCount() const { return dodgeCount; }
-    void setDodgeCount(int value) { dodgeCount = value; }
+  int getDodgeCount() const { return dodgeCount_; }
+  void setDodgeCount(int value) { dodgeCount_ = value; }
 
-    int getStaminaRecoveryFactor() const { return staminaRecoveryFactor; }
-    void setStaminaRecoveryFactor(int value) { staminaRecoveryFactor = value; }
+  int getStaminaRecoveryFactor() const { return staminaRecoveryFactor_; }
+  void setStaminaRecoveryFactor(int value) { staminaRecoveryFactor_ = value; }
 
-    int getLocationId() const { return locationId; }
-    void setLocationId(int value) { locationId = value; }
+  int getLocationId() const { return locationId_; }
+  void setLocationId(int value) { locationId_ = value; }
 
-    void showAbilities(){
-        for (int i = 0; i < abilities.size(); i++){
-            Renderer renderer;
-            renderer.printEndlineText(abilities[i]);
-        }
+  void showAbilities() {
+    for (int i = 0; i < abilities_.size(); i++) {
+      Renderer renderer;
+      renderer.printEndlineText(abilities_[i]);
     }
-    void addAbility(int abilityId, int abilityIndex){
-        if ((abilities.size()-1) >= abilityIndex){
-            abilities[abilityIndex] = abilityId;
-        }
+  }
+
+  void addAbility(int abilityId, int abilityIndex) {
+    if ((abilities_.size() - 1) >= abilityIndex) {
+      abilities_[abilityIndex] = abilityId;
     }
-    void removeAbility(int abilityIndex) {
-        abilities[abilityIndex] = 0;
+  }
+
+  void removeAbility(int abilityIndex) {
+    abilities_[abilityIndex] = 0;
+  }
+
+  std::array<int, 3> getAbilities() { return abilities_; }
+
+  int getMaxStamina() const { return maxStamina_; }
+  void setMaxStamina(int value) { maxStamina_ = value; }
+
+  int getMaxShield() const { return maxShield_; }
+  void setMaxShield(int value) { maxShield_ = value; }
+
+  int getAbilitiesCount() const { return abilitiesCount_; }
+  void setAbilitiesCount(int value) { abilitiesCount_ = value; }
+
+  int getMaxDodgeCount() const { return maxDodgeCount_; }
+  void setMaxDodgeCount(int value) { maxDodgeCount_ = value; }
+
+  std::vector<int> getItems() const { return items_; }
+  void setItems(const std::vector<int>& value) { items_ = value; }
+
+  void updateDodgeState() {
+    if (isDodgeOn_) {
+      if (dodgeCount_ >= maxDodgeCount_) {
+        isDodgeOn_ = false;
+        dodgeCount_ = 0;
+      } else {
+        dodgeCount_++;
+      }
     }
+  }
 
-    std::array<int, 3> getAbilities(){
-        return abilities;
+  void initDodgeCount() {
+    if (isDodgeOn_) {
+      if (dodgeCount_ == maxDodgeCount_) {
+        isDodgeOn_ = false;
+        dodgeCount_ = 0;
+      } else {
+        dodgeCount_++;
+      }
     }
+  }
 
-    int getMaxStamina() const { return maxStamina; }
-    void setMaxStamina(int value) { maxStamina = value; }
+  void afterRoundInfo() {
+    Renderer renderer;
+    renderer.printText("Здоровье врага: ");
+    renderer.printEndlineText(hp_);
+  }
 
-    int getMaxShield() const { return maxShield; }
-    void setMaxShield(int value) { maxShield = value; }
+  void winRound(int& enemyHp) {
+    hp_ = enemyHp;
+    stamina_ = maxStamina_;
+    shield_ = maxShield_;
+    dodgeCount_ = 0;
+    isDodgeOn_ = 0;
+    isShieldOn_ = 0;
+  }
 
-    int getAbilitiesCount() const { return abilitiesCount; }
-    void setAbilitiesCount(int value) { abilitiesCount = value; }
-
-    int getMaxDodgeCount() const { return maxDodgeCount; }
-    void setMaxDodgeCount(int value) {maxDodgeCount = value;}
-
-    std::vector<int> getItems() const { return items; }
-    void setItems(const std::vector<int>& value) { items = value; }
-
-        void updateDodgeState() {
-        if (isDodgeOn) {
-            if (dodgeCount >= maxDodgeCount) {
-                isDodgeOn = false;
-                dodgeCount = 0;
-            } else {
-                dodgeCount++;
-            }
-        }
+  void refreshStatsAfterRound() {
+    if (shield_ < 0) {
+      shield_ = 0;
     }
-
-        void initDodgeCount(){
-            if (isDodgeOn == 1){
-            if (dodgeCount == maxDodgeCount){
-                setIsDodgeOn(0);
-                setDodgeCount(0);
-            }
-            else
-            {
-                setDodgeCount(dodgeCount + 1);
-            }
-        }
+    isShieldOn_ = 0;
+    if (stamina_ + staminaFactor_ < maxStamina_) {
+      stamina_ = stamina_ + staminaRecoveryFactor_;
     }
-
-        void afterRoundInfo(){
-            Renderer renderer;
-            renderer.printText("Здоровье врага: ");
-            renderer.printEndlineText(hp);
+    if (shield_ + shieldFactor_ < maxShield_) {
+      shield_ = shield_ + shieldFactor_;
     }
+  }
 
-        void winRound(int& enemyHp){
-                setHp(enemyHp);
-                setStamina(maxStamina);
-                setShield(maxShield);
-                setDodgeCount(0);
-                setIsDodgeOn(0);
-                setIsShieldOn(0);
-    }
-
-        void refreshStatsAfterRound(){
-        if (shield < 0){
-            setShield(0);
-        }
-        setIsShieldOn(0);
-        if (stamina + staminaFactor < maxStamina){
-            setStamina(stamina + staminaRecoveryFactor);
-        }
-        if (shield + shieldFactor < maxShield){
-            setShield(shield + shieldFactor);
-        }
-        
-    }
-
-private:
-    std::string name;
-    int id;
-    int hp;
-    int damage;
-    int stamina;
-    int shield;
-    int dodgeCount;
-    std::array<int, 3> abilities;
-    int locationId;
-    bool isShieldOn;
-    bool isDodgeOn;
-    int staminaFactor;
-    int shieldFactor;
-    int maxDodgeCount;
-    int maxStamina;
-    int maxShield;
-    int staminaRecoveryFactor;
-    std::vector<int> items;
-    std::string description;
-    int abilitiesCount;
+ private:
+  std::string name_;
+  int id_;
+  int hp_;
+  int damage_;
+  int stamina_;
+  int shield_;
+  int dodgeCount_;
+  std::array<int, 3> abilities_;
+  int locationId_;
+  bool isShieldOn_;
+  bool isDodgeOn_;
+  int staminaFactor_;
+  int shieldFactor_;
+  int maxDodgeCount_;
+  int maxStamina_;
+  int maxShield_;
+  int staminaRecoveryFactor_;
+  std::vector<int> items_;
+  std::string description_;
+  int abilitiesCount_;
 };
 
+class EnemyRegistry {
+ public:
+  void load(std::istream& is);
+  std::vector<EnemyDef> getEnemies();
+  void save(std::ostream& os);
+  std::vector<EnemyDef> toEnemyDefs(const std::vector<Enemy>& enemies);
+  void setEnemies(const std::vector<EnemyDef>& defs);
 
-class EnemyRegistry{
-    public:
-    void load(std::istream& is);
-    std::vector<EnemyDef> getEnemies();
-    void save(std::ostream &os);
-    std::vector<EnemyDef> toEnemyDefs(const std::vector<Enemy>& enemies);
-    void setEnemies(const std::vector<EnemyDef>& defs);
-private:
-    std::vector<EnemyDef> enemies;
+ private:
+  std::vector<EnemyDef> enemies;
 };
-#endif
+
+#endif  

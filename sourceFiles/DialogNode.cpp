@@ -3,24 +3,23 @@
 
 const int MAX_STRING_LEN = 255;
 
-DialogNode::DialogNode(const DialogNodeDef& def):id(def.id), name(def.name), text(def.text), choices(def.choices), 
-description(def.description){}
+DialogNode::DialogNode(const DialogNodeDef& def)
+    : id_(def.id), name_(def.name), text_(def.text), choices_(def.choices), description_(def.description) {}
 
-std::vector<DialogNodeDef> DialogNodeRegistry::getDialogNodes(){
+std::vector<DialogNodeDef> DialogNodeRegistry::getDialogNodes() {
     return dialogNodes;
 }
 
-void DialogNodeRegistry::load(std::istream& is){
+void DialogNodeRegistry::load(std::istream& is) {
     int dialogNodesCount = 0;
     is >> dialogNodesCount;
-    for (int i = 0; i < dialogNodesCount; i++)
-    {
+    for (int i = 0; i < dialogNodesCount; i++) {
         DialogNodeDef dnd;
         is >> dnd.id;
         is.ignore(MAX_STRING_LEN, '\n');
         std::getline(is, dnd.name);
         std::getline(is, dnd.text);
-    
+
         int choicesCount = 0;
         is >> choicesCount;
         for (int i = 0; i < choicesCount; i++) {
@@ -34,7 +33,7 @@ void DialogNodeRegistry::load(std::istream& is){
     }
 }
 
-void DialogNodeRegistry::save(std::ostream& os){
+void DialogNodeRegistry::save(std::ostream& os) {
     os << dialogNodes.size() << std::endl;
     for (const DialogNodeDef& dnd : dialogNodes) {
         os << dnd.id << std::endl;
@@ -47,21 +46,21 @@ void DialogNodeRegistry::save(std::ostream& os){
         os << dnd.description << std::endl;
     }
 }
-std::vector<DialogNodeDef> DialogNodeRegistry::toDialogNodeDefs(const std::vector<DialogNode>& dialogNodes){
-        std::vector<DialogNodeDef> dialogNodeDefs;
-        
-        for (const auto& dialogNode : dialogNodes) {
-            DialogNodeDef def;
-            def.id = dialogNode.getId();
-            def.name = dialogNode.getName();
-            def.text = dialogNode.getText();
-            def.choices = dialogNode.getChoices();
-            def.description = dialogNode.getDescription();
-            dialogNodeDefs.push_back(def);
-        }
 
-        return dialogNodeDefs;
+std::vector<DialogNodeDef> DialogNodeRegistry::toDialogNodeDefs(const std::vector<DialogNode>& dialogNodes) {
+    std::vector<DialogNodeDef> dialogNodeDefs;
+    for (const auto& dialogNode : dialogNodes) {
+        DialogNodeDef def;
+        def.id = dialogNode.getId();
+        def.name = dialogNode.getName();
+        def.text = dialogNode.getText();
+        def.choices = dialogNode.getChoices();
+        def.description = dialogNode.getDescription();
+        dialogNodeDefs.push_back(def);
     }
+    return dialogNodeDefs;
+}
+
 void DialogNodeRegistry::setDialogNodes(const std::vector<DialogNodeDef>& defs) {
     dialogNodes = defs;
 }

@@ -1,20 +1,20 @@
-#include "../headerFiles/Item.h" 
+#include "../headerFiles/Item.h"
 #include <iostream>
 #include <climits>
 
 const int MAX_STRING_LEN = 255;
 
 Item::Item(const ItemDef& def)
-:id(def.id), name(def.name), type(def.type), factor(def.factor), description(def.description){}
+    : id_(def.id), name_(def.name), type_(def.type), factor_(def.factor), description_(def.description) {}
 
-std::vector<ItemDef> ItemRegistry::getItems(){
+std::vector<ItemDef> ItemRegistry::getItems() {
     return items;
 }
 
-void ItemRegistry::load(std::istream& is){
+void ItemRegistry::load(std::istream& is) {
     int itemsCount = 0;
     is >> itemsCount;
-    for (int i = 0; i < itemsCount;i++){
+    for (int i = 0; i < itemsCount; i++) {
         ItemDef id;
         is >> id.id;
         is.ignore(MAX_STRING_LEN, '\n');
@@ -26,7 +26,8 @@ void ItemRegistry::load(std::istream& is){
         items.push_back(id);
     }
 }
-void ItemRegistry::save(std::ostream& os){
+
+void ItemRegistry::save(std::ostream& os) {
     os << items.size() << std::endl;
     for (const ItemDef& id : items) {
         os << id.id << std::endl;
@@ -36,6 +37,7 @@ void ItemRegistry::save(std::ostream& os){
         os << id.description << std::endl;
     }
 }
+
 std::vector<ItemDef> ItemRegistry::toItemDefs(const std::vector<Item>& items) {
     std::vector<ItemDef> itemDefs;
     for (const auto& item : items) {
@@ -49,6 +51,7 @@ std::vector<ItemDef> ItemRegistry::toItemDefs(const std::vector<Item>& items) {
     }
     return itemDefs;
 }
+
 void ItemRegistry::setItems(const std::vector<ItemDef>& defs) {
     items = defs;
 }
