@@ -11,6 +11,7 @@
 #include "../headerFiles/Scene.h"
 #include "../headerFiles/BattleSystem.h"
 #include "../headerFiles/Game.h"
+#include "../headerFiles/ResourceSystem.h"
 
 template<typename T> T* findById(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
@@ -86,129 +87,6 @@ void startDialog(std::vector<DialogNode>& dialogNodes, std::vector<DialogChoice>
       break;
     }
   }
-}
-
-void downloadData(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies,
-    std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes,
-    std::vector<DialogChoice>& dialogChoices, std::vector<Scene>& scenes, Game& game) {
-  std::ifstream input("data.txt");
-
-  PlayerRegistry playerRegistry;
-  playerRegistry.load(input);
-  player = playerRegistry.getPlayer();
-
-  locations.clear();
-  enemies.clear();
-  abilities.clear();
-  items.clear();
-  dialogNodes.clear();
-  dialogChoices.clear();
-  scenes.clear();
-
-  LocationRegistry locationRegistry;
-  locationRegistry.load(input);
-  std::vector<LocationDef> locationDefs = locationRegistry.getLocations();
-  for (const LocationDef& def : locationDefs) {
-    locations.push_back(Location(def));
-  }
-
-  EnemyRegistry enemyRegistry;
-  enemyRegistry.load(input);
-  std::vector<EnemyDef> enemyDefs = enemyRegistry.getEnemies();
-  for (const EnemyDef& def : enemyDefs) {
-    enemies.push_back(Enemy(def));
-  }
-
-  AbilityRegistry abilityRegistry;
-  abilityRegistry.load(input);
-  std::vector<AbilityDef> abilityDefs = abilityRegistry.getAbilities();
-  for (const AbilityDef& def : abilityDefs) {
-    abilities.push_back(Ability(def));
-  }
-
-  ItemRegistry itemRegistry;
-  itemRegistry.load(input);
-  std::vector<ItemDef> itemDefs = itemRegistry.getItems();
-  for (const ItemDef& def : itemDefs) {
-    items.push_back(Item(def));
-  }
-
-  DialogNodeRegistry dialogNodeRegistry;
-  dialogNodeRegistry.load(input);
-  std::vector<DialogNodeDef> dialogNodeDefs = dialogNodeRegistry.getDialogNodes();
-  for (const DialogNodeDef& def : dialogNodeDefs) {
-    dialogNodes.push_back(DialogNode(def));
-  }
-
-  DialogChoiceRegistry dialogChoiceRegistry;
-  dialogChoiceRegistry.load(input);
-  std::vector<DialogChoiceDef> dialogChoiceDefs = dialogChoiceRegistry.getDialogChoices();
-  for (const DialogChoiceDef& def : dialogChoiceDefs) {
-    dialogChoices.push_back(DialogChoice(def));
-  }
-
-  SceneRegistry sceneRegistry;
-  sceneRegistry.load(input);
-  std::vector<SceneDef> sceneDefs = sceneRegistry.getScenes();
-  for (const SceneDef& def : sceneDefs) {
-    scenes.push_back(Scene(def));
-  }
-
-  GameRegistry gameRegistry;
-  gameRegistry.load(input);
-  game.setIsGameStarted(gameRegistry.getGameStats().isGameStarted);
-  game.setIsGameLoopEnded(gameRegistry.getGameStats().isGameLoopEnded);
-  game.setIsGameEnded(gameRegistry.getGameStats().isGameEnded);
-}
-
-void saveGame(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies,
-    std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes,
-    std::vector<DialogChoice>& dialogChoices, Game& game, std::vector<Scene>& scenes) {
-  std::ofstream output("data.txt");
-  PlayerRegistry playerRegistry;
-  PlayerDef playerDef = playerRegistry.toPlayerDef(player);
-  playerRegistry.setPlayer(playerDef);
-  playerRegistry.save(output);
-
-  LocationRegistry locationRegistry;
-  std::vector<LocationDef> locationDefs = locationRegistry.toLocationDefs(locations);
-  locationRegistry.setLocations(locationDefs);
-  locationRegistry.save(output);
-
-  EnemyRegistry enemyRegistry;
-  std::vector<EnemyDef> enemyDefs = enemyRegistry.toEnemyDefs(enemies);
-  enemyRegistry.setEnemies(enemyDefs);
-  enemyRegistry.save(output);
-
-  AbilityRegistry abilityRegistry;
-  std::vector<AbilityDef> abilityDefs = abilityRegistry.toAbilityDefs(abilities);
-  abilityRegistry.setAbilities(abilityDefs);
-  abilityRegistry.save(output);
-
-  ItemRegistry itemRegistry;
-  std::vector<ItemDef> itemDefs = itemRegistry.toItemDefs(items);
-  itemRegistry.setItems(itemDefs);
-  itemRegistry.save(output);
-
-  DialogNodeRegistry dialogNodeRegistry;
-  std::vector<DialogNodeDef> dialogNodeDefs = dialogNodeRegistry.toDialogNodeDefs(dialogNodes);
-  dialogNodeRegistry.setDialogNodes(dialogNodeDefs);
-  dialogNodeRegistry.save(output);
-
-  DialogChoiceRegistry dialogChoiceRegistry;
-  std::vector<DialogChoiceDef> dialogChoiceDefs = dialogChoiceRegistry.toDialogChoiceDefs(dialogChoices);
-  dialogChoiceRegistry.setDialogChoices(dialogChoiceDefs);
-  dialogChoiceRegistry.save(output);
-
-  SceneRegistry sceneRegistry;
-  std::vector<SceneDef> sceneDefs = sceneRegistry.toSceneDefs(scenes);
-  sceneRegistry.setScenes(sceneDefs);
-  sceneRegistry.save(output);
-
-  GameRegistry gameRegistry;
-  GameStatsDef gameDef = gameRegistry.toGameStatsDef(game);
-  gameRegistry.setGameStats(gameDef);
-  gameRegistry.save(output);
 }
 
 template <typename T> void loot(std::vector<T>& dataPool, Player& player, Location* currentLocation,
@@ -528,7 +406,7 @@ void showChosenWeapon(Player& player, std::vector<Item>& items, Renderer& render
 
 void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enemy>& enemies,
     std::vector<Ability>& abilities, std::vector<Item>& items, std::vector<DialogNode>& dialogNodes,
-    std::vector<DialogChoice>& dialogChoices, Renderer& renderer, Game& game, std::vector<Scene>& scenes) {
+    std::vector<DialogChoice>& dialogChoices, Renderer& renderer, Game& game, std::vector<Scene>& scenes, ResourceSystem& resourceSystem) {
   int userChoice = 0;
 
   while (player.getEnemiesCount() != enemies.size()) {
@@ -580,29 +458,29 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
     int enemiesCount = enemies.size();
     if (selectedOption == "Сменить локацию") {
       move(player, locations, enemiesCount, renderer);
-      saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+      resourceSystem.saveGame();
     } else if (selectedOption == "Показать инвентарь") {
       showInventory(items, player, renderer);
-      saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+      resourceSystem.saveGame();
     } else if (selectedOption == "Выбрать способности") {
       changeAbilities(playerAbilities, abilities, playerChosenAbilities, renderer);
-      saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+      resourceSystem.saveGame();
     } else if (selectedOption == "Вступить в бой") {
       fight(player, enemyId, enemies, abilities, currentLocation, renderer);
-      saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+      resourceSystem.saveGame();
     } else if (selectedOption == "Осмотреть предметы на локации") {
       loot<Item>(items, player, currentLocation, renderer,
           &Location::getItems, &Player::getInventory,
           "Предметы", "Предмет подобран!", "предметов.");
-      saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+      resourceSystem.saveGame();
     } else if (selectedOption == "Осмотреть способности на локации") {
       loot<Ability>(abilities, player, currentLocation, renderer,
           &Location::getAbilities, &Player::getAbilities,
           "Способности", "Появилась новая способность!", "способностей.");
-      saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+      resourceSystem.saveGame();
     } else if (selectedOption == "Поговорить") {
       startDialog(dialogNodes, dialogChoices, dialogNodeId, currentLocation, renderer);
-      saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+      resourceSystem.saveGame();
     } else if (selectedOption == "Показать оружие") {
       showChosenWeapon(player, items, renderer);
     } else if (selectedOption == "Показать описания") {
@@ -610,12 +488,11 @@ void showMenu(Player& player, std::vector<Location>& locations, std::vector<Enem
     }
   }
   game.setIsGameLoopEnded(1);
-  saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+  resourceSystem.saveGame();
 }
 
 int main(int argc, char* argv[]) {
-  std::ifstream input("data.txt");
-
+  std::string fileName = "data.txt";
   Player player;
   std::vector<Location> locations;
   std::vector<Enemy> enemies;
@@ -626,17 +503,19 @@ int main(int argc, char* argv[]) {
   std::vector<Scene> scenes;
   Renderer renderer;
   Game game(scenes, dialogNodes, dialogChoices, renderer);
-  downloadData(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, scenes, game);
+  ResourceSystem resourceSystem(player, locations, enemies, abilities, items,
+                                dialogNodes, dialogChoices, scenes, game, fileName);
+  resourceSystem.downloadData();
   if (!game.getIsGameStarted()) {
     game.initNewGame(scenes, dialogNodes, dialogChoices, renderer);
-    saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+    resourceSystem.saveGame();
   }
   if (!game.getIsGameLoopEnded()) {
-    showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, renderer, game, scenes);
+    showMenu(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, renderer, game, scenes, resourceSystem);
   }
   if (!game.getIsGameEnded()) {
     game.endGame(scenes, dialogNodes, dialogChoices, renderer);
-    saveGame(player, locations, enemies, abilities, items, dialogNodes, dialogChoices, game, scenes);
+    resourceSystem.saveGame();
   }
   return 0;
 }
