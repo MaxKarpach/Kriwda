@@ -212,6 +212,9 @@ bool BattleSystem::end_battle() {
 
   for (int i = 0; i < player_.get_abilities_count(); i++) {
     player_abilities_[i]->refresh_moves_count();
+  }
+
+  for (int i = 0; i < enemy_->get_abilities().size(); i++) {
     enemy_abilities_[i]->refresh_moves_count();
   }
 
@@ -224,6 +227,9 @@ bool BattleSystem::end_battle() {
 
     for (int i = 0; i < enemy_abilities_.size(); i++) {
       enemy_abilities_[i]->set_moves_count(enemy_abilities_[i]->get_max_moves_count());
+    }
+
+    for (int i = 0; i < player_abilities_.size(); i++) {
       player_abilities_[i]->set_moves_count(player_abilities_[i]->get_max_moves_count());
     }
 
@@ -235,6 +241,9 @@ bool BattleSystem::end_battle() {
 
     for (int i = 0; i < enemy_abilities_.size(); i++) {
       enemy_abilities_[i]->set_moves_count(enemy_abilities_[i]->get_max_moves_count());
+    }
+
+    for (int i = 0; i < player_abilities_.size(); i++) {
       player_abilities_[i]->set_moves_count(player_abilities_[i]->get_max_moves_count());
     }
 
@@ -243,7 +252,7 @@ bool BattleSystem::end_battle() {
     player_.after_round_info();
     enemy_->after_round_info();
 
-    for (int i = 0; i < player_.get_abilities_count(); i++) {
+    for (int i = 0; i < player_abilities_.size(); i++) {
       player_abilities_[i]->count_moves();
     }
 
@@ -282,9 +291,15 @@ int BattleSystem::enemy_move() {
   while (true) {
     enemy_choice_ = rand() % (3 + enemy_->get_abilities_count()) + 1;
 
-    if (enemy_choice_ == 1 && enemy_->get_stamina() > 0) break;
-    if (enemy_choice_ == 2 && enemy_->get_shield() > 0) break;
-    if (enemy_choice_ == 3 && enemy_->get_is_dodge_on() == 0) break;
+    if (enemy_choice_ == 1 && enemy_->get_stamina() > 0) {
+      break;
+    }
+    if (enemy_choice_ == 2 && enemy_->get_shield() > 0) {
+      break;
+    } 
+    if (enemy_choice_ == 3 && enemy_->get_is_dodge_on() == 0) {
+      break;
+    }
 
     if (enemy_choice_ >= 4 &&
         enemy_choice_ <= (3 + enemy_->get_abilities_count())) {
