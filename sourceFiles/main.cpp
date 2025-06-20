@@ -37,10 +37,8 @@ void fight(Player& player, int enemyId, std::vector<Enemy>& enemies,
   std::vector<Ability*> enemyAbilities;
 
   for (int i = 0; i < player.getAbilitiesCount(); i++) {
-    playerAbilities.push_back(
-        findById<Ability>(player.getChosenAbilities()[i], abilities));
-    enemyAbilities.push_back(
-        findById<Ability>(enemy->getAbilities()[i], abilities));
+    playerAbilities.push_back(findById<Ability>(player.getChosenAbilities()[i], abilities));
+    enemyAbilities.push_back(findById<Ability>(enemy->getAbilities()[i], abilities));
   }
 
   BattleSystem battleSystem(player, enemy, renderer, currentLocation,
@@ -57,8 +55,7 @@ void showMenu(Player& player, std::vector<Location>& locations,
   int userChoice = 0;
 
   while (player.getEnemiesCount() != enemies.size()) {
-    Location* currentLocation = findById<Location>(
-        player.getLocationId(), locations);
+    Location* currentLocation = findById<Location>(player.getLocationId(), locations);
     int enemyId = currentLocation->getEnemyId();
     int dialogNodeId = currentLocation->getDialogNodeId();
     std::vector<int>& locationItems = currentLocation->getItems();
@@ -66,34 +63,30 @@ void showMenu(Player& player, std::vector<Location>& locations,
 
     renderer.printEndlineText(currentLocation->getDescription());
 
-    std::vector<std::string> options;
-    options.push_back("Сменить локацию");
-    options.push_back("Показать инвентарь");
-    options.push_back("Выбрать способности");
-    options.push_back("Показать описания");
+    std::vector<std::string> options = {
+      "Сменить локацию",
+      "Показать инвентарь",
+      "Выбрать способности",
+      "Показать описания"
+    };
 
-    if (player.getChosenWeaponId() != 0) {
+    if (player.getChosenWeaponId() != 0)
       options.push_back("Показать оружие");
-    }
 
     if (enemyId != 0) {
       options.push_back("Вступить в бой");
       renderer.printText("На локации присутствует враг ");
-      renderer.printEndlineText(
-          findById<Enemy>(enemyId, enemies)->getName());
+      renderer.printEndlineText(findById<Enemy>(enemyId, enemies)->getName());
     }
 
-    if (dialogNodeId != 0) {
+    if (dialogNodeId != 0)
       options.push_back("Поговорить");
-    }
 
-    if (!locationItems.empty()) {
+    if (!locationItems.empty())
       options.push_back("Осмотреть предметы на локации");
-    }
 
-    if (!locationAbilities.empty()) {
+    if (!locationAbilities.empty())
       options.push_back("Осмотреть способности на локации");
-    }
 
     for (int i = 0; i < options.size(); i++) {
       renderer.printText(i + 1);
@@ -116,43 +109,35 @@ void showMenu(Player& player, std::vector<Location>& locations,
                                     abilities, items, currentLocation);
       locationSystem.move();
       resourceSystem.saveGame();
-
     } else if (selectedOption == "Показать инвентарь") {
       InventorySystem inventorySystem(player, items, renderer);
       inventorySystem.showInventory();
       resourceSystem.saveGame();
-
     } else if (selectedOption == "Выбрать способности") {
       AbilitiesSystem abilitiesSystem(player, abilities, renderer);
       abilitiesSystem.changeAbilities();
       resourceSystem.saveGame();
-
     } else if (selectedOption == "Вступить в бой") {
       fight(player, enemyId, enemies, abilities, currentLocation, renderer);
       resourceSystem.saveGame();
-
     } else if (selectedOption == "Осмотреть предметы на локации") {
       LocationSystem locationSystem(player, locations, enemiesCount, renderer,
                                     abilities, items, currentLocation);
       locationSystem.lootItems();
       resourceSystem.saveGame();
-
     } else if (selectedOption == "Осмотреть способности на локации") {
       LocationSystem locationSystem(player, locations, enemiesCount, renderer,
                                     abilities, items, currentLocation);
       locationSystem.lootAbilities();
       resourceSystem.saveGame();
-
     } else if (selectedOption == "Поговорить") {
       DialogSystem dialogSystem(dialogNodes, dialogChoices, dialogNodeId,
                                 currentLocation, renderer);
       dialogSystem.startDialog();
       resourceSystem.saveGame();
-
     } else if (selectedOption == "Показать оружие") {
       InventorySystem inventorySystem(player, items, renderer);
       inventorySystem.showChosenWeapon();
-
     } else if (selectedOption == "Показать описания") {
       InfoSystem infoSystem(player, enemies, abilities, items, renderer);
       infoSystem.showDescriptions();
@@ -161,6 +146,33 @@ void showMenu(Player& player, std::vector<Location>& locations,
 
   game.setIsGameLoopEnded(1);
   resourceSystem.saveGame();
+}
+
+void run(Player& player,
+         std::vector<Location>& locations,
+         std::vector<Enemy>& enemies,
+         std::vector<Ability>& abilities,
+         std::vector<Item>& items,
+         std::vector<DialogNode>& dialogNodes,
+         std::vector<DialogChoice>& dialogChoices,
+         std::vector<Scene>& scenes,
+         Game& game,
+         ResourceSystem& resourceSystem,
+         Renderer& renderer) {
+  if (!game.getIsGameStarted()) {
+    game.initNewGame(scenes, dialogNodes, dialogChoices, renderer);
+    resourceSystem.saveGame();
+  }
+
+  if (!game.getIsGameLoopEnded()) {
+    showMenu(player, locations, enemies, abilities, items, dialogNodes,
+             dialogChoices, renderer, game, scenes, resourceSystem);
+  }
+
+  if (!game.getIsGameEnded()) {
+    game.endGame(scenes, dialogNodes, dialogChoices, renderer);
+    resourceSystem.saveGame();
+  }
 }
 
 int main(int argc, char* argv[]) {
@@ -177,24 +189,12 @@ int main(int argc, char* argv[]) {
   Game game(scenes, dialogNodes, dialogChoices, renderer);
 
   ResourceSystem resourceSystem(player, locations, enemies, abilities, items,
-                                dialogNodes, dialogChoices, scenes, game,
-                                fileName);
+                                dialogNodes, dialogChoices, scenes, game, fileName);
+
   resourceSystem.downloadData();
 
-  if (!game.getIsGameStarted()) {
-    game.initNewGame(scenes, dialogNodes, dialogChoices, renderer);
-    resourceSystem.saveGame();
-  }
-
-  if (!game.getIsGameLoopEnded()) {
-    showMenu(player, locations, enemies, abilities, items, dialogNodes,
-             dialogChoices, renderer, game, scenes, resourceSystem);
-  }
-
-  if (!game.getIsGameEnded()) {
-    game.endGame(scenes, dialogNodes, dialogChoices, renderer);
-    resourceSystem.saveGame();
-  }
+  run(player, locations, enemies, abilities, items, dialogNodes,
+      dialogChoices, scenes, game, resourceSystem, renderer);
 
   return 0;
 }
