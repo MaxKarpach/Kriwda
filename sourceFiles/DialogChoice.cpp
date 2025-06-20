@@ -1,52 +1,56 @@
-#include "../headerFiles/DialogChoice.h" 
+#include "../headerFiles/DialogChoice.h"
 #include <iostream>
 
 const int MAX_STRING_LEN = 255;
 
 DialogChoice::DialogChoice(const DialogChoiceDef& def)
-    : id_(def.id), text_(def.text), nextNodeId_(def.nextNodeId), isUsed_(def.isUsed) {}
+    : id_(def.id),
+      text_(def.text),
+      next_node_id_(def.next_node_id),
+      is_used_(def.is_used) {}
 
-std::vector<DialogChoiceDef> DialogChoiceRegistry::getDialogChoices() {
-    return dialogChoices;
+std::vector<DialogChoiceDef> DialogChoiceRegistry::get_dialog_choices() {
+  return dialog_choices_;
 }
 
 void DialogChoiceRegistry::load(std::istream& is) {
-    int dialogChoicesCount = 0;
-    is >> dialogChoicesCount;
-    for (int i = 0; i < dialogChoicesCount; i++) {
-        DialogChoiceDef dcd;
-        is >> dcd.id;
-        is.ignore(MAX_STRING_LEN, '\n');
-        std::getline(is, dcd.text);
-        is >> dcd.nextNodeId;
-        is >> dcd.isUsed;
-        dialogChoices.push_back(dcd);
-    }
+  int dialog_choices_count = 0;
+  is >> dialog_choices_count;
+  for (int i = 0; i < dialog_choices_count; ++i) {
+    DialogChoiceDef def;
+    is >> def.id;
+    is.ignore(MAX_STRING_LEN, '\n');
+    std::getline(is, def.text);
+    is >> def.next_node_id;
+    is >> def.is_used;
+    dialog_choices_.push_back(def);
+  }
 }
 
 void DialogChoiceRegistry::save(std::ostream& os) {
-    os << dialogChoices.size() << std::endl;
-    for (const DialogChoiceDef& dcd : dialogChoices) {
-        os << dcd.id << std::endl;
-        os << dcd.text << std::endl;
-        os << dcd.nextNodeId << std::endl;
-        os << dcd.isUsed << std::endl;
-    }
+  os << dialog_choices_.size() << std::endl;
+  for (const DialogChoiceDef& def : dialog_choices_) {
+    os << def.id << std::endl;
+    os << def.text << std::endl;
+    os << def.next_node_id << std::endl;
+    os << def.is_used << std::endl;
+  }
 }
 
-std::vector<DialogChoiceDef> DialogChoiceRegistry::toDialogChoiceDefs(const std::vector<DialogChoice>& dialogChoices) {
-    std::vector<DialogChoiceDef> dialogChoiceDefs;
-    for (const auto& dialogChoice : dialogChoices) {
-        DialogChoiceDef def;
-        def.id = dialogChoice.getId();
-        def.text = dialogChoice.getText();
-        def.nextNodeId = dialogChoice.getNextNodeId();
-        def.isUsed = dialogChoice.getIsUsed();
-        dialogChoiceDefs.push_back(def);
-    }
-    return dialogChoiceDefs;
+std::vector<DialogChoiceDef> DialogChoiceRegistry::to_dialog_choice_defs(const std::vector<DialogChoice>& dialog_choices) {
+  std::vector<DialogChoiceDef> defs;
+  for (const auto& choice : dialog_choices) {
+    DialogChoiceDef def;
+    def.id = choice.get_id();
+    def.text = choice.get_text();
+    def.next_node_id = choice.get_next_node_id();
+    def.is_used = choice.get_is_used();
+    defs.push_back(def);
+  }
+  return defs;
 }
 
-void DialogChoiceRegistry::setDialogChoices(const std::vector<DialogChoiceDef>& defs) {
-    dialogChoices = defs;
+void DialogChoiceRegistry::set_dialog_choices(const std::vector<DialogChoiceDef>& defs) {
+  dialog_choices_ = defs;
 }
+

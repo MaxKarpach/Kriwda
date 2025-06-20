@@ -1,5 +1,5 @@
-#ifndef INVENTORYSYSTEM_H
-#define INVENTORYSYSTEM_H
+#ifndef INVENTORY_SYSTEM_H
+#define INVENTORY_SYSTEM_H
 
 #include <iostream>
 #include <vector>
@@ -14,8 +14,8 @@ class InventorySystem {
                   std::vector<Item>& items,
                   Renderer& renderer);
 
-  void showInventory();
-  void showChosenWeapon();
+  void show_inventory();
+  void show_chosen_weapon();
 
  private:
   Player& player_;
@@ -23,7 +23,7 @@ class InventorySystem {
   Renderer& renderer_;
 
   template <typename T>
-  T* findById(int id, std::vector<T>& vec);
+  T* find_by_id(int id, std::vector<T>& vec);
 };
 
-#endif  
+#endif

@@ -1,69 +1,70 @@
+#ifndef GAME_H
+#define GAME_H
+
 #include <iostream>
 #include <Renderer.h>
 #include <Scene.h>
 #include <DialogNode.h>
 #include <DialogChoice.h>
 
-#ifndef GAME_H
-#define GAME_H
-
 struct GameStatsDef {
-  bool isGameStarted;
-  bool isGameLoopEnded;
-  bool isGameEnded;
+    bool is_game_started;
+    bool is_game_loop_ended;
+    bool is_game_ended;
 };
 
 class Game {
  public:
-  Game(std::vector<Scene>& scenes, std::vector<DialogNode>& dialogNodes,
-       std::vector<DialogChoice>& dialogChoices, Renderer& renderer);
+    Game(std::vector<Scene>& scenes, std::vector<DialogNode>& dialog_nodes,
+         std::vector<DialogChoice>& dialog_choices, Renderer& renderer);
 
-  bool getIsGameStarted() const { return isGameStarted_; }
-  void setIsGameStarted(bool value) { isGameStarted_ = value; }
+    bool get_is_game_started() const { return is_game_started_; }
+    void set_is_game_started(bool value) { is_game_started_ = value; }
 
-  bool getIsGameLoopEnded() const { return isGameLoopEnded_; }
-  void setIsGameLoopEnded(bool value) { isGameLoopEnded_ = value; }
+    bool get_is_game_loop_ended() const { return is_game_loop_ended_; }
+    void set_is_game_loop_ended(bool value) { is_game_loop_ended_ = value; }
 
-  bool getIsGameEnded() const { return isGameEnded_; }
-  void setIsGameEnded(bool value) { isGameEnded_ = value; }
+    bool get_is_game_ended() const { return is_game_ended_; }
+    void set_is_game_ended(bool value) { is_game_ended_ = value; }
 
-  void sceneDialog(std::vector<DialogNode>& dialogNodes,
-                   std::vector<DialogChoice>& dialogChoices, int currentNodeId,
-                   Renderer& renderer);
+    void scene_dialog(std::vector<DialogNode>& dialog_nodes,
+                      std::vector<DialogChoice>& dialog_choices, int current_node_id,
+                      Renderer& renderer);
 
-  void initNewGame(std::vector<Scene>& scenes,
-                   std::vector<DialogNode>& dialogNodes,
-                   std::vector<DialogChoice>& dialogChoices,
-                   Renderer& renderer);
+    void init_new_game(std::vector<Scene>& scenes,
+                       std::vector<DialogNode>& dialog_nodes,
+                       std::vector<DialogChoice>& dialog_choices,
+                       Renderer& renderer);
 
-  void gameOver(Renderer& renderer);
+    void game_over(Renderer& renderer);
 
-  void endGame(std::vector<Scene>& scenes,
-               std::vector<DialogNode>& dialogNodes,
-               std::vector<DialogChoice>& dialogChoices, Renderer& renderer);
+    void end_game(std::vector<Scene>& scenes,
+                  std::vector<DialogNode>& dialog_nodes,
+                  std::vector<DialogChoice>& dialog_choices, Renderer& renderer);
 
  private:
-  bool isGameStarted_;
-  bool isGameLoopEnded_;
-  bool isGameEnded_;
-  std::vector<Scene>& scenes_;
-  std::vector<DialogNode>& dialogNodes_;
-  std::vector<DialogChoice>& dialogChoices_;
-  Renderer& renderer_;
+    bool is_game_started_ = false;
+    bool is_game_loop_ended_ = false;
+    bool is_game_ended_ = false;
+
+    std::vector<Scene>& scenes_;
+    std::vector<DialogNode>& dialog_nodes_;
+    std::vector<DialogChoice>& dialog_choices_;
+    Renderer& renderer_;
 };
 
 class GameRegistry {
  public:
-  void load(std::istream& is);
-  void save(std::ostream& os);
-  GameStatsDef getGameStats() const;
-  void setGameStats(const GameStatsDef& def);
+    void load(std::istream& is);
+    void save(std::ostream& os);
+    GameStatsDef get_game_stats() const;
+    void set_game_stats(const GameStatsDef& def);
 
-  GameStatsDef toGameStatsDef(const Game& game);
-  void fromGameStatsDef(Game& game, const GameStatsDef& def);
+    GameStatsDef to_game_stats_def(const Game& game);
+    void from_game_stats_def(Game& game, const GameStatsDef& def);
 
  private:
-  GameStatsDef gameStats;
+    GameStatsDef game_stats_;
 };
 
-#endif  
+#endif

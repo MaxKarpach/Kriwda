@@ -1,5 +1,5 @@
-#ifndef LOCATIONSYSTEM_H
-#define LOCATIONSYSTEM_H
+#ifndef LOCATION_SYSTEM_H
+#define LOCATION_SYSTEM_H
 
 #include <iostream>
 #include <vector>
@@ -14,15 +14,15 @@ class LocationSystem {
  public:
   LocationSystem(Player& player,
                  std::vector<Location>& locations,
-                 int& enemiesCount,
+                 int& enemies_count,
                  Renderer& renderer,
                  std::vector<Ability>& abilities,
                  std::vector<Item>& items,
-                 Location* currentLocation);
+                 Location* current_location);
 
   void move();
-  void lootAbilities();
-  void lootItems();
+  void loot_abilities();
+  void loot_items();
 
  private:
   Player& player_;
@@ -30,11 +30,12 @@ class LocationSystem {
   std::vector<Ability>& abilities_;
   std::vector<Item>& items_;
   Renderer& renderer_;
-  int& enemiesCount_;
-  Location* currentLocation_;
+  int& enemies_count_;
+  Location* current_location_;
 
   template <typename T>
-  T* findById(int id, std::vector<T>& vec);
+  T* find_by_id(int id, std::vector<T>& vec);
 };
 
-#endif  
+#endif
+

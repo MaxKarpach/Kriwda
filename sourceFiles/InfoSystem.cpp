@@ -12,75 +12,75 @@ InfoSystem::InfoSystem(Player& player,
       renderer_(renderer) {}
 
 template <typename T>
-T* InfoSystem::findById(int id, std::vector<T>& vec) {
+T* InfoSystem::find_by_id(int id, std::vector<T>& vec) {
   for (auto& obj : vec) {
-    if (obj.getId() == id) {
+    if (obj.get_id() == id) {
       return &obj;
     }
   }
   return nullptr;
 }
 
-void InfoSystem::showDescriptions() {
-  int userChoice = 0;
+void InfoSystem::show_descriptions() {
+  int user_choice = 0;
   while (true) {
     std::vector<std::string> options;
     options.push_back("Показать описания способностей");
     options.push_back("Показать описания предметов");
     options.push_back("Показать описания побеждённых врагов");
 
-    renderer_.printEndlineText("Введите 0 для выхода");
+    renderer_.print_endline_text("Введите 0 для выхода");
     for (int i = 0; i < options.size(); ++i) {
-      renderer_.printText(i + 1);
-      renderer_.printText(": ");
-      renderer_.printEndlineText(options[i]);
+      renderer_.print_text(i + 1);
+      renderer_.print_text(": ");
+      renderer_.print_endline_text(options[i]);
     }
 
-    std::cin >> userChoice;
+    std::cin >> user_choice;
 
-    if (userChoice < 0 || userChoice > options.size()) {
-      renderer_.printEndlineText("Неверный ввод. Попробуйте снова.");
+    if (user_choice < 0 || user_choice > options.size()) {
+      renderer_.print_endline_text("Неверный ввод. Попробуйте снова.");
       continue;
     }
 
-    if (userChoice == 0) {
+    if (user_choice == 0) {
       break;
     }
 
-    std::string selectedOption = options[userChoice - 1];
+    std::string selected_option = options[user_choice - 1];
 
-    if (selectedOption == "Показать описания способностей") {
-      showDataDescription<Ability>(player_.getAbilities(), abilities_,
-                                   renderer_, "Ваши способности");
+    if (selected_option == "Показать описания способностей") {
+      show_data_description<Ability>(player_.get_abilities(), abilities_,
+                                     renderer_, "Ваши способности");
       break;
-    } else if (selectedOption == "Показать описания предметов") {
-      showDataDescription<Item>(player_.getInventory(), items_,
-                                renderer_, "Ваш инвентарь");
+    } else if (selected_option == "Показать описания предметов") {
+      show_data_description<Item>(player_.get_inventory(), items_,
+                                  renderer_, "Ваш инвентарь");
       break;
-    } else if (selectedOption == "Показать описания побеждённых врагов") {
-      showDataDescription<Enemy>(player_.getEnemies(), enemies_,
-                                 renderer_, "Ваши враги");
+    } else if (selected_option == "Показать описания побеждённых врагов") {
+      show_data_description<Enemy>(player_.get_enemies(), enemies_,
+                                   renderer_, "Ваши враги");
       break;
     }
   }
 }
 
 template <typename T>
-void InfoSystem::showDataDescription(std::vector<int>& playerData,
-                                     std::vector<T>& data,
-                                     Renderer& renderer,
-                                     const std::string& description) {
+void InfoSystem::show_data_description(std::vector<int>& player_data,
+                                       std::vector<T>& data,
+                                       Renderer& renderer,
+                                       const std::string& description) {
   while (true) {
-    renderer.printText(description);
-    renderer.printEndlineText(
+    renderer.print_text(description);
+    renderer.print_endline_text(
         " Введите номер предмета для просмотра описания (0 для выхода):");
 
-    for (int i = 0; i < playerData.size(); ++i) {
-      const T* subject = findById<T>(playerData[i], data);
+    for (int i = 0; i < player_data.size(); ++i) {
+      const T* subject = find_by_id<T>(player_data[i], data);
       if (subject != nullptr) {
-        renderer.printText(i + 1);
-        renderer.printText(": ");
-        renderer.printEndlineText(subject->getName());
+        renderer.print_text(i + 1);
+        renderer.print_text(": ");
+        renderer.print_endline_text(subject->get_name());
       }
     }
 
@@ -89,17 +89,17 @@ void InfoSystem::showDataDescription(std::vector<int>& playerData,
 
     if (choice == 0) break;
 
-    if (choice < 1 || choice > playerData.size()) {
-      renderer.printEndlineText("Некорректный выбор. Попробуйте снова.");
+    if (choice < 1 || choice > player_data.size()) {
+      renderer.print_endline_text("Некорректный выбор. Попробуйте снова.");
       continue;
     }
 
-    const T* selected = findById<T>(playerData[choice - 1], data);
+    const T* selected = find_by_id<T>(player_data[choice - 1], data);
     if (selected) {
-      renderer.printText("Описание ");
-      renderer.printText(selected->getName());
-      renderer.printEndlineText(":");
-      renderer.printEndlineText(selected->getDescription());
+      renderer.print_text("Описание ");
+      renderer.print_text(selected->get_name());
+      renderer.print_endline_text(":");
+      renderer.print_endline_text(selected->get_description());
     }
   }
 }

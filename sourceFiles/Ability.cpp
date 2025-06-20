@@ -8,63 +8,83 @@ Ability::Ability(const AbilityDef& def)
       name_(def.name),
       type_(def.type),
       factor_(def.factor),
-      movesCount_(def.movesCount),
-      maxMovesCount_(def.maxMovesCount),
+      moves_count_(def.moves_count),
+      max_moves_count_(def.max_moves_count),
       description_(def.description) {}
 
-std::vector<AbilityDef> AbilityRegistry::getAbilities() {
-  return abilities;
+void Ability::count_moves() {
+  if (max_moves_count_ != moves_count_) {
+    Renderer renderer;
+    renderer.print_text("До возможности использовать способность ");
+    renderer.print_text(name_);
+    renderer.print_text(" осталось ");
+    renderer.print_text(moves_count_ + 2);
+    renderer.print_endline_text(" хода(ов)");
+  }
+}
+
+void Ability::refresh_moves_count() {
+  if (max_moves_count_ != moves_count_) {
+    if (moves_count_ == -1) {
+      moves_count_ = max_moves_count_;
+    } else {
+      moves_count_--;
+    }
+  }
+}
+
+std::vector<AbilityDef> AbilityRegistry::get_abilities() {
+  return abilities_;
 }
 
 void AbilityRegistry::load(std::istream& is) {
-  int abilitiesCount = 0;
-  is >> abilitiesCount;
-  for (int i = 0; i < abilitiesCount; i++) {
-    AbilityDef ad;
-    is >> ad.id;
+  int abilities_count = 0;
+  is >> abilities_count;
+  for (int i = 0; i < abilities_count; i++) {
+    AbilityDef def;
+    is >> def.id;
     is.ignore(MAX_STRING_LEN, '\n');
-    std::getline(is, ad.name);
-    is >> ad.type;
-    is >> ad.factor;
-    is >> ad.movesCount;
-    is >> ad.maxMovesCount;
+    std::getline(is, def.name);
+    is >> def.type;
+    is >> def.factor;
+    is >> def.moves_count;
+    is >> def.max_moves_count;
     is.ignore(MAX_STRING_LEN, '\n');
-    std::getline(is, ad.description);
+    std::getline(is, def.description);
 
-    abilities.push_back(ad);
+    abilities_.push_back(def);
   }
 }
 
-std::vector<AbilityDef> AbilityRegistry::toAbilityDefs(
-    const std::vector<Ability>& abilities) {
-  std::vector<AbilityDef> abilityDefs;
+std::vector<AbilityDef> AbilityRegistry::to_ability_defs(const std::vector<Ability>& abilities) {
+  std::vector<AbilityDef> ability_defs;
   for (const auto& ability : abilities) {
     AbilityDef def;
-    def.id = ability.getId();
-    def.name = ability.getName();
-    def.type = ability.getType();
-    def.factor = ability.getFactor();
-    def.movesCount = ability.getMovesCount();
-    def.maxMovesCount = ability.getMaxMovesCount();
-    def.description = ability.getDescription();
-    abilityDefs.push_back(def);
+    def.id = ability.get_id();
+    def.name = ability.get_name();
+    def.type = ability.get_type();
+    def.factor = ability.get_factor();
+    def.moves_count = ability.get_moves_count();
+    def.max_moves_count = ability.get_max_moves_count();
+    def.description = ability.get_description();
+    ability_defs.push_back(def);
   }
-  return abilityDefs;
+  return ability_defs;
 }
 
 void AbilityRegistry::save(std::ostream& os) {
-  os << abilities.size() << std::endl;
-  for (const AbilityDef& ad : abilities) {
-    os << ad.id << std::endl;
-    os << ad.name << std::endl;
-    os << ad.type << std::endl;
-    os << ad.factor << std::endl;
-    os << ad.movesCount << std::endl;
-    os << ad.maxMovesCount << std::endl;
-    os << ad.description << std::endl;
+  os << abilities_.size() << std::endl;
+  for (const AbilityDef& def : abilities_) {
+    os << def.id << std::endl;
+    os << def.name << std::endl;
+    os << def.type << std::endl;
+    os << def.factor << std::endl;
+    os << def.moves_count << std::endl;
+    os << def.max_moves_count << std::endl;
+    os << def.description << std::endl;
   }
 }
 
-void AbilityRegistry::setAbilities(const std::vector<AbilityDef>& defs) {
-  abilities = defs;
+void AbilityRegistry::set_abilities(const std::vector<AbilityDef>& defs) {
+  abilities_ = defs;
 }

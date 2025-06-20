@@ -22,14 +22,14 @@ class ResourceSystem {
                  std::vector<Enemy>& enemies,
                  std::vector<Ability>& abilities,
                  std::vector<Item>& items,
-                 std::vector<DialogNode>& dialogNodes,
-                 std::vector<DialogChoice>& dialogChoices,
+                 std::vector<DialogNode>& dialog_nodes,
+                 std::vector<DialogChoice>& dialog_choices,
                  std::vector<Scene>& scenes,
                  Game& game,
-                 std::string& fileName);
+                 std::string& file_name);
 
-  void downloadData();
-  void saveGame();
+  void download_data();
+  void save_game();
 
  private:
   Player& player_;
@@ -38,10 +38,11 @@ class ResourceSystem {
   std::vector<Ability>& abilities_;
   std::vector<Item>& items_;
   std::vector<Scene>& scenes_;
-  std::vector<DialogNode>& dialogNodes_;
-  std::vector<DialogChoice>& dialogChoices_;
+  std::vector<DialogNode>& dialog_nodes_;
+  std::vector<DialogChoice>& dialog_choices_;
   Game& game_;
-  std::string& fileName_;
+  std::string& file_name_;
 };
 
 #endif
+
