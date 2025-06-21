@@ -15,49 +15,8 @@ T* InventorySystem::find_by_id(int id, std::vector<T>& vec) {
   return nullptr;
 }
 
-void InventorySystem::show_inventory() {
-  std::vector<int>& inventory = player_.get_inventory();
-
-  while (true) {
-    renderer_.print_endline_text("Ваш инвентарь:");
-
-    if (inventory.empty()) {
-      renderer_.print_endline_text("Инвентарь пуст.");
-      return;
-    }
-
-    renderer_.print_endline_text("0: Выход");
-
-    for (int i = 0; i < inventory.size(); ++i) {
-      Item* item = find_by_id<Item>(inventory[i], items_);
-      if (item != nullptr) {
-        renderer_.print_text(i + 1);
-        renderer_.print_text(": ");
-        renderer_.print_endline_text(item->get_name());
-      }
-    }
-
-    int input;
-    std::cin >> input;
-
-    if (input == 0) break;
-
-    if (input < 1 || input > inventory.size()) {
-      renderer_.print_endline_text("Неверный выбор. Попробуйте снова.");
-      continue;
-    }
-
-    int item_id = inventory[input - 1];
-    Item* item = find_by_id<Item>(item_id, items_);
-
-    if (!item) {
-      renderer_.print_endline_text("Ошибка: предмет не найден.");
-      continue;
-    }
-
-    char type = item->get_type();
-
-    switch (type) {
+void InventorySystem::item_effect(char& type, Item* item, int& input, std::vector<int>& inventory){
+      switch (type) {
       case 'f':
         player_.set_hp(player_.get_hp() + item->get_factor());
         renderer_.print_text("Вы выбрали еду: ");
@@ -90,12 +49,58 @@ void InventorySystem::show_inventory() {
 
       default:
         renderer_.print_endline_text("Предмет не может быть использован.");
-        continue;
     }
 
     if (type == 'f') {
       inventory.erase(inventory.begin() + (input - 1));
     }
+}
+
+void InventorySystem::show_inventory() {
+  std::vector<int>& inventory = player_.get_inventory();
+
+  while (true) {
+    renderer_.print_endline_text("Ваш инвентарь:");
+
+    if (inventory.empty()) {
+      renderer_.print_endline_text("Инвентарь пуст.");
+      return;
+    }
+
+    renderer_.print_endline_text("0: Выход");
+
+    for (int i = 0; i < inventory.size(); ++i) {
+      Item* item = find_by_id<Item>(inventory[i], items_);
+      if (item != nullptr) {
+        renderer_.print_text(i + 1);
+        renderer_.print_text(": ");
+        renderer_.print_endline_text(item->get_name());
+      }
+    }
+
+    int input;
+    std::cin >> input;
+
+    if (input == 0) {
+      break;
+    }
+
+    if (input < 1 || input > inventory.size()) {
+      renderer_.print_endline_text("Неверный выбор. Попробуйте снова.");
+      continue;
+    }
+
+    int item_id = inventory[input - 1];
+    Item* item = find_by_id<Item>(item_id, items_);
+
+    if (!item) {
+      renderer_.print_endline_text("Ошибка: предмет не найден.");
+      continue;
+    }
+
+    char type = item->get_type();
+
+    item_effect(type, item, input, inventory);
   }
 }
 

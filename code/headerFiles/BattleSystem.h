@@ -27,6 +27,8 @@ class BattleSystem {
   void enemy_defence();
   void enemy_dodge();
   void enemy_ability();
+  void player_ability_effect(int& idx);
+  void enemy_ability_effect(int &idx);
 
  private:
   Player& player_;

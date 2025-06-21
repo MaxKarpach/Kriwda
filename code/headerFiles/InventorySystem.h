@@ -16,6 +16,7 @@ class InventorySystem {
 
   void show_inventory();
   void show_chosen_weapon();
+  void item_effect(char& type, Item* item, int& input, std::vector<int>& inventory);
 
  private:
   Player& player_;
