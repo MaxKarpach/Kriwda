@@ -91,15 +91,7 @@ void BattleSystem::player_dodge() {
   }
 }
 
-void BattleSystem::player_ability() {
-  int idx = user_choice_ - 4;
-  if (player_abilities_[idx]->get_moves_count() ==
-      player_abilities_[idx]->get_max_moves_count()) {
-    player_abilities_[idx]->set_moves_count(
-        player_abilities_[idx]->get_moves_count() - 1);
-    renderer_.print_text("Вы использовали способность ");
-    renderer_.print_endline_text(player_abilities_[idx]->get_name());
-
+void BattleSystem::player_ability_effect(int& idx){
     switch (player_abilities_[idx]->get_type()) {
       case 'd':
         if (enemy_choice_ == 2) {
@@ -132,6 +124,37 @@ void BattleSystem::player_ability() {
       default:
         break;
     }
+}
+
+void BattleSystem::enemy_ability_effect(int& idx){
+  switch (enemy_abilities_[idx]->get_type()) {
+    case 'd':
+      if (user_choice_ != 2 && user_choice_ != 3) {
+        player_.set_hp(player_.get_hp() - enemy_abilities_[idx]->get_factor());
+        renderer_.print_endline_text("Враг попал");
+      }
+      break;
+    case 'h':
+      if (enemy_->get_hp() + enemy_abilities_[idx]->get_factor() > enemy_hp_) {
+        enemy_->set_hp(enemy_hp_);
+      } else {
+        enemy_->set_hp(enemy_->get_hp() + enemy_abilities_[idx]->get_factor());
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+void BattleSystem::player_ability() {
+  int idx = user_choice_ - 4;
+  if (player_abilities_[idx]->get_moves_count() ==
+      player_abilities_[idx]->get_max_moves_count()) {
+    player_abilities_[idx]->set_moves_count(
+        player_abilities_[idx]->get_moves_count() - 1);
+    renderer_.print_text("Вы использовали способность ");
+    renderer_.print_endline_text(player_abilities_[idx]->get_name());
+    player_ability_effect(idx);
   } else {
     renderer_.print_endline_text("Вы не можете использовать эту способность");
   }
@@ -160,24 +183,7 @@ void BattleSystem::enemy_ability() {
       enemy_abilities_[idx]->get_moves_count() - 1);
   renderer_.print_text("Враг использовал способность ");
   renderer_.print_endline_text(enemy_abilities_[idx]->get_name());
-
-  switch (enemy_abilities_[idx]->get_type()) {
-    case 'd':
-      if (user_choice_ != 2 && user_choice_ != 3) {
-        player_.set_hp(player_.get_hp() - enemy_abilities_[idx]->get_factor());
-        renderer_.print_endline_text("Враг попал");
-      }
-      break;
-    case 'h':
-      if (enemy_->get_hp() + enemy_abilities_[idx]->get_factor() > enemy_hp_) {
-        enemy_->set_hp(enemy_hp_);
-      } else {
-        enemy_->set_hp(enemy_->get_hp() + enemy_abilities_[idx]->get_factor());
-      }
-      break;
-    default:
-      break;
-  }
+  enemy_ability_effect(idx);
 }
 
 void BattleSystem::prepare_battle() {
